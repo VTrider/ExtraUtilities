@@ -1,4 +1,4 @@
-# ExtraUtilities
+# Extra Utilities
 
 Finally figured out how to work git, if something's wrong let me know on discord please.
 
