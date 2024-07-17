@@ -150,7 +150,6 @@ DWORD WINAPI InitialThread(HMODULE hModule)
     FileSystem();
     CodeInjection();
 
-    SystemLog->Out(std::filesystem::current_path().string());
 
     // std::thread MainThread(Main);
     // MainThread.detach();
