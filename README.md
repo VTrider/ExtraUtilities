@@ -10,3 +10,8 @@ You should be able to download the above dependencies in the visual studio insta
 
 Usage:
 Build the DLL or download the latest release from the releases tab. The two important files are exu.dll and ExtraUtils.lua, those two files should always be together since the latter is the wrapper for the dll functions that you can use in-game. Further info is provided on the steam workshop page. If you want the bleeding edge build it will always be on this repo, the workshop version will always be a bit behind to make sure it's relatively stable.
+
+Compatibility:
+- Windows: Yes
+- Mac: No
+- Linux: No
