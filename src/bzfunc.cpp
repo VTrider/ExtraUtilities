@@ -538,16 +538,67 @@ int SetDifficulty(std::string newDifficulty)
 
 DWORD jmpBackOrdnanceVelocity = 0x004803D4 + 5;
 
+DWORD jmpBackOrdnancePosition = 0x00480357 + 7;
+
 VECTOR_3D playerVelocity;
 
 VECTOR_3D playerPosition;
 
-// TODO: distance compare between player and ordnance to only apply tweak to player's ordnance
+// TODO: Refactor, it's a fkn mess
 
-float __cdecl Distance3D(VECTOR_3D* a, VECTOR_3D* b)
+MAT_3D ordnancePosition;
+
+struct VECTOR_3D_DOUBLE
+{
+	double x;
+	double y;
+	double z;
+};
+
+double __cdecl Distance3D(VECTOR_3D_DOUBLE* a, VECTOR_3D_DOUBLE* b)
 {
 	return sqrt(pow((b->x - a->x), 2) + pow((b->y - a->y), 2) + pow((b->z - a->z), 2));
 }
+
+VECTOR_3D_DOUBLE playerPosDouble;
+double ordnanceDistance;
+
+unsigned char* ordnancePosBytes;
+
+void __declspec(naked) OrdnancePositionHook()
+{
+	__asm
+	{
+		// game code
+		mov ecx, [ebp+0x08]
+		push ecx
+		mov ecx, [ebp-0x20]
+
+		// preserve registers
+		sub esp, 0x10
+		movdqu [esp], xmm0
+		pushfd
+		push eax
+
+		mov eax, [esp+0x18] // +24 bytes since I pushed a bunch of stuff
+		movsd xmm0, [eax+0x28]
+		movsd [ordnancePosition.posit_x], xmm0
+		movsd xmm0, [eax+0x30]
+		movsd [ordnancePosition.posit_y], xmm0
+		movsd xmm0, [eax+0x38]
+		movsd [ordnancePosition.posit_z], xmm0
+		
+		// restore registers
+		pop eax
+		popfd
+		movdqu xmm0, [esp]
+		add esp, 0x10
+
+		jmp [jmpBackOrdnancePosition]
+	}
+}
+
+double ordPosTolerance = 5;
 
 void  __declspec(naked) OrdnanceVelocityHook()
 {
@@ -563,6 +614,21 @@ void  __declspec(naked) OrdnanceVelocityHook()
 		sub esp, 0x10
 		movdqu [esp], xmm1
 		pushfd // push flags
+
+		// compare distance between local player and ordnance to only apply change to player's ordnance
+		push eax // preserve
+
+		lea eax, [playerPosDouble]
+		push eax 
+		lea eax, [ordnancePosition.posit_x] // start of pos section of matrix 3d
+		push eax 
+		call Distance3D
+		add esp, 0x8 // two pointers
+		pop eax // restore
+		movsd[ordnanceDistance], xmm0
+		movsd xmm1, [ordPosTolerance]
+		comisd xmm0, xmm1
+		ja notPlayerOrd // jump if above the tolerance
 
 		// X velocity component
 		movss xmm0, [ebp-0x10] // ordnance X velocity
@@ -582,6 +648,8 @@ void  __declspec(naked) OrdnanceVelocityHook()
 		addss xmm0, xmm1
 		movss [ebp-0x08], xmm0
 	
+		notPlayerOrd:
+
 		// restore SSE registers & flags
 		popfd
 		movdqu xmm1, [esp]
@@ -600,7 +668,9 @@ bool ordnanceTweakApplied = false;
 
 unsigned char* ordnanceTweakBytes;
 
-void EnableOrdnanceTweak()
+float velocityScalingFactor;
+
+void EnableOrdnanceTweak(float scalingFactor)
 {
 	// initialize this to 0 so nothing explodes
 	playerVelocity.x = 0;
@@ -610,21 +680,27 @@ void EnableOrdnanceTweak()
 	playerPosition.y = 0;
 	playerPosition.z = 0;
 
+	velocityScalingFactor = scalingFactor;
+
 	if (!ordnanceTweakApplied)
 	{
 		ordnanceTweakBytes = Hook((void*)0x004803D4, OrdnanceVelocityHook, 5);
+		ordnancePosBytes = Hook((void*)0x00480357, OrdnancePositionHook, 7);
 		ordnanceTweakApplied = true;
 	}
 }
 
 void UpdateOrdnance(float vx, float vy, float vz, float px, float py, float pz)
 {
-	playerVelocity.x = vx;
-	playerVelocity.y = vy;
-	playerVelocity.z = vz;
+	playerVelocity.x = vx * velocityScalingFactor;
+	playerVelocity.y = vy * velocityScalingFactor;
+	playerVelocity.z = vz * velocityScalingFactor;
 	playerPosition.x = px;
 	playerPosition.y = py;
 	playerPosition.z = pz;
+	playerPosDouble.x = px;
+	playerPosDouble.y = py;
+	playerPosDouble.z = pz;
 }
 
 /*-------------------------

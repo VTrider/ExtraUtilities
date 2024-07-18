@@ -181,6 +181,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         if (ordnanceTweakApplied)
         {
             Restore((void*)0x004803D4, ordnanceTweakBytes, 5);
+            Restore((void*)0x00480357, ordnancePosBytes, 7);
         }
         //MessageBox(NULL, "POST RESTORE", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         ResetValues();

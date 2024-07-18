@@ -439,7 +439,8 @@ int lua_SetDifficulty(lua_State* L)
 
 int lua_EnableOrdnanceTweak(lua_State* L)
 {
-	EnableOrdnanceTweak();
+	float scalingFactor = luaL_checknumber(L, 1);
+	EnableOrdnanceTweak(scalingFactor);
 	return 0;
 }
 
