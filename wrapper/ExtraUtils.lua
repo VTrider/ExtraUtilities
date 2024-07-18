@@ -1,7 +1,7 @@
 --[[
 =====================================================
 *   Extra Utilities
-*   Version 0.5.0
+*   Version 0.5.1
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -21,8 +21,8 @@ require("exu")
 local extraUtils = {}
 do
     -- Metadata
-    local version = "0.5.0"
-    local crc32 = "55166F8D"
+    local version = "0.5.1"
+    local crc32 = "69308044"
 
     local function Start() -- put this in function Start() to print out metadata to console
         print("--------------------------------------------------------------------------------------")
@@ -503,25 +503,38 @@ do
     end
 
     --[[
-    -----------------------------------------------------------
-    *   Name       : `
-    *   Description: `
-    *   Inputs     : `
-    *   Outputs    : `
-    *   Return Type: `
-    -----------------------------------------------------------
+    --------------------------------------------------------------------------
+    *   Name       : Ordnance Velocity Inheritance
+    *   Description: Enables full velocity inheritance on the local player's
+    *                ordnance. You can control the ratio of velocity inherited
+    *                by providing a float argument from 0-1. The default value
+    *                is 1 (full inheritance).
+    *                WARNING: you MUST call Enable BEFORE calling Update,
+    *                and you must call UpdateOrdnance in the update loop to
+    *                apply the patch.
+    *   Inputs     : Optional float ratio
+    *   Outputs    : Velocity inheritance patch
+    *   Return Type: Void
+    --------------------------------------------------------------------------
     ]]
 
-    -- WARNING! Your game will certainly crash if you enable these and then enter a different map
-    -- than the one with the dll, it's a one way trip and I haven't implemented safeguards
-
-    local function EnableOrdnanceTweak()
-        exu.EnableOrdnanceTweak()
+    local function EnableOrdnanceTweak(ratio)
+        local velocityScalingFactor
+        if not ratio then
+            velocityScalingFactor = 1
+        else
+            velocityScalingFactor = ratio
+        end
+        if velocityScalingFactor < 0 or velocityScalingFactor > 1 then
+            error("Extra Utilities Error: the velocity scaling for EnableOrdnanceTweak must be between 0 and 1!")
+        end
+        exu.EnableOrdnanceTweak(velocityScalingFactor)
     end
 
     local function UpdateOrdnance()
-        playerVelocity = GetVelocity(GetPlayerHandle())
-        exu.UpdateOrdnance(playerVelocity.x, playerVelocity.y, playerVelocity.z)
+        local playerVelocity = GetVelocity(GetPlayerHandle())
+        local playerPosition = GetPosition(GetPlayerHandle())
+        exu.UpdateOrdnance(playerVelocity.x, playerVelocity.y, playerVelocity.z, playerPosition.x, playerPosition.y, playerPosition.z)
     end
 
     --[[
