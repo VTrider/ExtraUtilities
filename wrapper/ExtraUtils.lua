@@ -22,13 +22,34 @@ local extraUtils = {}
 do
     -- Metadata
     local version = "0.5.3"
-    local crc32 = "855B8CA4"
+    local crc32 = "7F81BB2A"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console
         print("--------------------------------------------------------------------------------------")
         print("Extra Utilities loaded! Version: " .. version .. "                                                  ")
         print("--------------------------------------------------------------------------------------")
+    end
+
+    --[[
+    ------------------------------------------------------------------------------------
+    *   Name       : SetAccessMode
+    *   Description: Sets the method for accessing the game's memory, valid
+    *                options: 0 (direct access - blazing fast but potentially unstable),
+    *                1 (windows api - much slower but potentially more stable), default
+    *                is 0 (direct access)
+    *   Inputs     : Int mode 0 or 1
+    *   Outputs    : New access mode
+    *   Return Type: Void
+    -----------------------------------------------------------------------------------
+    ]]
+
+    local function SetAccessMode(mode)
+        if mode ~= 0 and mode ~= 1 then
+            error("Extra Utilities Error: input must be either 0 or 1")
+            return
+        end
+        exu.SetAccessMode(mode)
     end
 
     --[[
@@ -597,6 +618,7 @@ do
     extraUtils.Start               = Start
 
     -- Exported Functions
+    extraUtils.SetAccessMode         = SetAccessMode
     extraUtils.GetObj                = GetObj
     extraUtils.GetGravity            = GetGravity
     extraUtils.SetGravity            = SetGravity

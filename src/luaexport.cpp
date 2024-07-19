@@ -7,6 +7,7 @@
 #include "bzfunc.h"
 #include "filesystem.h"
 #include "lua.hpp"
+#include "Memory.h"
 #include <Windows.h>
 #include <thread>
 #include <chrono>
@@ -22,6 +23,13 @@ int lua_GetVersion(lua_State* L)
 {
 	lua_pushstring(L, "test");
 	return 1;
+}
+
+int lua_SetAccessMode(lua_State* L)
+{
+	int mode = luaL_checkinteger(L, 1);
+	Memory::SetAccessMode(mode);
+	return 0;
 }
 
 int lua_GetObj(lua_State* L)
@@ -513,6 +521,7 @@ extern "C"
 
 		const luaL_Reg exu_export[] = {
 			// EXU Functions:
+			{ "SetAccessMode",       lua_SetAccessMode       },
 			{ "GetObj",			 	 lua_GetObj              },
 			{ "GetGravity",			 lua_GetGravity          },
 			{ "SetGravity",	         lua_SetGravity          },
