@@ -456,6 +456,12 @@ int lua_UpdateOrdnance(lua_State* L)
 	return 0;
 }
 
+int lua_EnableShotConvergence(lua_State* L)
+{
+	EnableShotConvergence();
+	return 0;
+}
+
 /*-------------------------
 * Internal Function Hooks *
 --------------------------*/
@@ -540,6 +546,7 @@ extern "C"
 			{ "SetLives",            lua_SetLives            },
 			{ "EnableOrdnanceTweak", lua_EnableOrdnanceTweak },
 			{ "UpdateOrdnance",      lua_UpdateOrdnance      },
+			{ "EnableShotConvergence", lua_EnableShotConvergence },
 			{ "GetDifficulty",       lua_GetDifficulty       },
 			{ "SetDifficulty",       lua_SetDifficulty       },
 			{ "SetAsUser",           lua_SetAsUser           },

@@ -157,6 +157,7 @@ DWORD WINAPI InitialThread(HMODULE hModule)
 }
 
 extern bool ordnanceTweakApplied;
+extern bool shotConvergenceApplied;
 
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
@@ -182,6 +183,10 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         {
             Restore((void*)0x004803D4, ordnanceTweakBytes, 5);
             Restore((void*)0x00480357, ordnancePosBytes, 7);
+        }
+        if (shotConvergenceApplied)
+        {
+            Restore((void*)0x004eb590, shotConvergenceBytes, 6);
         }
         //MessageBox(NULL, "POST RESTORE", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         ResetValues();

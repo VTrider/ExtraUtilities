@@ -159,6 +159,10 @@ void EnableOrdnanceTweak(float scalingFactor);
 
 void UpdateOrdnance(float vx, float vy, float vz, float px, float py, float pz);
 
+extern unsigned char* shotConvergenceBytes;
+
+void EnableShotConvergence();
+
 /*-------------------------
 * Internal Function Hooks *
 --------------------------*/

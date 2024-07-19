@@ -600,7 +600,7 @@ void __declspec(naked) OrdnancePositionHook()
 
 double ordPosTolerance = 5;
 
-void  __declspec(naked) OrdnanceVelocityHook()
+void __declspec(naked) OrdnanceVelocityHook()
 {
 	__asm
 	{
@@ -701,6 +701,34 @@ void UpdateOrdnance(float vx, float vy, float vz, float px, float py, float pz)
 	playerPosDouble.x = px;
 	playerPosDouble.y = py;
 	playerPosDouble.z = pz;
+}
+
+DWORD updateWeaponAimWalker = 0x0060f320;
+
+void __declspec(naked) ShotConvergenceHook()
+{
+	__asm
+	{
+		jmp [updateWeaponAimWalker] // one line of code for this patch LOL
+
+		// game code, doesn't really matter cause we won't return
+		push ebp
+		mov ebp, esp
+		sub esp, 0x318
+	}
+}
+
+unsigned char* shotConvergenceBytes;
+
+bool shotConvergenceApplied = false;
+
+void EnableShotConvergence()
+{
+	if (!shotConvergenceApplied)
+	{
+		shotConvergenceBytes = Hook((void*)0x004eb590, ShotConvergenceHook, 6);
+		shotConvergenceApplied = true;
+	}
 }
 
 /*-------------------------

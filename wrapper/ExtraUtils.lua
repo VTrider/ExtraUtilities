@@ -1,7 +1,7 @@
 --[[
 =====================================================
 *   Extra Utilities
-*   Version 0.5.1
+*   Version 0.5.2
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -21,8 +21,8 @@ require("exu")
 local extraUtils = {}
 do
     -- Metadata
-    local version = "0.5.1"
-    local crc32 = "69308044"
+    local version = "0.5.2"
+    local crc32 = "830B687D"
 
     local function Start() -- put this in function Start() to print out metadata to console
         print("--------------------------------------------------------------------------------------")
@@ -539,6 +539,20 @@ do
 
     --[[
     -------------------------------------------------------------------------------
+    *   Name       : EnableShotConvergence
+    *   Description: Activates shot convergence for hovercraft
+    *   Inputs     : None
+    *   Outputs    : Shot convergence 
+    *   Return Type: Void
+    -------------------------------------------------------------------------------
+    ]]
+
+    local function EnableShotConvergence()
+        exu.EnableShotConvergence()
+    end
+
+    --[[
+    -------------------------------------------------------------------------------
     *   Name       : SetAsUser
     *   Description: Internal function call to set the local user to a given handle
     *   Inputs     : Game object handle
@@ -573,41 +587,42 @@ do
     extraUtils.Start               = Start
 
     -- Exported Functions
-    extraUtils.GetObj              = GetObj
-    extraUtils.GetGravity          = GetGravity
-    extraUtils.SetGravity          = SetGravity
-    extraUtils.GetLuminance        = GetLuminance
-    extraUtils.SetLuminance        = SetLuminance
-    extraUtils.GetFogStart         = GetFogStart
-    extraUtils.SetFogStart         = SetFogStart
-    extraUtils.GetSmartCursorRange = GetSmartCursorRange
-    extraUtils.SetSmartCursorRange = SetSmartCursorRange
-    extraUtils.GetReticleAngle     = GetReticleAngle
-    extraUtils.GetReticlePos       = GetReticlePos
-    extraUtils.GetSatState         = GetSatState
-    extraUtils.GetSatCursorPos     = GetSatCursorPos
-    extraUtils.GetSatCamPos        = GetSatCamPos
-    extraUtils.GetSatClickPos      = GetSatClickPos
-    extraUtils.GetSatPanSpeed      = GetSatPanSpeed
-    extraUtils.SetSatPanSpeed      = SetSatPanSpeed
-    extraUtils.GetMinSatZoom       = GetMinSatZoom
-    extraUtils.SetMinSatZoom       = SetMinSatZoom
-    extraUtils.GetMaxSatZoom       = GetMaxSatZoom
-    extraUtils.SetMaxSatZoom       = SetMaxSatZoom
-    extraUtils.GetSatZoom          = GetSatZoom
-    extraUtils.SetSatZoom          = SetSatZoom
-    extraUtils.GetRadarState       = GetRadarState
-    extraUtils.SetRadarState       = SetRadarState
-    extraUtils.GetGameKey          = GetGameKey
-    extraUtils.GetSteam64          = GetSteam64
-    extraUtils.GetWeaponMask       = GetWeaponMask
-    extraUtils.GetLives            = GetLives
-    extraUtils.SetLives            = SetLives
-    extraUtils.EnableOrdnanceTweak = EnableOrdnanceTweak
-    extraUtils.UpdateOrdnance      = UpdateOrdnance
-    extraUtils.SetAsUser           = SetAsUser
-    extraUtils.FileRead            = FileRead
-    extraUtils.FileWrite           = FileWrite
+    extraUtils.GetObj                = GetObj
+    extraUtils.GetGravity            = GetGravity
+    extraUtils.SetGravity            = SetGravity
+    extraUtils.GetLuminance          = GetLuminance
+    extraUtils.SetLuminance          = SetLuminance
+    extraUtils.GetFogStart           = GetFogStart
+    extraUtils.SetFogStart           = SetFogStart
+    extraUtils.GetSmartCursorRange   = GetSmartCursorRange
+    extraUtils.SetSmartCursorRange   = SetSmartCursorRange
+    extraUtils.GetReticleAngle       = GetReticleAngle
+    extraUtils.GetReticlePos         = GetReticlePos
+    extraUtils.GetSatState           = GetSatState
+    extraUtils.GetSatCursorPos       = GetSatCursorPos
+    extraUtils.GetSatCamPos          = GetSatCamPos
+    extraUtils.GetSatClickPos        = GetSatClickPos
+    extraUtils.GetSatPanSpeed        = GetSatPanSpeed
+    extraUtils.SetSatPanSpeed        = SetSatPanSpeed
+    extraUtils.GetMinSatZoom         = GetMinSatZoom
+    extraUtils.SetMinSatZoom         = SetMinSatZoom
+    extraUtils.GetMaxSatZoom         = GetMaxSatZoom
+    extraUtils.SetMaxSatZoom         = SetMaxSatZoom
+    extraUtils.GetSatZoom            = GetSatZoom
+    extraUtils.SetSatZoom            = SetSatZoom
+    extraUtils.GetRadarState         = GetRadarState
+    extraUtils.SetRadarState         = SetRadarState
+    extraUtils.GetGameKey            = GetGameKey
+    extraUtils.GetSteam64            = GetSteam64
+    extraUtils.GetWeaponMask         = GetWeaponMask
+    extraUtils.GetLives              = GetLives
+    extraUtils.SetLives              = SetLives
+    extraUtils.EnableOrdnanceTweak   = EnableOrdnanceTweak
+    extraUtils.UpdateOrdnance        = UpdateOrdnance
+    extraUtils.EnableShotConvergence = EnableShotConvergence
+    extraUtils.SetAsUser             = SetAsUser
+    extraUtils.FileRead              = FileRead
+    extraUtils.FileWrite             = FileWrite
 
 end
 return extraUtils
