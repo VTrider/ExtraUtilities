@@ -22,7 +22,7 @@ local extraUtils = {}
 do
     -- Metadata
     local version = "0.5.3"
-    local crc32 = "830B687D"
+    local crc32 = "855B8CA4"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console
