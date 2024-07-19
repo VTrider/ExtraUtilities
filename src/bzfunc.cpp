@@ -11,6 +11,8 @@
 #include <chrono>
 #include <cmath>
 #include "Log.h"
+#include "Memory.h"
+#include "Offsets.h"
 
 extern Log* SystemLog;
 
@@ -38,59 +40,27 @@ GameObject* GetObj(unsigned int handle)
 
 void ResetValues()
 {
-	DWORD oldProtectSmartCursorRange;
-	VirtualProtect((LPVOID)0x00886B20, 4, PAGE_EXECUTE_READWRITE, &oldProtectSmartCursorRange);
-	*smartCursorRange = 200;
+	Memory::Write(Reticle::range, 200.0f, true);
 
-	DWORD oldProtectGravity;
-	VirtualProtect((LPVOID)0x00871A80, 12, PAGE_EXECUTE_READWRITE, &oldProtectGravity);
-	gravityVector->x = 0.0;
-	gravityVector->y = -9.8f;
-	gravityVector->z = 0.0;
+	VECTOR_3D defaultGravity{};
+	defaultGravity.x = 0.0f;
+	defaultGravity.y = -9.8f;
+	defaultGravity.z = 0.0f;
+	Memory::Write(Environment::gravity, defaultGravity, true);
 
-	DWORD oldProtectMinZoom;
-	VirtualProtect((LPVOID)0x00872400, 4, PAGE_EXECUTE_READWRITE, &oldProtectMinZoom);
-	*minSatZoom = 2;
+	Memory::Write(Satellite::minZoom, 2.0f, true);
 
-	DWORD oldProtectMaxZoom;
-	VirtualProtect((LPVOID)0x008723F4, 4, PAGE_EXECUTE_READWRITE, &oldProtectMaxZoom);
-	*maxSatZoom = 8;
+	Memory::Write(Satellite::maxZoom, 8.0f, true);
 }
-
 
 /*-----------------------
 * Environment Functions *
 ----------------------- */
 
-VECTOR_3D* gravityVector = (VECTOR_3D*)0x00871A80;
-
-//VECTOR_3D* GetGravity()
-//{
-//	return gravityVector;
-//}
-
-DWORD pid;
-
 VECTOR_3D GetGravity()
 {
-	float x, y, z;
-	VECTOR_3D value;
-	HWND hWnd = FindWindowA(0, ("Battlezone 98 Redux (2.2.301)"));
-	GetWindowThreadProcessId(hWnd, &pid);
-	HANDLE pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	ReadProcessMemory(pHandle, gravityVector, &value, sizeof(VECTOR_3D), 0);
-	return value;
+	return Memory::Read<VECTOR_3D>(Environment::gravity);
 }
-
-DWORD oldProtectGravity; // you need to store the old protection value for some reason
-
-//void SetGravity(float x, float y, float z)
-//{
-//	VirtualProtect((LPVOID)0x00871A80, 12, PAGE_EXECUTE_READWRITE, &oldProtectGravity); // this address was in write protected memory, this hacks it to be writable
-//	gravityVector->x = x;
-//	gravityVector->y = y;
-//	gravityVector->z = z;
-//}
 
 void SetGravity(float x, float y, float z)
 {
@@ -98,11 +68,7 @@ void SetGravity(float x, float y, float z)
 	value.x = x;
 	value.y = y;
 	value.z = z;
-	VirtualProtect((LPVOID)0x00871A80, 12, PAGE_EXECUTE_READWRITE, &oldProtectGravity); // this address was in write protected memory, this hacks it to be writable
-	HWND hWnd = FindWindowA(0, ("Battlezone 98 Redux (2.2.301)"));
-	GetWindowThreadProcessId(hWnd, &pid);
-	HANDLE pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	WriteProcessMemory(pHandle, gravityVector, &value, sizeof(VECTOR_3D), 0);
+	Memory::Write(Environment::gravity, value, true);
 }
 
 // Sun_Ambient ONLY, need the other two components
@@ -136,52 +102,35 @@ void SetGravity(float x, float y, float z)
 * Reticle Functions *
 ------------------- */
 
-float* reticleAngle = (float*)0x025CE714;
-
 float GetReticleAngle()
 {
-	return *reticleAngle;
+	return Memory::Read<float>(Reticle::angle);
 }
-
-VECTOR_3D* reticlePos = (VECTOR_3D*)0x025CE79C; // start of the reticle struct (3 floats)
 
 VECTOR_3D GetReticlePos()
 {
-	VECTOR_3D value;
-	HWND hWnd = FindWindowA(0, ("Battlezone 98 Redux (2.2.301)"));
-	GetWindowThreadProcessId(hWnd, &pid);
-	HANDLE pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	ReadProcessMemory(pHandle, reticlePos, &value, sizeof(VECTOR_3D), 0);
-	return value;
+	return Memory::Read<VECTOR_3D>(Reticle::position);
 }
-
-float* smartCursorRange = (float*)0x00886B20;
 
 float GetSmartCursorRange()
 {
-	return *smartCursorRange;
+	return Memory::Read<float>(Reticle::range);
 }
-
-DWORD oldProtectSmartCursorRange;
 
 void SetSmartCursorRange(float range)
 {
-	VirtualProtect((LPVOID)0x00886B20, 4, PAGE_EXECUTE_READWRITE, &oldProtectSmartCursorRange);
-	*smartCursorRange = range;
+	Memory::Write(Reticle::range, range, true);
 }
 
 /*---------------------
 * Satellite Functions *
 --------------------- */
 
-// char* satState = (char*)0x00917AF8; // old value bugged in MP
-
-char* satState = (char*)0x008E8F9C; // technically if you have mouse control but it works
-
 char GetSatState()
 {
+	char state = Memory::Read<char>(Satellite::state);
 	// need to get the inverse for satellite state
-	if (*satState == 1)
+	if (state == 1)
 	{
 		return 0;
 	}
@@ -191,95 +140,73 @@ char GetSatState()
 	}
 }
 
-VECTOR_3D* satCursorPos = (VECTOR_3D*)0x009C9194;
-
-VECTOR_3D* GetSatCursorPos()
+VECTOR_3D GetSatCursorPos()
 {
-	return satCursorPos;
+	return Memory::Read<VECTOR_3D>(Satellite::cursorPos);
 }
 
-VECTOR_3D* satCamPos = (VECTOR_3D*)0x009C91B4;
-
-VECTOR_3D* GetSatCamPos()
+VECTOR_3D GetSatCamPos()
 {
-	return satCamPos;
+	return Memory::Read<VECTOR_3D>(Satellite::camPos);
 }
 
-VECTOR_3D* satClickPos = (VECTOR_3D*)0x009C9188;
-
-VECTOR_3D* GetSatClickPos()
+VECTOR_3D GetSatClickPos()
 {
-	return satClickPos;
+	return Memory::Read<VECTOR_3D>(Satellite::clickPos);
 }
-
-float* satPanSpeed = (float*)0x009C91D0;
 
 float GetSatPanSpeed()
 {
-	return *satPanSpeed;
+	return Memory::Read<float>(Satellite::panSpeed);
 }
 
 void SetSatPanSpeed(float speed)
 {
-	*satPanSpeed = speed;
+	Memory::Write(Satellite::panSpeed, speed);
 }
-
-float* minSatZoom = (float*)0x00872400;
 
 float GetMinSatZoom()
 {
-	return *minSatZoom;
+	return Memory::Read<float>(Satellite::minZoom);
 }
-
-DWORD oldProtectMinZoom;
 
 void SetMinSatZoom(float zoom)
 {
-	VirtualProtect((LPVOID)0x00872400, 4, PAGE_EXECUTE_READWRITE, &oldProtectMinZoom);
-	*minSatZoom = zoom;
+	Memory::Write(Satellite::minZoom, zoom, true);
 }
-
-float* maxSatZoom = (float*)0x008723F4;
 
 float GetMaxSatZoom() 
 {
-	return *maxSatZoom;
+	return Memory::Read<float>(Satellite::maxZoom);
 }
-
-DWORD oldProtectMaxZoom;
 
 void SetMaxSatZoom(float zoom)
 {
-	VirtualProtect((LPVOID)0x008723F4, 4, PAGE_EXECUTE_READWRITE, &oldProtectMaxZoom);
-	*maxSatZoom = zoom;
+	Memory::Write(Satellite::maxZoom, zoom, true);
 }
-
-float* satZoom = (float*)0x009C91B0;
 
 float GetSatZoom()
 {
-	return *satZoom;
+	return Memory::Read<float>(Satellite::zoom);
 }
 
 void SetSatZoom(float zoom)
 {
-	*satZoom = zoom;
+	Memory::Write(Satellite::zoom, zoom);
 }
 
 /*-----------------
 * Radar Functions *
 ----------------- */
 
-char* radarState = (char*)0x008EAAAC; // boolean value for radar state is stored at this address
-
 char GetRadarState()
 {
-	return *radarState;
+	return Memory::Read<char>(Radar::state);
 }
 
 void SetRadarState(int state)
 {
-	*radarState = state;
+	Memory::Write(Radar::state, state);
 }
 
 /*--------------
@@ -459,7 +386,7 @@ long long* steam64 = (long long*)0x0260B1D0; // 8 byte value for steam64 ID is s
 
 const char* GetSteam64()
 {
-	std::string formattedSteam64 = std::to_string(*steam64);
+	std::string formattedSteam64 = std::to_string(Memory::Read<long long>(Misc::steam64));
 	const char* luaSteam64 = formattedSteam64.c_str();
 	return luaSteam64;
 }
@@ -473,35 +400,34 @@ int* lives = (int*)0x008E8D04;
 
 int GetLives()
 {
-	return *lives;
+	return Memory::Read<int>(Misc::lives);
 }
 
 void SetLives(int newLives)
 {
-	*lives = newLives;
+	Memory::Write(Misc::lives, newLives);
 }
-
-char* difficulty = (char*)0x25CFA1C;
 
 const char* GetDifficulty()
 {
-	if (*difficulty == 0)
+	char difficulty = Memory::Read<char>(Misc::difficulty);
+	if (difficulty == 0)
 	{
 		return "Very Easy";
 	}
-	else if (*difficulty == 1)
+	else if (difficulty == 1)
 	{
 		return "Easy";
 	}
-	else if (*difficulty == 2)
+	else if (difficulty == 2)
 	{
 		return "Medium";
 	}
-	else if (*difficulty == 3)
+	else if (difficulty == 3)
 	{
 		return "Hard";
 	}
-	else if (*difficulty == 4)
+	else if (difficulty == 4)
 	{
 		return "Very Hard";
 	}
@@ -511,23 +437,23 @@ int SetDifficulty(std::string newDifficulty)
 {
 	if (newDifficulty == "Very Easy")
 	{
-		*difficulty = 0;
+		Memory::Write(Misc::difficulty, 0);
 	}
 	else if (newDifficulty == "Easy")
 	{
-		*difficulty = 1;
+		Memory::Write(Misc::difficulty, 1);
 	}
 	else if (newDifficulty == "Medium")
 	{
-		*difficulty = 2;
+		Memory::Write(Misc::difficulty, 2);
 	}
 	else if (newDifficulty == "Hard")
 	{
-		*difficulty = 3;
+		Memory::Write(Misc::difficulty, 3);
 	}
 	else if (newDifficulty == "Very Hard")
 	{
-		*difficulty = 4;
+		Memory::Write(Misc::difficulty, 4);
 	}
 	else
 	{

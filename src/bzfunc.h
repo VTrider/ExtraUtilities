@@ -15,10 +15,6 @@
 
 GameObject* GetObj(unsigned int handle);
 
-extern DWORD moduleBase;
-
-DWORD GetPointerAddress(DWORD ptr, std::vector<DWORD> offsets);
-
 void ResetValues();
 
 unsigned char* Hook(void* hookAddress, void* function, int length);
@@ -26,8 +22,6 @@ unsigned char* Hook(void* hookAddress, void* function, int length);
 /*-----------------------
 * Environment Functions *
 ----------------------- */
-
-extern VECTOR_3D* gravityVector;
 
 VECTOR_3D GetGravity();
 
@@ -49,15 +43,9 @@ void SetFogStart(float value);
 * Reticle Functions *
 ------------------- */
 
-extern float* reticleAngle;
-
 float GetReticleAngle();
 
-extern VECTOR_3D* reticlePos;
-
 VECTOR_3D GetReticlePos();
-
-extern float* smartCursorRange;
 
 float GetSmartCursorRange();
 
@@ -67,8 +55,6 @@ void SetSmartCursorRange(float range);
 * Radar Functions *
 ----------------- */
 
-extern char* radarState;
-
 char GetRadarState();
 
 void SetRadarState(int state);
@@ -77,41 +63,25 @@ void SetRadarState(int state);
 * Satellite Functions *
 --------------------- */
 
-extern char* satState;
-
 char GetSatState();
 
-extern VECTOR_3D* satCursorPos;
+VECTOR_3D GetSatCursorPos();
 
-VECTOR_3D* GetSatCursorPos();
+VECTOR_3D GetSatCamPos();
 
-extern VECTOR_3D* satCamPos;
-
-VECTOR_3D* GetSatCamPos();
-
-extern VECTOR_3D* satClickPos;
-
-VECTOR_3D* GetSatClickPos();
-
-extern float* satPanSpeed;
+VECTOR_3D GetSatClickPos();
 
 float GetSatPanSpeed();
 
 void SetSatPanSpeed(float speed);
 
-extern float* minSatZoom;
-
 float GetMinSatZoom();
 
 void SetMinSatZoom(float zoom);
 
-extern float* maxSatZoom;
-
 float GetMaxSatZoom();
 
 void SetMaxSatZoom(float zoom);
-
-extern float* satZoom;
 
 float GetSatZoom();
 
@@ -130,22 +100,15 @@ bool GetGameKey(int key);
 /*----------------
 * Misc Functions *
 -----------------*/
-
-extern long long* steam64;
-
 const char* GetSteam64();
 
 extern int weaponMask;
 
 int GetWeaponMask();
 
-extern int* lives;
-
 int GetLives();
 
 void SetLives(int newLives);
-
-extern char* difficulty;
 
 const char* GetDifficulty();
 

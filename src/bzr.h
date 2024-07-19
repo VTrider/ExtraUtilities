@@ -2535,7 +2535,7 @@ struct ControlPanel {
 
 // UNTESTED STRUCTS! -VT
 
-struct Reticle 
+struct SmartReticle 
 {
 	undefined field_0x0;
 	undefined field_0x1;

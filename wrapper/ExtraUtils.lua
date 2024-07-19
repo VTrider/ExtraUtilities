@@ -1,7 +1,7 @@
 --[[
 =====================================================
 *   Extra Utilities
-*   Version 0.5.2
+*   Version 0.5.3
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -21,8 +21,9 @@ require("exu")
 local extraUtils = {}
 do
     -- Metadata
-    local version = "0.5.2"
+    local version = "0.5.3"
     local crc32 = "830B687D"
+    local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console
         print("--------------------------------------------------------------------------------------")
@@ -519,6 +520,10 @@ do
     ]]
 
     local function EnableOrdnanceTweak(ratio)
+        if IsNetGame and not debug then
+            error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
+            return
+        end
         local velocityScalingFactor
         if not ratio then
             velocityScalingFactor = 1
@@ -527,11 +532,16 @@ do
         end
         if velocityScalingFactor < 0 or velocityScalingFactor > 1 then
             error("Extra Utilities Error: the velocity scaling for EnableOrdnanceTweak must be between 0 and 1!")
+            return
         end
         exu.EnableOrdnanceTweak(velocityScalingFactor)
     end
 
     local function UpdateOrdnance()
+        if IsNetGame and not debug then
+            error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
+            return
+        end
         local playerVelocity = GetVelocity(GetPlayerHandle())
         local playerPosition = GetPosition(GetPlayerHandle())
         exu.UpdateOrdnance(playerVelocity.x, playerVelocity.y, playerVelocity.z, playerPosition.x, playerPosition.y, playerPosition.z)

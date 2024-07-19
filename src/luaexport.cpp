@@ -57,9 +57,9 @@ int lua_GetGravity(lua_State* L)
 
 int	lua_SetGravity(lua_State* L)
 {
-	float x = luaL_checknumber(L, 1);
-	float y = luaL_checknumber(L, 2);
-	float z = luaL_checknumber(L, 3);
+	float x = static_cast<float>(luaL_checknumber(L, 1));
+	float y = static_cast<float>(luaL_checknumber(L, 2));
+	float z = static_cast<float>(luaL_checknumber(L, 3));
 	lua_pop(L, 3);
 	SetGravity(x, y, z);
 	return 0;
@@ -158,7 +158,7 @@ int lua_SetSmartCursorRange(lua_State* L)
 {
 	try
 	{
-		float range = luaL_checknumber(L, 1);
+		float range = static_cast<float>(luaL_checknumber(L, 1));
 		lua_pop(L, 1);
 		SetSmartCursorRange(range);
 		return 0;
@@ -202,17 +202,16 @@ int lua_GetSatCursorPos(lua_State* L)
 {
 	try
 	{
-		VECTOR_3D* cursorPos = GetSatCursorPos();
-		lua_pop(L, 1);
+		VECTOR_3D cursorPos = GetSatCursorPos();
 		lua_createtable(L, 0, 3);
 
-		lua_pushnumber(L, cursorPos->x);
+		lua_pushnumber(L, cursorPos.x);
 		lua_setfield(L, -2, "x");
 
-		lua_pushnumber(L, cursorPos->y);
+		lua_pushnumber(L, cursorPos.y);
 		lua_setfield(L, -2, "y");
 
-		lua_pushnumber(L, cursorPos->z);
+		lua_pushnumber(L, cursorPos.z);
 		lua_setfield(L, -2, "z");
 
 		return 1;
@@ -231,17 +230,17 @@ int lua_GetSatCursorPos(lua_State* L)
 
 int lua_GetSatCamPos(lua_State* L)
 {
-	VECTOR_3D* camPos = GetSatCamPos();
+	VECTOR_3D camPos = GetSatCamPos();
 	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
-	lua_pushnumber(L, camPos->x);
+	lua_pushnumber(L, camPos.x);
 	lua_setfield(L, -2, "x");
 
-	lua_pushnumber(L, camPos->y);
+	lua_pushnumber(L, camPos.y);
 	lua_setfield(L, -2, "y");
 
-	lua_pushnumber(L, camPos->z);
+	lua_pushnumber(L, camPos.z);
 	lua_setfield(L, -2, "z");
 
 	return 1;
@@ -249,17 +248,17 @@ int lua_GetSatCamPos(lua_State* L)
 
 int lua_GetSatClickPos(lua_State* L)
 {
-	VECTOR_3D* clickPos = GetSatClickPos();
+	VECTOR_3D clickPos = GetSatClickPos();
 	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
-	lua_pushnumber(L, clickPos->x);
+	lua_pushnumber(L, clickPos.x);
 	lua_setfield(L, -2, "x");
 
-	lua_pushnumber(L, clickPos->y);
+	lua_pushnumber(L, clickPos.y);
 	lua_setfield(L, -2, "y");
 
-	lua_pushnumber(L, clickPos->z);
+	lua_pushnumber(L, clickPos.z);
 	lua_setfield(L, -2, "z");
 
 	return 1;
@@ -275,7 +274,7 @@ int lua_SetSatPanSpeed(lua_State* L)
 {
 	try
 	{
-		float speed = luaL_checknumber(L, 1);
+		float speed = static_cast<float>(luaL_checknumber(L, 1));
 		lua_pop(L, 1);
 		SetSatPanSpeed(speed);
 		return 0;
@@ -300,7 +299,7 @@ int lua_GetMinSatZoom(lua_State* L)
 
 int lua_SetMinSatZoom(lua_State* L)
 {
-	float zoom = luaL_checknumber(L, 1);
+	float zoom = static_cast<float>(luaL_checknumber(L, 1));
 	lua_pop(L, 1);
 	SetMinSatZoom(zoom);
 	return 0;
@@ -314,7 +313,7 @@ int lua_GetMaxSatZoom(lua_State* L)
 
 int lua_SetMaxSatZoom(lua_State* L)
 {
-	float zoom = luaL_checknumber(L, 1);
+	float zoom = static_cast<float>(luaL_checknumber(L, 1));
 	lua_pop(L, 1);
 	SetMaxSatZoom(zoom);
 	return 0;
@@ -330,7 +329,7 @@ int lua_SetSatZoom(lua_State* L)
 {
 	try
 	{
-		float zoom = luaL_checknumber(L, 1);
+		float zoom = static_cast<float>(luaL_checknumber(L, 1));
 		lua_pop(L, 1);
 		SetSatZoom(zoom);
 		return 0;
@@ -412,7 +411,7 @@ int lua_GetLives(lua_State* L)
 	lua_pushnumber(L, GetLives());
 	return 1;
 }
-
+// 
 int lua_SetLives(lua_State* L)
 {
 	int newLives = luaL_checkinteger(L, 1);
@@ -439,19 +438,19 @@ int lua_SetDifficulty(lua_State* L)
 
 int lua_EnableOrdnanceTweak(lua_State* L)
 {
-	float scalingFactor = luaL_checknumber(L, 1);
+	float scalingFactor = static_cast<float>(luaL_checknumber(L, 1));
 	EnableOrdnanceTweak(scalingFactor);
 	return 0;
 }
 
 int lua_UpdateOrdnance(lua_State* L)
 {
-	float vx = luaL_checknumber(L, 1);
-	float vy = luaL_checknumber(L, 2);
-	float vz = luaL_checknumber(L, 3);
-	float px = luaL_checknumber(L, 4);
-	float py = luaL_checknumber(L, 5);
-	float pz = luaL_checknumber(L, 6);
+	float vx = static_cast<float>(luaL_checknumber(L, 1));
+	float vy = static_cast<float>(luaL_checknumber(L, 2));
+	float vz = static_cast<float>(luaL_checknumber(L, 3));
+	float px = static_cast<float>(luaL_checknumber(L, 4));
+	float py = static_cast<float>(luaL_checknumber(L, 5));
+	float pz = static_cast<float>(luaL_checknumber(L, 6));
 	UpdateOrdnance(vx, vy, vz, px, py, pz);
 	return 0;
 }

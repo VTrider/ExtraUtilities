@@ -149,5 +149,8 @@
     <ClInclude Include="src\Memory.h">
       <Filter>Header Files\exu</Filter>
     </ClInclude>
+    <ClInclude Include="src\Offsets.h">
+      <Filter>Header Files\exu</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@
 #include <cstdint>
 #include "dx9hook.h"
 #include "Log.h"
+#include "Memory.h"
 
 // Todo: memory flag to exit the thread, and free cursor frame game while gui is active
 
@@ -145,6 +146,7 @@ Log* SystemLog;
 DWORD WINAPI InitialThread(HMODULE hModule) 
 {
     SystemLog = new Log();
+    Memory::Init();
 
     InitializeConsole();
     FileSystem();
