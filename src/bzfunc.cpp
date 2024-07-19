@@ -382,8 +382,6 @@ bool GetGameKey(int vKey) // takes the virtual key to use in GetAsyncKeyState
 * Misc Functions *
 -----------------*/
 
-long long* steam64 = (long long*)0x0260B1D0; // 8 byte value for steam64 ID is stored at this address
-
 const char* GetSteam64()
 {
 	std::string formattedSteam64 = std::to_string(Memory::Read<long long>(Misc::steam64));
@@ -395,8 +393,6 @@ int GetWeaponMask()
 {
 	return weaponMask;
 }
-
-int* lives = (int*)0x008E8D04;
 
 int GetLives()
 {
