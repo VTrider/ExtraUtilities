@@ -79,7 +79,8 @@
     <TargetName>exu</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <VcpkgUseStatic>false</VcpkgUseStatic>
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>false</VcpkgUseMD>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,13 +109,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)\minhook;$(ProjectDir)\lib;$(ProjectDir)\imgui;$(ProjectDir)\include;$(ProjectDir)\src;$(ProjectDir)\lua\lua-5.1\src;$(ProjectDir)\lua\lua-5.1\etc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,7 +125,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d9.lib;lua5.1.lib;legacy_stdio_definitions.lib;user32.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;lua5.1.lib;legacy_stdio_definitions.lib;user32.lib;OpenAL32.lib;urlmon.lib.;ole32.lib;Shell32.lib;winmm.lib;mpg123.lib;shlwapi.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -187,6 +189,9 @@
     <ClCompile Include="src\filesystem.cpp" />
     <ClCompile Include="src\gui.cpp" />
     <ClCompile Include="src\luaexport.cpp" />
+    <ClCompile Include="src\SoundBuffer.cpp" />
+    <ClCompile Include="src\SoundDevice.cpp" />
+    <ClCompile Include="src\SoundSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -210,6 +215,9 @@
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Memory.h" />
     <ClInclude Include="src\Offsets.h" />
+    <ClInclude Include="src\SoundBuffer.h" />
+    <ClInclude Include="src\SoundDevice.h" />
+    <ClInclude Include="src\SoundSource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

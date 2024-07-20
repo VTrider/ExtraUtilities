@@ -31,6 +31,12 @@
     <Filter Include="Header Files\minhook">
       <UniqueIdentifier>{dd1a755d-6502-4dcf-9e94-709b54930400}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\openal">
+      <UniqueIdentifier>{e27e72e2-0805-4da4-9225-0c1a50bf6ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\openal">
+      <UniqueIdentifier>{4ab5281a-83ff-4a4d-81c5-250111797476}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\audiosystem.cpp">
@@ -86,6 +92,15 @@
     </ClCompile>
     <ClCompile Include="src\gui.cpp">
       <Filter>Source Files\exu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SoundDevice.cpp">
+      <Filter>Source Files\openal</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SoundBuffer.cpp">
+      <Filter>Source Files\openal</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SoundSource.cpp">
+      <Filter>Source Files\openal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +166,15 @@
     </ClInclude>
     <ClInclude Include="src\Offsets.h">
       <Filter>Header Files\exu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SoundDevice.h">
+      <Filter>Header Files\openal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SoundBuffer.h">
+      <Filter>Header Files\openal</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SoundSource.h">
+      <Filter>Header Files\openal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

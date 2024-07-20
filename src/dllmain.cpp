@@ -12,6 +12,11 @@
 #include "dx9hook.h"
 #include "Log.h"
 #include "Memory.h"
+#include <print>
+
+#include "SoundBuffer.h"
+#include "SoundDevice.h"
+#include "SoundSource.h"
 
 // Todo: memory flag to exit the thread, and free cursor frame game while gui is active
 
@@ -88,6 +93,16 @@ void FileSystem()
 {
     CreateEXUDirectory();
     std::cout << "EXU Directory Created" << '\n';
+
+    SoundDevice* test = SoundDevice::Get();
+
+    std::uint32_t sound = SoundBuffer::Get()->AddSoundEffect(".\\Extra Utilities\\rail.ogg");
+
+    SoundSource speaker;
+
+    speaker.Play(sound);
+
+    SystemLog->Out("Got here");
 }
 
 bool enableConsole = false;
@@ -151,7 +166,6 @@ DWORD WINAPI InitialThread(HMODULE hModule)
     InitializeConsole();
     FileSystem();
     CodeInjection();
-
 
     // std::thread MainThread(Main);
     // MainThread.detach();
