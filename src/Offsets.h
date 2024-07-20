@@ -3,9 +3,16 @@
 #include "bzr.h"
 #include <iostream>
 
+// BZR 2.2.301
+
 // Notes: positions will always be a VECTOR_3D unless otherwise specified,
 // and numbers will always be floats, type is defined when you call the
 // functions in Memory class
+
+namespace Flags
+{
+	constexpr std::uintptr_t inGame = 0x0091552A; // char static address maybe not 100% stable
+}
 
 namespace Environment
 {

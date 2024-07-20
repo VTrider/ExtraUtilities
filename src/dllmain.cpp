@@ -1,6 +1,6 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 
-#include "audiosystem.h"
+#include "Audio.h"
 #include "bzfunc.h"
 #include "filesystem.h"
 #include <Windows.h>
@@ -13,12 +13,14 @@
 #include "Log.h"
 #include "Memory.h"
 #include <print>
+#include "Offsets.h"
 
 #include "SoundBuffer.h"
 #include "SoundDevice.h"
 #include "SoundSource.h"
 
 // Todo: memory flag to exit the thread, and free cursor frame game while gui is active
+// fix open AL holding on to a handle or something
 
 unsigned char* Hook(void* hookAddress, void* function, int length)
 {
@@ -93,16 +95,6 @@ void FileSystem()
 {
     CreateEXUDirectory();
     std::cout << "EXU Directory Created" << '\n';
-
-    SoundDevice* test = SoundDevice::Get();
-
-    std::uint32_t sound = SoundBuffer::Get()->AddSoundEffect(".\\Extra Utilities\\rail.ogg");
-
-    SoundSource speaker;
-
-    speaker.Play(sound);
-
-    SystemLog->Out("Got here");
 }
 
 bool enableConsole = false;
@@ -157,15 +149,31 @@ UNLOAD:
 
 Log* SystemLog;
 
+void AudioSystem()
+{
+    Audio audioSystem;
+
+    while (true)
+    {
+        if (Memory::CheckExitCondition(5))
+            break;
+
+
+        
+    }
+}
+
 // Make separate threads so windows doesn't freak out
 DWORD WINAPI InitialThread(HMODULE hModule) 
 {
     SystemLog = new Log();
     Memory::Init();
-
     InitializeConsole();
     FileSystem();
     CodeInjection();
+    
+    std::thread audio(AudioSystem);
+    audio.detach();
 
     // std::thread MainThread(Main);
     // MainThread.detach();
@@ -204,11 +212,11 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         {
             Restore((void*)0x004eb590, shotConvergenceBytes, 6);
         }
-        //MessageBox(NULL, "POST RESTORE", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         ResetValues();
         FreeConsole();
-        SystemLog->Out("exu.dll detached from process");
+        SystemLog->Out("exu.dll detached from process", 3);
         delete SystemLog;
+        MessageBox(NULL, "PROCESS DETACH!", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         break;
     }
     return TRUE;

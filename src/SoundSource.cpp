@@ -32,10 +32,10 @@ void SoundSource::Play(const ALuint buffer_to_play)
 
 	ALint state = AL_PLAYING;
 	SystemLog->Out("Playing sound");
-	while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
-	{
-		SystemLog->Out("Currently playing sound");
-		alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
-	}
+	//while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
+	//{
+	//	SystemLog->Out("Currently playing sound");
+	//	alGetSourcei(p_Source, AL_SOURCE_STATE, &state);
+	//}
 	SystemLog->Out("Done playing sound");
 }

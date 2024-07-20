@@ -5,11 +5,13 @@
 #include <fstream>
 #include <chrono>
 
+
+
 class Log
 {
 private:
 	std::filesystem::path logPath;
-	int logLevel; // 0 = off | 1 = Info | 2 = Warning | 3 = Error
+	int logLevel; // 0 = off | 1 = Error | 2 = Warning | 3 = Info
 
 	void CheckSize()
 	{
@@ -34,7 +36,7 @@ public:
 	Log()
 	{
 		logPath = ".\\Extra Utilities\\exulog.txt";
-		logLevel = 0;
+		logLevel = 3;
 		LogInit();
 	}
 
@@ -45,8 +47,11 @@ public:
 		LogInit();
 	}
 
-	void Out(const std::string& content)
+	void Out(const std::string& content, const int level = 3)
 	{
+		if (logLevel < level)
+			return;
+
 		auto now = std::chrono::system_clock::now();
 		std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
 		std::tm localTime = *std::localtime(&currentTime);

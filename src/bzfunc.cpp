@@ -14,6 +14,10 @@
 #include "Memory.h"
 #include "Offsets.h"
 
+#include "SoundBuffer.h"
+#include "SoundDevice.h"
+#include "SoundSource.h"
+
 extern Log* SystemLog;
 
 // test

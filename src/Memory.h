@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Log.h"
+#include "Offsets.h"
 #include <Windows.h>
 #include <vector>
 #include <array>
@@ -19,7 +20,7 @@ private:
 
 	static inline DWORD dummyOldProtection{}; // required arg for VirtualProtect
 
-
+	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(5);
 
 public:
 	static void Init()
@@ -42,6 +43,29 @@ public:
 			useWinApi = true;
 			SystemLog->Out("Access mode set to 1: windows api");
 			break;
+		}
+	}
+	
+	static bool CheckExitCondition(int interval)
+	{
+		auto now = std::chrono::steady_clock::now();
+		if (now > nextCheck)
+		{
+			char exitFlag = Memory::Read<char>(Flags::inGame);
+			if (exitFlag == 0)
+			{
+				SystemLog->Out("Exit condition detected, exiting audio thread", 3);
+				return true;
+			}
+			else
+			{
+				nextCheck = now + std::chrono::seconds(interval);
+				return false;
+			}
+		}
+		else
+		{
+			return false;
 		}
 	}
 

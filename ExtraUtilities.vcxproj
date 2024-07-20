@@ -182,7 +182,7 @@
     <ClCompile Include="minhook\hde32.c" />
     <ClCompile Include="minhook\hook.c" />
     <ClCompile Include="minhook\trampoline.c" />
-    <ClCompile Include="src\audiosystem.cpp" />
+    <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\bzfunc.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\dx9hook.cpp" />
@@ -206,7 +206,7 @@
     <ClInclude Include="minhook\hde32.h" />
     <ClInclude Include="minhook\MinHook.h" />
     <ClInclude Include="minhook\trampoline.h" />
-    <ClInclude Include="src\audiosystem.h" />
+    <ClInclude Include="src\Audio.h" />
     <ClInclude Include="src\bzfunc.h" />
     <ClInclude Include="src\bzr.h" />
     <ClInclude Include="src\dx9hook.h" />
