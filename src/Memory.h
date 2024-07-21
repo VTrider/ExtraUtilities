@@ -1,10 +1,17 @@
 #pragma once
 
+#include "bzr.h"
 #include "Log.h"
 #include "Offsets.h"
+
 #include <Windows.h>
+
+#include <format>
+#include <unordered_map>
+#include <variant>
 #include <vector>
-#include <array>
+
+// todo: restore values
 
 extern Log* SystemLog;
 
@@ -47,7 +54,7 @@ public:
 		}
 	}
 	
-	static bool CheckExitCondition(int interval)
+	static bool CheckExitCondition(int interval, const std::string& message)
 	{
 		checkInterval = interval;
 		auto now = std::chrono::steady_clock::now();
@@ -56,7 +63,7 @@ public:
 			char exitFlag = Memory::Read<char>(Flags::inGame);
 			if (exitFlag == 0)
 			{
-				SystemLog->Out("Exit condition detected, exiting audio thread", 3);
+				SystemLog->Out(message, 3);
 				return true;
 			}
 			else
@@ -86,7 +93,7 @@ public:
 
 	static T Read(const std::uintptr_t address, bool overrideProtection = false)
 	{
-		if (overrideProtection = true)
+		if (overrideProtection == true)
 		{
 			::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
 		}
@@ -105,11 +112,12 @@ public:
 		return value;
 	}
 
+	
 	template <typename T>
 
 	static void Write(const std::uintptr_t address, const T& value, bool overrideProtection = false)
 	{
-		if (overrideProtection = true)
+		if (overrideProtection == true)
 		{
 			::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
 		}
@@ -124,5 +132,19 @@ public:
 		}
 	}
 
-};
+	// hardcoded for now :(
+	static void RestoreAll()
+	{
+		Memory::Write(Reticle::range, 200.0f, true);
 
+		VECTOR_3D defaultGravity{};
+		defaultGravity.x = 0.0f;
+		defaultGravity.y = -9.8f;
+		defaultGravity.z = 0.0f;
+		Memory::Write(Environment::gravity, defaultGravity, true);
+
+		Memory::Write(Satellite::minZoom, 2.0f, true);
+
+		Memory::Write(Satellite::maxZoom, 8.0f, true);
+	}
+};

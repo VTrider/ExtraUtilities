@@ -93,7 +93,7 @@ void AudioSystem()
 
     while (true)
     {
-        if (Memory::CheckExitCondition(5))
+        if (Memory::CheckExitCondition(5, "Exit condition detected, exiting audio thread"))
         {
             break;
         }
@@ -142,7 +142,8 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         // Resets hacked write protected values back to stock when the DLL is unloaded (when you leave the modded map)
         // Also resets values that don't reset because they aren't expecting to be changed
         Hook::RestoreAll();
-        ResetValues();
+        Memory::RestoreAll();
+        //ResetValues();
         FreeConsole();
         SystemLog->Out("exu.dll detached from process", 3);
         delete SystemLog;

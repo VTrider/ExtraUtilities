@@ -15,10 +15,6 @@
 
 GameObject* GetObj(unsigned int handle);
 
-void ResetValues();
-
-unsigned char* Hook(void* hookAddress, void* function, int length);
-
 /*-----------------------
 * Environment Functions *
 ----------------------- */
@@ -26,18 +22,6 @@ unsigned char* Hook(void* hookAddress, void* function, int length);
 VECTOR_3D GetGravity();
 
 void SetGravity(float x, float y, float z);
-
-extern Luminance* sunlight;
-
-Luminance* GetLuminance();
-
-void SetLuminance(float r, float g, float b);
-
-extern float* fogStart;
-
-float GetFogStart();
-
-void SetFogStart(float value);
 
 /*-------------------
 * Reticle Functions *

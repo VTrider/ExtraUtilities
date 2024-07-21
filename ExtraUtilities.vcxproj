@@ -221,6 +221,7 @@
     <ClInclude Include="src\SoundBuffer.h" />
     <ClInclude Include="src\SoundDevice.h" />
     <ClInclude Include="src\SoundSource.h" />
+    <ClInclude Include="src\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

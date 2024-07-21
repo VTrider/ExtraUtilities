@@ -15,6 +15,8 @@ class Hook
 {
 private:
 
+    static inline std::vector<HookData> hookData{};
+
     static void Restore(std::uintptr_t address, unsigned char* originalBytes, int length)
     {
         DWORD curProtection;
@@ -29,8 +31,6 @@ private:
     }
 
 public:
-
-    static inline std::vector<HookData> hookData{};
 
     // WARNING: be extremely careful and triple check that you counted the right number of fking bytes,
     // if the hook is crashing despite proper usage, that probably means you interrupted some critical

@@ -5,8 +5,6 @@
 #include <fstream>
 #include <chrono>
 
-
-
 class Log
 {
 private:

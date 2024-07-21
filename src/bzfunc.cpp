@@ -44,21 +44,6 @@ GameObject* GetObj(unsigned int handle)
 	return (GameObject*)(((handle >> 0x14) * 0x400) + 0x260DB20); // wtf lol magic numbers
 }
 
-void ResetValues()
-{
-	Memory::Write(Reticle::range, 200.0f, true);
-
-	VECTOR_3D defaultGravity{};
-	defaultGravity.x = 0.0f;
-	defaultGravity.y = -9.8f;
-	defaultGravity.z = 0.0f;
-	Memory::Write(Environment::gravity, defaultGravity, true);
-
-	Memory::Write(Satellite::minZoom, 2.0f, true);
-
-	Memory::Write(Satellite::maxZoom, 8.0f, true);
-}
-
 /*-----------------------
 * Environment Functions *
 ----------------------- */

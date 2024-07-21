@@ -185,5 +185,8 @@
     <ClInclude Include="src\asm.h">
       <Filter>Header Files\exu</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utils.h">
+      <Filter>Header Files\exu</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

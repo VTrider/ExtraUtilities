@@ -51,6 +51,15 @@ namespace Radar
 	constexpr std::uintptr_t state = 0x008EAAAC; // char
 }
 
+namespace Camera
+{
+	constexpr std::uintptr_t zoomFactorFPP = 0x008EAD10;
+	constexpr std::uintptr_t zoomFactorGlobal = 0x008EAB10;
+	constexpr std::uintptr_t maxZoomFactor = 0x008A2688;
+	constexpr std::uintptr_t minZoomFactor = 0x008A25FC;
+	constexpr std::uintptr_t viewFrustum = 0x008EABE0; // frustum
+}
+
 namespace Misc
 {
 	constexpr std::uintptr_t steam64 = 0x0260B1D0; // long long (8 bytes)
