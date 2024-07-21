@@ -48,19 +48,13 @@ public:
         VirtualProtect(reinterpret_cast<void*>(hookAddress), length, PAGE_EXECUTE_READWRITE, &curProtection);
 
         unsigned char* originalBytes = new unsigned char[length];
-
-        std::uint32_t jmpBackAddress = static_cast<std::uint32_t>(hookAddress) + static_cast<std::uint32_t>(length);
-
-        hookData.push_back({ hookAddress, originalBytes, length});
-
         memcpy(originalBytes, reinterpret_cast<void*>(hookAddress), length);
+        hookData.push_back({ hookAddress, originalBytes, length });
 
         memset(reinterpret_cast<void*>(hookAddress), 0x90, length); // nops the hooked code so nothing bad happens
 
         DWORD relativeAddress = ((DWORD)function - (DWORD)hookAddress) - 5; // calculate the address of the function to jmp to
-
         *(BYTE*)hookAddress = 0xE9; // sets jmp instruction at hook address
-
         *(DWORD*)((DWORD)hookAddress + 1) = relativeAddress; // writes the next 4 bytes with the target address (opcode is 5 bytes total)
 
         DWORD temp;
