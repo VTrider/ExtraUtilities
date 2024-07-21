@@ -1,5 +1,7 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 
+#pragma warning(disable : 6387) // suppress warning on create thread, yes I know it's dangerous lol
+
 #include "asm.h"
 #include "Audio.h"
 #include "bzfunc.h"
@@ -123,6 +125,8 @@ DWORD WINAPI InitialThread(HMODULE hModule)
     return 0;
 }
 
+HANDLE tempHandle;
+
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
     LPVOID lpReserved
@@ -131,7 +135,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     switch (ul_reason_for_call)
     { // make sure to break to avoid erroneous calls
     case DLL_PROCESS_ATTACH:
-        //MessageBox(NULL, "ATTACH", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+        //MessageBox(NULL, "ATTACH", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL
         CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)InitialThread, hModule, 0, nullptr));
         break;
     case DLL_THREAD_ATTACH:

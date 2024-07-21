@@ -50,7 +50,7 @@ int lua_GetObj(lua_State* L)
 
 int lua_GetGravity(lua_State* L)
 {
-	VECTOR_3D gravity = GetGravity();
+	VECTOR_3D gravity = Environment::GetGravity();
 	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
@@ -72,51 +72,9 @@ int	lua_SetGravity(lua_State* L)
 	float y = static_cast<float>(luaL_checknumber(L, 2));
 	float z = static_cast<float>(luaL_checknumber(L, 3));
 	lua_pop(L, 3);
-	SetGravity(x, y, z);
+	Environment::SetGravity(x, y, z);
 	return 0;
 }
-
-//int lua_GetLuminance(lua_State* L)
-//{
-//	Luminance* sunlight = GetLuminance();
-//	lua_pop(L, 1);
-//	lua_createtable(L, 0, 3);
-//
-//	lua_pushnumber(L, sunlight->r);
-//	lua_setfield(L, -2, "r");
-//
-//	lua_pushnumber(L, sunlight->g);
-//	lua_setfield(L, -2, "g");
-//
-//	lua_pushnumber(L, sunlight->b);
-//	lua_setfield(L, -2, "b");
-//
-//	return 1;
-//}
-//
-//int lua_SetLuminance(lua_State* L)
-//{
-//	float r = luaL_checknumber(L, 1);
-//	float g = luaL_checknumber(L, 2);
-//	float b = luaL_checknumber(L, 3);
-//	lua_pop(L, 3);
-//	SetLuminance(r, g, b);
-//	return 0;
-//}
-
-//int lua_GetFogStart(lua_State* L)
-//{
-//	lua_pushnumber(L, GetFogStart());
-//	return 1;
-//}
-//
-//int lua_SetFogStart(lua_State* L)
-//{
-//	float value = luaL_checknumber(L, 1);
-//	lua_pop(L, 1);
-//	SetFogStart(value);
-//	return 0;
-//}
 
 /*-------------------
 * Reticle Functions *
@@ -124,7 +82,7 @@ int	lua_SetGravity(lua_State* L)
 
 int lua_GetReticleAngle(lua_State* L)
 {
-	lua_pushnumber(L, GetReticleAngle());
+	lua_pushnumber(L, Reticle::GetReticleAngle());
 	return 1;
 }
 
@@ -132,7 +90,7 @@ int lua_GetReticlePos(lua_State* L)
 {
 	try
 	{
-		VECTOR_3D reticlePos = GetReticlePos();
+		VECTOR_3D reticlePos = Reticle::GetReticlePos();
 		lua_pop(L, 1);
 		lua_createtable(L, 0, 3);
 
@@ -161,7 +119,7 @@ int lua_GetReticlePos(lua_State* L)
 
 int lua_GetSmartCursorRange(lua_State* L)
 {
-	lua_pushnumber(L, GetSmartCursorRange());
+	lua_pushnumber(L, Reticle::GetSmartCursorRange());
 	return 1;
 }
 
@@ -171,7 +129,7 @@ int lua_SetSmartCursorRange(lua_State* L)
 	{
 		float range = static_cast<float>(luaL_checknumber(L, 1));
 		lua_pop(L, 1);
-		SetSmartCursorRange(range);
+		Reticle::SetSmartCursorRange(range);
 		return 0;
 	}
 	catch (const std::exception& e)
@@ -194,7 +152,7 @@ int lua_GetSatState(lua_State* L)
 {
 	try
 	{
-		lua_pushnumber(L, GetSatState());
+		lua_pushnumber(L, Satellite::GetSatState());
 		return 1;
 	}
 	catch (const std::exception& e)
@@ -213,7 +171,7 @@ int lua_GetSatCursorPos(lua_State* L)
 {
 	try
 	{
-		VECTOR_3D cursorPos = GetSatCursorPos();
+		VECTOR_3D cursorPos = Satellite::GetSatCursorPos();
 		lua_createtable(L, 0, 3);
 
 		lua_pushnumber(L, cursorPos.x);
@@ -241,7 +199,7 @@ int lua_GetSatCursorPos(lua_State* L)
 
 int lua_GetSatCamPos(lua_State* L)
 {
-	VECTOR_3D camPos = GetSatCamPos();
+	VECTOR_3D camPos = Satellite::GetSatCamPos();
 	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
@@ -259,7 +217,7 @@ int lua_GetSatCamPos(lua_State* L)
 
 int lua_GetSatClickPos(lua_State* L)
 {
-	VECTOR_3D clickPos = GetSatClickPos();
+	VECTOR_3D clickPos = Satellite::GetSatClickPos();
 	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
@@ -277,7 +235,7 @@ int lua_GetSatClickPos(lua_State* L)
 
 int lua_GetSatPanSpeed(lua_State* L)
 {
-	lua_pushnumber(L, GetSatPanSpeed());
+	lua_pushnumber(L, Satellite::GetSatPanSpeed());
 	return 1;
 }
 
@@ -287,7 +245,7 @@ int lua_SetSatPanSpeed(lua_State* L)
 	{
 		float speed = static_cast<float>(luaL_checknumber(L, 1));
 		lua_pop(L, 1);
-		SetSatPanSpeed(speed);
+		Satellite::SetSatPanSpeed(speed);
 		return 0;
 	}
 	catch (const std::exception& e)
@@ -304,7 +262,7 @@ int lua_SetSatPanSpeed(lua_State* L)
 
 int lua_GetMinSatZoom(lua_State* L)
 {
-	lua_pushnumber(L, GetMinSatZoom());
+	lua_pushnumber(L, Satellite::GetMinSatZoom());
 	return 1;
 }
 
@@ -312,13 +270,13 @@ int lua_SetMinSatZoom(lua_State* L)
 {
 	float zoom = static_cast<float>(luaL_checknumber(L, 1));
 	lua_pop(L, 1);
-	SetMinSatZoom(zoom);
+	Satellite::SetMinSatZoom(zoom);
 	return 0;
 }
 
 int lua_GetMaxSatZoom(lua_State* L)
 {
-	lua_pushnumber(L, GetMaxSatZoom());
+	lua_pushnumber(L, Satellite::GetMaxSatZoom());
 	return 1;
 }
 
@@ -326,13 +284,13 @@ int lua_SetMaxSatZoom(lua_State* L)
 {
 	float zoom = static_cast<float>(luaL_checknumber(L, 1));
 	lua_pop(L, 1);
-	SetMaxSatZoom(zoom);
+	Satellite::SetMaxSatZoom(zoom);
 	return 0;
 }
 
 int lua_GetSatZoom(lua_State* L)
 {
-	lua_pushnumber(L, GetSatZoom());
+	lua_pushnumber(L, Satellite::GetSatZoom());
 	return 1;
 }
 
@@ -342,7 +300,7 @@ int lua_SetSatZoom(lua_State* L)
 	{
 		float zoom = static_cast<float>(luaL_checknumber(L, 1));
 		lua_pop(L, 1);
-		SetSatZoom(zoom);
+		Satellite::SetSatZoom(zoom);
 		return 0;
 	}
 	catch (const std::exception& e)
@@ -363,7 +321,7 @@ int lua_SetSatZoom(lua_State* L)
 
 int lua_GetRadarState(lua_State* L) 
 {
-	lua_pushnumber(L, GetRadarState());
+	lua_pushnumber(L, Radar::GetRadarState());
 	return 1;
 }
 
@@ -371,7 +329,7 @@ int lua_SetRadarState(lua_State* L)
 {
 	int state = luaL_checkinteger(L, 1);
 	lua_pop(L, 1);
-	SetRadarState(state);
+	Radar::SetRadarState(state);
 	return 0;
 }
 
@@ -382,8 +340,8 @@ int lua_SetRadarState(lua_State* L)
 int lua_GetGameKey(lua_State* L)
 {
 	std::string key = luaL_checkstring(L, 1);
-	int vKey = (GetKeyCode(key));
-	lua_pushboolean(L, GetGameKey(vKey));
+	int vKey = (IO::GetKeyCode(key));
+	lua_pushboolean(L, IO::GetGameKey(vKey));
 	return 1;
 }
 
@@ -395,7 +353,7 @@ int lua_GetSteam64(lua_State* L)
 {
 	try
 	{
-		lua_pushstring(L, GetSteam64());
+		lua_pushstring(L, Misc::GetSteam64());
 		return 1;
 	}
 	catch (const std::exception& e)
@@ -412,14 +370,14 @@ int lua_GetSteam64(lua_State* L)
 
 int lua_GetWeaponMask(lua_State* L)
 {
-	lua_pushnumber(L, GetWeaponMask());
+	lua_pushnumber(L, Misc::GetWeaponMask());
 	
 	return 1;
 }
 
 int lua_GetLives(lua_State* L)
 {
-	lua_pushnumber(L, GetLives());
+	lua_pushnumber(L, Misc::GetLives());
 	return 1;
 }
 // 
@@ -427,20 +385,20 @@ int lua_SetLives(lua_State* L)
 {
 	int newLives = luaL_checkinteger(L, 1);
 	lua_pop(L, 1);
-	SetLives(newLives);
+	Misc::SetLives(newLives);
 	return 1;
 }
 
 int lua_GetDifficulty(lua_State* L)
 {
-	lua_pushstring(L, GetDifficulty());
+	lua_pushstring(L, Misc::GetDifficulty());
 	return 1;
 }
 
 int lua_SetDifficulty(lua_State* L)
 {
 	std::string newDifficulty = luaL_checkstring(L, 1);
-	if (SetDifficulty(newDifficulty) == 1 )
+	if (Misc::SetDifficulty(newDifficulty) == 1 )
 	{
 		luaL_error(L, "Bad format: enter difficulty as it appears in game - check documentation");
 	}
@@ -480,7 +438,7 @@ int lua_SetAsUser(lua_State* L)
 {
 	void* handle = (void*)lua_touserdata(L, 1);
 	GameObject* gameObject = GetObj((unsigned int)handle);
-	SetAsUser(gameObject);
+	Hooks::SetAsUser(gameObject);
 
 	lua_pop(L, 1);
 	return 0;

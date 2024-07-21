@@ -13,92 +13,85 @@
 
 GameObject* GetObj(unsigned int handle);
 
-/*-----------------------
-* Environment Functions *
------------------------ */
+namespace Environment
+{
+	VECTOR_3D GetGravity();
 
-VECTOR_3D GetGravity();
+	void SetGravity(float x, float y, float z);
+}
 
-void SetGravity(float x, float y, float z);
+namespace Reticle
+{
+	float GetReticleAngle();
 
-/*-------------------
-* Reticle Functions *
-------------------- */
+	VECTOR_3D GetReticlePos();
 
-float GetReticleAngle();
+	float GetSmartCursorRange();
 
-VECTOR_3D GetReticlePos();
+	void SetSmartCursorRange(float range);
+}
 
-float GetSmartCursorRange();
+namespace Satellite
+{
+	char GetSatState();
 
-void SetSmartCursorRange(float range);
+	VECTOR_3D GetSatCursorPos();
 
-/*-----------------
-* Radar Functions *
------------------ */
+	VECTOR_3D GetSatCamPos();
 
-char GetRadarState();
+	VECTOR_3D GetSatClickPos();
 
-void SetRadarState(int state);
+	float GetSatPanSpeed();
 
-/*---------------------
-* Satellite Functions *
---------------------- */
+	void SetSatPanSpeed(float speed);
 
-char GetSatState();
+	float GetMinSatZoom();
 
-VECTOR_3D GetSatCursorPos();
+	void SetMinSatZoom(float zoom);
 
-VECTOR_3D GetSatCamPos();
+	float GetMaxSatZoom();
 
-VECTOR_3D GetSatClickPos();
+	void SetMaxSatZoom(float zoom);
 
-float GetSatPanSpeed();
+	float GetSatZoom();
 
-void SetSatPanSpeed(float speed);
+	void SetSatZoom(float zoom);
+}
 
-float GetMinSatZoom();
+namespace Radar
+{
+	char GetRadarState();
 
-void SetMinSatZoom(float zoom);
+	void SetRadarState(int state);
+}
 
-float GetMaxSatZoom();
+namespace IO
+{
+	int GetKeyCode(std::string keycode);
 
-void SetMaxSatZoom(float zoom);
+	extern bool keyPressed;
 
-float GetSatZoom();
+	bool GetGameKey(int key);
+}
 
-void SetSatZoom(float zoom);
+namespace Misc
+{
+	const char* GetSteam64();
 
-/*--------------
-* Input/Output *
----------------*/
+	int GetWeaponMask();
 
-int GetKeyCode(std::string keycode);
+	int GetLives();
 
-extern bool keyPressed;
+	void SetLives(int newLives);
 
-bool GetGameKey(int key);
+	const char* GetDifficulty();
 
-/*----------------
-* Misc Functions *
------------------*/
+	int SetDifficulty(std::string newDifficulty);
+}
 
-const char* GetSteam64();
+namespace Hooks
+{
+	typedef void(__thiscall* _SetAsUser)(GameObject* obj);
 
-int GetWeaponMask();
-
-int GetLives();
-
-void SetLives(int newLives);
-
-const char* GetDifficulty();
-
-int SetDifficulty(std::string newDifficulty);
-
-/*-------------------------
-* Internal Function Hooks *
---------------------------*/
-
-typedef void(__thiscall* _SetAsUser)(GameObject* obj);
-
-extern _SetAsUser SetAsUser;
+	extern _SetAsUser SetAsUser;
+}
