@@ -14,6 +14,14 @@ namespace Flags
 	constexpr std::uintptr_t inGame = 0x0091552A; // char static address maybe not 100% stable
 }
 
+namespace Hooks
+{
+	constexpr std::uintptr_t weaponMask = 0x0060A8C6;
+	constexpr std::uintptr_t ordnanceVelocity = 0x004803D4;
+	constexpr std::uintptr_t ordnancePosition = 0x00480357;
+	constexpr std::uintptr_t shotConvergence = 0x004eb590;
+}
+
 namespace Environment
 {
 	constexpr std::uintptr_t gravity = 0x00871A80;

@@ -8,12 +8,14 @@
 #include <vector>
 #include <thread>
 #include <chrono>
-#include <cstdint>
 #include "dx9hook.h"
 #include "Log.h"
 #include "Memory.h"
 #include <print>
 #include "Offsets.h"
+#include "Hook.h"
+#include "asm.h"
+
 
 #include "SoundBuffer.h"
 #include "SoundDevice.h"
@@ -22,74 +24,9 @@
 // Todo: memory flag to exit the thread, and free cursor frame game while gui is active
 // fix open AL holding on to a handle or something
 
-unsigned char* Hook(void* hookAddress, void* function, int length)
-{
-    if (length < 5) // need room for a jmp instruction
-    {
-        MessageBox(NULL, "You fool. You need at least 5 bytes to write a hook, go fix it before something breaks", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-        return nullptr;
-    }
-    
-    DWORD curProtection;
-    VirtualProtect(hookAddress, length, PAGE_EXECUTE_READWRITE, &curProtection); // make sure you can write
-    
-    unsigned char* originalBytes = new unsigned char[length]; // for some reason this needs to be initialized to work in memcpy
-
-    memcpy(originalBytes, hookAddress, length);
-
-    memset(hookAddress, 0x90, length); // nops the hooked code so nothing bad happens
-
-    DWORD relativeAddress = ((DWORD)function - (DWORD)hookAddress) - 5; // calculate the address of the function to jmp to
-
-    *(BYTE*)hookAddress = 0xE9; // sets jmp instruction at hook address
-
-    *(DWORD*)((DWORD)hookAddress + 1) = relativeAddress; // writes the next 4 bytes with the target address (opcode is 5 bytes total)
-
-    DWORD temp;
-    VirtualProtect(hookAddress, length, curProtection, &temp); // reset memory protection
-
-    return originalBytes;
-}
-
-void Restore(void* address, unsigned char* originalBytes, int length)
-{
-    DWORD curProtection;
-    VirtualProtect(address, length, PAGE_EXECUTE_READWRITE, &curProtection);
-
-    memcpy(address, originalBytes, length);
-
-    delete[] originalBytes;
-
-    DWORD temp;
-    VirtualProtect(address, length, curProtection, &temp);
-}
-
-/*---------------------------
-* Weapon Mask Function Hook *
-----------------------------*/
-
-int weaponMask;
-
-DWORD jmpBackWeaponMask;
-
-void  __declspec(naked) WeaponMaskHook() // need to make sure the compiler doesn't mess with the asm
-{
-    __asm
-    {
-        // the value of the player's weapon mask is in the edx register at 
-        // this location, this moves it into a variable before it executes 
-        // the rest of the code normally
-        mov [weaponMask],edx 
-        mov [ecx+0x1C],edx
-        mov eax,[ebp-0x00000110]
-        jmp [jmpBackWeaponMask] // jumps back to the original code to resume normal execution
-    }
-}
-
 /*---------
 * Threads *
 ----------*/
-
 
 void FileSystem()
 {
@@ -114,9 +51,10 @@ unsigned char* weaponMaskBytes;
 
 void CodeInjection()
 {
-    // Weapon Mask Hook
-    jmpBackWeaponMask = 0x0060A8C6 + 9;
-    weaponMaskBytes = Hook((void*)0x0060A8C6, WeaponMaskHook, 9);
+    Hook::CreateHook(Hooks::weaponMask, WeaponMaskHook, 9);
+    Hook::CreateHook(Hooks::ordnanceVelocity, OrdnanceVelocityHook, 5);
+    Hook::CreateHook(Hooks::ordnancePosition, OrdnancePositionHook, 7);
+    Hook::CreateHook(Hooks::shotConvergence, ShotConvergenceHook, 6);
 }
 
 void Main()
@@ -156,9 +94,13 @@ void AudioSystem()
     while (true)
     {
         if (Memory::CheckExitCondition(5))
+        {
             break;
+        }
+    
 
-
+    
+        
         
     }
 }
@@ -172,16 +114,13 @@ DWORD WINAPI InitialThread(HMODULE hModule)
     FileSystem();
     CodeInjection();
     
-    std::thread audio(AudioSystem);
-    audio.detach();
+    // std::thread audio(AudioSystem);
+    // audio.detach();
 
     // std::thread MainThread(Main);
     // MainThread.detach();
     return 0;
 }
-
-extern bool ordnanceTweakApplied;
-extern bool shotConvergenceApplied;
 
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
@@ -202,16 +141,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         // MessageBox(NULL, "DETACH", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         // Resets hacked write protected values back to stock when the DLL is unloaded (when you leave the modded map)
         // Also resets values that don't reset because they aren't expecting to be changed
-        Restore((void*)0x0060A8C6, weaponMaskBytes, 9);
-        if (ordnanceTweakApplied)
-        {
-            Restore((void*)0x004803D4, ordnanceTweakBytes, 5);
-            Restore((void*)0x00480357, ordnancePosBytes, 7);
-        }
-        if (shotConvergenceApplied)
-        {
-            Restore((void*)0x004eb590, shotConvergenceBytes, 6);
-        }
+        Hook::RestoreAll();
         ResetValues();
         FreeConsole();
         SystemLog->Out("exu.dll detached from process", 3);

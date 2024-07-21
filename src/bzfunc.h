@@ -102,8 +102,6 @@ bool GetGameKey(int key);
 -----------------*/
 const char* GetSteam64();
 
-extern int weaponMask;
-
 int GetWeaponMask();
 
 int GetLives();
@@ -113,18 +111,6 @@ void SetLives(int newLives);
 const char* GetDifficulty();
 
 int SetDifficulty(std::string newDifficulty);
-
-extern unsigned char* ordnancePosBytes;
-
-extern unsigned char* ordnanceTweakBytes;
-
-void EnableOrdnanceTweak(float scalingFactor);
-
-void UpdateOrdnance(float vx, float vy, float vz, float px, float py, float pz);
-
-extern unsigned char* shotConvergenceBytes;
-
-void EnableShotConvergence();
 
 /*-------------------------
 * Internal Function Hooks *

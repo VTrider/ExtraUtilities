@@ -20,7 +20,8 @@ private:
 
 	static inline DWORD dummyOldProtection{}; // required arg for VirtualProtect
 
-	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(5);
+	static inline int checkInterval{};
+	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(checkInterval);
 
 public:
 	static void Init()
@@ -48,6 +49,7 @@ public:
 	
 	static bool CheckExitCondition(int interval)
 	{
+		checkInterval = interval;
 		auto now = std::chrono::steady_clock::now();
 		if (now > nextCheck)
 		{
@@ -59,7 +61,7 @@ public:
 			}
 			else
 			{
-				nextCheck = now + std::chrono::seconds(interval);
+				nextCheck = now + std::chrono::seconds(checkInterval);
 				return false;
 			}
 		}

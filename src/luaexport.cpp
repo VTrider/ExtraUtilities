@@ -4,6 +4,7 @@
 * lua stack						   *
 -----------------------------------*/
 
+#include "asm.h"
 #include "bzfunc.h"
 #include "filesystem.h"
 #include "lua.hpp"
