@@ -3,18 +3,18 @@
 #include "bzfunc.h"
 
 #include "asm.h"
-#include "lua.hpp"
-#include <Windows.h>
-#include "memoryapi.h"
-#include <iostream>
-#include <string>
-#include <vector>
-#include <thread>
-#include <chrono>
-#include <cmath>
 #include "Log.h"
 #include "Memory.h"
 #include "Offsets.h"
+
+#include "lua.hpp"
+#include <Windows.h>
+
+#include <cmath>
+#include <iostream>
+#include <string>
+#include <vector>
+
 
 #include "SoundBuffer.h"
 #include "SoundDevice.h"

@@ -1,21 +1,22 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 
+#include "asm.h"
 #include "Audio.h"
 #include "bzfunc.h"
-#include "filesystem.h"
-#include <Windows.h>
-#include <iostream>
-#include <vector>
-#include <thread>
-#include <chrono>
 #include "dx9hook.h"
+#include "filesystem.h"
+#include "Hook.h"
 #include "Log.h"
 #include "Memory.h"
-#include <print>
 #include "Offsets.h"
-#include "Hook.h"
-#include "asm.h"
 
+#include <Windows.h>
+
+#include <chrono>
+#include <iostream>
+#include <thread>
+#include <print>
+#include <vector>
 
 #include "SoundBuffer.h"
 #include "SoundDevice.h"

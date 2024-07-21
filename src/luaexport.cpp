@@ -7,11 +7,13 @@
 #include "asm.h"
 #include "bzfunc.h"
 #include "filesystem.h"
-#include "lua.hpp"
 #include "Memory.h"
+
+#include "lua.hpp"
 #include <Windows.h>
-#include <thread>
+
 #include <chrono>
+#include <thread>
 #include "Log.h"
 
 extern Log* SystemLog;

@@ -1,13 +1,11 @@
 #pragma once
 
 #include "bzr.h"
+
 #include <Windows.h>
+
 #include <string>
 #include <vector>
-#include <atomic>
-
-// Global function and variable declarations (Rhade would kill me)
-// Explanations are provided where they are defined
 
 /*---------------------
 * Important Functions *
@@ -84,6 +82,7 @@ bool GetGameKey(int key);
 /*----------------
 * Misc Functions *
 -----------------*/
+
 const char* GetSteam64();
 
 int GetWeaponMask();
