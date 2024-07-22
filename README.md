@@ -2,7 +2,7 @@
 
 Finally figured out how to work git, if something's wrong let me know on discord please.
 
-Dependencies: (use vcpkg to install, must be x86 static binaries)
+Dependencies: (use vcpkg to install, must be x86 static binaries - SDKs are from the visual studio installer)
 - Windows SDK
 - DirectX 9 SDK
 - OpenAL-Soft:x86-windows-static
