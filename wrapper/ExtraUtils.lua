@@ -563,7 +563,7 @@ do
     ]]
 
     local function EnableOrdnanceTweak(ratio)
-        if IsNetGame and not debug then
+        if IsNetGame == true and debug == false then
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
             return
         end
@@ -581,7 +581,7 @@ do
     end
 
     local function UpdateOrdnance()
-        if IsNetGame and not debug then
+        if IsNetGame == true and debug == false then
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
             return
         end
