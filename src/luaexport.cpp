@@ -1,17 +1,3 @@
-/*----------------------------------
-* Exported lua functions go here,  *
-* sends/receieves data to/from the *
-* lua stack						   *
------------------------------------*/
-
-#include "asm.h"
-#include "bzfunc.h"
-#include "filesystem.h"
-#include "Memory.h"
-
-#include "lua.hpp"
-#include <Windows.h>
-
 /* Copyright (C) 2023-2024 VTrider
  *
  * This file is part of Extra Utilities.
@@ -29,6 +15,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
+/*----------------------------------
+* Exported lua functions go here,  *
+* sends/receieves data to/from the *
+* lua stack						   *
+-----------------------------------*/
+
+#include "asm.h"
+#include "bzfunc.h"
+#include "filesystem.h"
+#include "Memory.h"
+
+#include "lua.hpp"
+#include <Windows.h>
 
 #include <chrono>
 #include <thread>
