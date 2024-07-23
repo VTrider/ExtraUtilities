@@ -1,7 +1,7 @@
 --[[
 =====================================================
 *   Extra Utilities
-*   Version 0.5.3
+*   Version 0.6.0
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -21,8 +21,8 @@ require("exu")
 local extraUtils = {}
 do
     -- Metadata
-    local version = "0.5.3"
-    local crc32 = "7F81BB2A"
+    local version = "0.6.0"
+    local crc32 = "C2F196C5"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console
@@ -64,8 +64,7 @@ do
     ]]
 
     local function GetObj(handle)
-        local obj = exu.GetObj(handle)
-        return obj
+        return exu.GetObj(handle)
     end
 
     --[[
@@ -99,65 +98,6 @@ do
     end
 
     --[[
-    ------------------------------------------------------
-    *   Name       : GetLuminance
-    *   Description: Gets the current value of Sun_Ambient
-    *   Inputs     : None
-    *   Outputs    : VECTOR_3D luminance: R, G, B
-    *   Return Type: Userdata
-    ------------------------------------------------------
-    ]]
-
-    local function GetLuminance()
-        local luminance = exu.GetLuminance()
-        local formattedLuminance = SetVector(luminance.r, luminance.g, luminance.b)
-        return formattedLuminance
-    end
-
-    --[[
-    ------------------------------------------------------
-    *   Name       : SetLuminance
-    *   Description: Sets the current value of Sun_Ambient
-    *   Inputs     : Float R, G, B values
-    *   Outputs    : New luminance value in map
-    *   Return Type: Void
-    ------------------------------------------------------
-    ]]
-
-    local function SetLuminance(r, g, b)
-        exu.SetLuminance(r, g, b)
-    end
-
-    --[[
-    --------------------------------------------------------------
-    *   Name       : GetFogStart
-    *   Description: Gets the current value of FogStart
-    *   Inputs     : None
-    *   Outputs    : Current value of FogStart
-    *   Return Type: Number
-    --------------------------------------------------------------
-    ]]
-
-    local function GetFogStart()
-        local fogStart = exu.GetFogStart()
-        return fogStart
-    end
-
-    --[[
-    --------------------------------------------------------------
-    *   Name       : SetFogStart
-    *   Description: Sets the current value of FogStart
-    *   Inputs     : Float value
-    *   Outputs    : New FogStart value in map
-    *   Return Type: Void
-    --------------------------------------------------------------
-    ]]
-
-    local function SetFogStart(value)
-        exu.SetFogStart(value)
-    end
-
-    --[[
     ---------------------------------------------------------------------------
     *   Name       : GetSmartCursorRange
     *   Description: Gets the current range of the smart cursor (stock is 200m)
@@ -168,8 +108,7 @@ do
     ]]
 
     local function GetSmartCursorRange()
-        local range = exu.GetSmartCursorRange()
-        return range
+        return exu.GetSmartCursorRange()
     end
 
     --[[
@@ -198,8 +137,7 @@ do
     ]]
     
     local function GetReticleAngle()
-        local reticleAngle = exu.GetReticleAngle()
-        return reticleAngle
+        return exu.GetReticleAngle()
     end
 
     --[[
@@ -229,8 +167,7 @@ do
     ]]
 
     local function GetSatState()
-        local satState = exu.GetSatState()
-        return satState
+        return exu.GetSatState()
     end
 
     --[[
@@ -302,8 +239,7 @@ do
     ]]
 
     local function GetSatPanSpeed()
-        local panSpeed = exu.GetSatPanSpeed()
-        return panSpeed
+        return exu.GetSatPanSpeed()
     end
 
     --[[
@@ -333,8 +269,7 @@ do
     ]]
 
     local function GetMinSatZoom()
-        local minZoom = exu.GetMinSatZoom()
-        return minZoom
+        return exu.GetMinSatZoom()
     end
 
     --[[
@@ -364,8 +299,7 @@ do
     ]]
 
     local function GetMaxSatZoom()
-        local maxZoom = exu.GetMaxSatZoom()
-        return maxZoom
+        return exu.GetMaxSatZoom()
     end
 
     --[[
@@ -395,8 +329,7 @@ do
     ]]
 
     local function GetSatZoom()
-        local satZoom = exu.GetSatZoom()
-        return satZoom
+        return exu.GetSatZoom()
     end
 
     --[[
@@ -426,8 +359,7 @@ do
     ]]
 
     local function GetRadarState()
-        local radarState = exu.GetRadarState()
-        return radarState
+        return exu.GetRadarState()
     end
 
     --[[
@@ -445,6 +377,101 @@ do
     end
 
     --[[
+    ----------------------------------------------------------------------------------
+    *   Name       : GetZoomFactor
+    *   Description: Gets the zoom factor of the given camera, both cameras are tied
+    *              : together except for when you are in third person or freecam, then
+    *              : only the global cam will be active.
+    *   Inputs     : String 'F' (first person) or 'G' (global)
+    *   Outputs    : Current zoom factor
+    *   Return Type: Float
+    ----------------------------------------------------------------------------------
+    ]]
+
+    local function GetZoomFactor(camera)
+        if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
+            error("Extra Utilities Error: Invalid camera")
+            return
+        end
+        return exu.GetZoomFactor(string.upper(camera))
+    end
+
+    --[[
+    -----------------------------------------------------------------------------
+    *   Name       : SetZoomFactor
+    *   Description: Sets the zoom factor of the given camera. Note this will
+    *              : override the min/max until the player tries to zoom with -+
+    *   Inputs     : Float zoom factor, String 'F' (first person) or 'G' (global)
+    *   Outputs    : New zoom factor
+    *   Return Type: Void
+    -----------------------------------------------------------------------------
+    ]]
+
+    local function SetZoomFactor(factor, camera)
+        if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
+            error("Extra Utilities Error: Invalid camera")
+            return
+        end
+        exu.SetZoomFactor(factor, string.upper(camera))
+    end
+
+    --[[
+    -----------------------------------------------------------------------------
+    *   Name       : GetMinZoomFactor
+    *   Description: Gets the minimum zoom factor for all cameras
+    *   Inputs     : None
+    *   Outputs    : Current minimum zoom factor
+    *   Return Type: Float
+    -----------------------------------------------------------------------------
+    ]]
+
+    local function GetMinZoomFactor()
+        return exu.GetMinZoomFactor()
+    end
+
+    --[[
+    -----------------------------------------------------------------------------
+    *   Name       : SetMinZoomFactor
+    *   Description: Sets the minimum zoom factor for all cameras
+    *   Inputs     : Float desired minimum zoom factor
+    *   Outputs    : New minimum zoom factor
+    *   Return Type: Void
+    -----------------------------------------------------------------------------
+    ]]
+
+    local function SetMinZoomFactor(factor)
+        exu.SetMinZoomFactor(factor)
+    end
+
+        --[[
+    -----------------------------------------------------------------------------
+    *   Name       : GetMaxZoomFactor
+    *   Description: Gets the maximum zoom factor for all cameras
+    *   Inputs     : None
+    *   Outputs    : Current maximum zoom factor
+    *   Return Type: Float
+    -----------------------------------------------------------------------------
+    ]]
+
+    local function GetMaxZoomFactor()
+        return exu.GetMaxZoomFactor()
+    end
+
+    --[[
+    -----------------------------------------------------------------------------
+    *   Name       : SetMaxZoomFactor
+    *   Description: Sets the maximum zoom factor for all cameras
+    *   Inputs     : Float desired maximum zoom factor
+    *   Outputs    : New maximum zoom factor
+    *   Return Type: Void
+    -----------------------------------------------------------------------------
+    ]]
+
+    local function SetMaxZoomFactor(factor)
+        exu.SetMaxZoomFactor(factor)
+    end
+
+    --[[
     ---------------------------------------------------------------------------
     *   Name       : GetGameKey
     *   Description: Gets whether or not a key is held, currently only supports
@@ -457,8 +484,7 @@ do
     ]]
 
     local function GetGameKey(key)
-        local keyPressed = exu.GetGameKey(key)
-        return keyPressed
+        return exu.GetGameKey(key)
     end
 
     --[[
@@ -472,9 +498,7 @@ do
     ]]
 
     local function GetSteam64()
-        local steam64 = exu.GetSteam64()
-        local formattedID = string.format("%.0f", steam64)
-        return formattedID
+        return exu.GetSteam64()
     end
 
     --[[
@@ -490,8 +514,7 @@ do
     ]]
 
     local function GetWeaponMask()
-        local weaponMask = exu.GetWeaponMask()
-        return weaponMask
+        return exu.GetWeaponMask()
     end
 
     --[[
@@ -505,8 +528,7 @@ do
     ]]
 
     local function GetLives()
-        local lives = exu.GetLives()
-        return lives
+        return exu.GetLives()
     end
 
     --[[
@@ -622,10 +644,6 @@ do
     extraUtils.GetObj                = GetObj
     extraUtils.GetGravity            = GetGravity
     extraUtils.SetGravity            = SetGravity
-    extraUtils.GetLuminance          = GetLuminance
-    extraUtils.SetLuminance          = SetLuminance
-    extraUtils.GetFogStart           = GetFogStart
-    extraUtils.SetFogStart           = SetFogStart
     extraUtils.GetSmartCursorRange   = GetSmartCursorRange
     extraUtils.SetSmartCursorRange   = SetSmartCursorRange
     extraUtils.GetReticleAngle       = GetReticleAngle
@@ -644,6 +662,12 @@ do
     extraUtils.SetSatZoom            = SetSatZoom
     extraUtils.GetRadarState         = GetRadarState
     extraUtils.SetRadarState         = SetRadarState
+    extraUtils.GetZoomFactor         = GetZoomFactor
+    extraUtils.SetZoomFactor         = SetZoomFactor
+    extraUtils.GetMinZoomFactor      = GetMinZoomFactor
+    extraUtils.SetMinZoomFactor      = SetMinZoomFactor
+    extraUtils.GetMaxZoomFactor      = GetMaxZoomFactor
+    extraUtils.SetMaxZoomFactor      = SetMaxZoomFactor
     extraUtils.GetGameKey            = GetGameKey
     extraUtils.GetSteam64            = GetSteam64
     extraUtils.GetWeaponMask         = GetWeaponMask
