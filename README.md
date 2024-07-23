@@ -17,3 +17,7 @@ Compatibility:
 - Windows: Yes
 - Mac: No
 - Linux: No
+
+Contact me on discord: vtrider
+
+Join the battlezone community discord: https://discord.gg/battlezonestrategy
