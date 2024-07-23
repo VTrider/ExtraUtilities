@@ -65,7 +65,7 @@ public:
     // if you load into a stock map
     static void RestoreAll()
     {
-        for (auto& data : hookData)
+        for (const auto& data : hookData)
         {
             Restore(data.hookAddress, data.originalBytes, data.length);
         }

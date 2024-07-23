@@ -124,7 +124,6 @@ public:
 			return T{};
 		}
 	}
-
 	
 	template <typename T>
 

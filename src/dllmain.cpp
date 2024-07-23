@@ -46,8 +46,6 @@ void InitializeConsole()
     }
 }
 
-unsigned char* weaponMaskBytes;
-
 void CodeInjection()
 {
     Hook::CreateHook(Hooks::weaponMask, WeaponMaskHook, 9);
