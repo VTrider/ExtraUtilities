@@ -1,3 +1,5 @@
+// Assembly code
+
 #include "asm.h"
 
 #include "Hook.h"

@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "Memory.h"
 #include "Offsets.h"
+#include "Utils.h"
 
 #include "lua.hpp"
 #include <Windows.h>
@@ -14,11 +15,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
-
-#include "SoundBuffer.h"
-#include "SoundDevice.h"
-#include "SoundSource.h"
 
 extern Log* SystemLog;
 
@@ -171,11 +167,72 @@ namespace Radar
 
 }
 
+namespace Camera
+{
+	float GetZoomFactor(const std::string& camera)
+	{
+		if (camera == "F")
+		{
+			return Memory::Read<float>(Camera::zoomFactorFPP);
+		}
+		else if (camera == "G")
+		{
+			return Memory::Read<float>(Camera::zoomFactorGlobal);
+		}
+		else
+		{
+			return -1.0f;
+		}
+	}
+
+	void SetZoomFactor(float factor, const std::string& camera)
+	{
+		if (camera == "F")
+		{
+			Memory::Write(Camera::zoomFactorFPP, factor);
+		}
+		else if (camera == "G")
+		{
+			Memory::Write(Camera::zoomFactorGlobal, factor);
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	float GetMinZoomFactor()
+	{
+		return Memory::Read<float>(Camera::minZoomFactor);
+	}
+
+	void SetMinZoomFactor(float factor)
+	{
+		Memory::Write(Camera::minZoomFactor, factor);
+	}
+
+	float GetMaxZoomFactor()
+	{
+		return Memory::Read<float>(Camera::maxZoomFactor);
+	}
+
+	void SetMaxZoomFactor(float factor)
+	{
+		Memory::Write(Camera::maxZoomFactor, factor);
+	}
+
+	Frustum GetViewFrustum()
+	{
+		return Memory::Read<Frustum>(Camera::viewFrustum);
+	}
+
+}
+
 namespace IO
 {
 	// there's probably a better way to do this, but oh well.
 // converts the inputted key into a virtual key for windows
-	int GetKeyCode(std::string key)
+	int GetKeyCode(const std::string& key)
 	{
 		if (key == "0")
 		{
@@ -396,7 +453,7 @@ namespace Misc
 		}
 	}
 
-	int SetDifficulty(std::string newDifficulty)
+	int SetDifficulty(const std::string& newDifficulty)
 	{
 		if (newDifficulty == "Very Easy")
 		{

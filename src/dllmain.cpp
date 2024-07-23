@@ -20,11 +20,7 @@
 #include <print>
 #include <vector>
 
-#include "SoundBuffer.h"
-#include "SoundDevice.h"
-#include "SoundSource.h"
-
-// Todo: memory flag to exit the thread, and free cursor frame game while gui is active
+// Todo: free cursor frame game while gui is active
 // fix open AL holding on to a handle or something
 
 /*---------
@@ -143,16 +139,14 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     case DLL_THREAD_DETACH:
         break;
     case DLL_PROCESS_DETACH:
-        // MessageBox(NULL, "DETACH", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         // Resets hacked write protected values back to stock when the DLL is unloaded (when you leave the modded map)
         // Also resets values that don't reset because they aren't expecting to be changed
         Hook::RestoreAll();
         Memory::RestoreAll();
-        //ResetValues();
         FreeConsole();
         SystemLog->Out("exu.dll detached from process", 3);
         delete SystemLog;
-        MessageBox(NULL, "PROCESS DETACH!", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+        // MessageBox(NULL, "PROCESS DETACH!", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         break;
     }
     return TRUE;

@@ -317,7 +317,7 @@ int lua_SetSatZoom(lua_State* L)
 
 /*-----------------
 * Radar Functions *
------------------ */
+------------------*/
 
 int lua_GetRadarState(lua_State* L) 
 {
@@ -330,6 +330,51 @@ int lua_SetRadarState(lua_State* L)
 	int state = luaL_checkinteger(L, 1);
 	lua_pop(L, 1);
 	Radar::SetRadarState(state);
+	return 0;
+}
+
+/*------------------
+* Camera Functions *
+-------------------*/
+
+int lua_GetZoomFactor(lua_State* L)
+{
+	std::string camera = luaL_checkstring(L, 1);
+	lua_pushnumber(L, Camera::GetZoomFactor(camera));
+	return 1;
+}
+
+int lua_SetZoomFactor(lua_State* L)
+{
+	float factor = static_cast<float>(luaL_checknumber(L, 1));
+	std::string camera = luaL_checkstring(L, 2);
+	Camera::SetZoomFactor(factor, camera);
+	return 0;
+}
+
+int lua_GetMinZoomFactor(lua_State* L)
+{
+	lua_pushnumber(L, Camera::GetMinZoomFactor());
+	return 1;
+}
+
+int lua_SetMinZoomFactor(lua_State* L)
+{
+	float factor = static_cast<float>(luaL_checknumber(L, 1));
+	Camera::SetMinZoomFactor(factor);
+	return 0;
+}
+
+int lua_GetMaxZoomFactor(lua_State* L)
+{
+	lua_pushnumber(L, Camera::GetMaxZoomFactor());
+	return 1;
+}
+
+int lua_SetMaxZoomFactor(lua_State* L)
+{
+	float factor = static_cast<float>(luaL_checknumber(L, 1));
+	Camera::SetMaxZoomFactor(factor);
 	return 0;
 }
 
@@ -486,10 +531,6 @@ extern "C"
 			{ "GetObj",			 	 lua_GetObj              },
 			{ "GetGravity",			 lua_GetGravity          },
 			{ "SetGravity",	         lua_SetGravity          },
-			//{ "SetLuminance",        lua_SetLuminance        },
-			//{ "GetLuminance",        lua_GetLuminance        },
-			//{ "GetFogStart",         lua_GetFogStart         },
-			//{ "SetFogStart",         lua_SetFogStart         },
 			{ "GetReticleAngle",	 lua_GetReticleAngle     },
 			{ "GetReticlePos",		 lua_GetReticlePos       },
 			{ "GetSmartCursorRange", lua_GetSmartCursorRange },
@@ -508,6 +549,12 @@ extern "C"
 			{ "SetSatZoom",          lua_SetSatZoom          },
 			{ "GetRadarState",	     lua_GetRadarState       },
 			{ "SetRadarState",		 lua_SetRadarState       },
+			{ "GetZoomFactor",       lua_GetZoomFactor       },
+			{ "SetZoomFactor",       lua_SetZoomFactor       },
+			{ "GetMinZoomFactor",    lua_GetMinZoomFactor    },
+			{ "SetMinZoomFactor",    lua_SetMinZoomFactor    },
+			{ "GetMaxZoomFactor",    lua_GetMaxZoomFactor    },
+			{ "SetMaxZoomFactor",    lua_SetMaxZoomFactor    },
 			{ "GetGameKey",          lua_GetGameKey          },
 			{ "GetSteam64",          lua_GetSteam64          },
 			{ "GetWeaponMask",       lua_GetWeaponMask       },

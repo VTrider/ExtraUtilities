@@ -7,7 +7,7 @@
 #include <Windows.h>
 
 #include <format>
-#include <unordered_map>
+#include <optional>
 #include <variant>
 #include <vector>
 
@@ -93,23 +93,36 @@ public:
 
 	static T Read(const std::uintptr_t address, bool overrideProtection = false)
 	{
-		if (overrideProtection == true)
+		try
 		{
-			::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
+			if (overrideProtection == true)
+			{
+				::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
+			}
+
+			T value = {};
+
+			if (useWinApi)
+			{
+				::ReadProcessMemory(pHandle, reinterpret_cast<const void*>(address), &value, sizeof(T), 0);
+			}
+			else
+			{
+				value = *reinterpret_cast<const T*>(address);
+			}
+
+			return value;
 		}
-
-		T value = {};
-
-		if (useWinApi)
+		catch (const std::exception& e)
 		{
-			::ReadProcessMemory(pHandle, reinterpret_cast<const void*>(address), &value, sizeof(T), 0);
+			SystemLog->Out(std::format("[EXU ERROR]: Caught exception {}", e.what()));
+			return T{};
 		}
-		else
+		catch (...)
 		{
-			value = *reinterpret_cast<const T*>(address);
+			SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
+			return T{};
 		}
-
-		return value;
 	}
 
 	
@@ -117,18 +130,29 @@ public:
 
 	static void Write(const std::uintptr_t address, const T& value, bool overrideProtection = false)
 	{
-		if (overrideProtection == true)
+		try
 		{
-			::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
-		}
+			if (overrideProtection == true)
+			{
+				::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
+			}
 
-		if (useWinApi)
-		{
-			::WriteProcessMemory(pHandle, reinterpret_cast<void*>(address), &value, sizeof(T), 0);
+			if (useWinApi)
+			{
+				::WriteProcessMemory(pHandle, reinterpret_cast<void*>(address), &value, sizeof(T), 0);
+			}
+			else
+			{
+				*reinterpret_cast<T*>(address) = value;
+			}
 		}
-		else
+		catch (const std::exception& e)
 		{
-			*reinterpret_cast<T*>(address) = value;
+			SystemLog->Out(std::format("[EXU ERROR]: Caught exception {}", e.what()));
+		}
+		catch (...)
+		{
+			SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
 		}
 	}
 
