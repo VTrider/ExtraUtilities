@@ -29,7 +29,10 @@
 *.exe
 *.out
 *.app
+
+# Other
 /.vs/ExtraUtilities
 /ExtraUtilities/Release
 /Release
 /.vs
+*.zip
