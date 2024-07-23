@@ -1,7 +1,7 @@
 --[[
 =====================================================
 *   Extra Utilities
-*   Version 0.6.0
+*   Version 0.6.2
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -21,8 +21,8 @@ require("exu")
 local extraUtils = {}
 do
     -- Metadata
-    local version = "0.6.0"
-    local crc32 = "C2F196C5"
+    local version = "0.6.2"
+    local crc32 = "D90C883B"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console
