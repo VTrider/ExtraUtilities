@@ -37,3 +37,9 @@
 /.vs
 *.zip
 *.user
+*.tlog
+*.lastbuildstate
+*.json
+*.command
+*.recipe
+*.log

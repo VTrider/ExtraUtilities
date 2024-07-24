@@ -96,7 +96,6 @@ void GUI()
     {
         if (Memory::CheckExitCondition(5, "Exit condition detected, exiting GUI thread"))
         {
-            MessageBox(0, "FUCK", "FUCK", MB_SYSTEMMODAL | MB_OK | MB_ICONERROR);
             break;
         }
     }
