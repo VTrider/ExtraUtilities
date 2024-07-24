@@ -23,11 +23,8 @@ extern int weaponMask;
 // asm functions
 
 void WeaponMaskHook();
-
 void OrdnanceVelocityHook();
-
 void OrdnancePositionHook();
-
 void ShotConvergenceHook();
 
 // callable functions

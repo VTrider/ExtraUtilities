@@ -72,7 +72,7 @@ void CodeInjection()
     Hook::CreateHook(Hooks::shotConvergence, ShotConvergenceHook, 6);
 }
 
-void Main()
+void GUI()
 {
     try
     {
@@ -92,8 +92,14 @@ void Main()
         goto UNLOAD;
     }
 
-    while (!GetAsyncKeyState(VK_END))
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    while (true)
+    {
+        if (Memory::CheckExitCondition(5, "Exit condition detected, exiting GUI thread"))
+        {
+            MessageBox(0, "FUCK", "FUCK", MB_SYSTEMMODAL | MB_OK | MB_ICONERROR);
+            break;
+        }
+    }
 
 UNLOAD:
     hooks::Destroy();
@@ -120,7 +126,7 @@ void AudioSystem()
     }
 }
 
-// Make separate threads so windows doesn't freak out
+// it's okay to detach these threads cause they will stop automatically
 DWORD WINAPI InitialThread(HMODULE hModule) 
 {
     SystemLog = new Log();
@@ -132,8 +138,8 @@ DWORD WINAPI InitialThread(HMODULE hModule)
     // std::thread audio(AudioSystem);
     // audio.detach();
 
-    // std::thread MainThread(Main);
-    // MainThread.detach();
+    std::thread GUIThread(GUI);
+    GUIThread.detach();
     return 0;
 }
 

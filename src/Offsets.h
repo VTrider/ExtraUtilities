@@ -38,6 +38,7 @@ namespace Hooks
 	constexpr std::uintptr_t ordnanceVelocity = 0x004803D4;
 	constexpr std::uintptr_t ordnancePosition = 0x00480357;
 	constexpr std::uintptr_t shotConvergence = 0x004eb590;
+	constexpr std::uintptr_t freeCursor = 0x0043510E;
 }
 
 namespace Environment

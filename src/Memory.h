@@ -33,6 +33,8 @@
 
 extern Log* SystemLog;
 
+void LockCursor();
+
 class Memory
 {
 private:
@@ -46,7 +48,10 @@ private:
 	static inline DWORD dummyOldProtection{}; // required arg for VirtualProtect
 
 	static inline int checkInterval{};
-	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(checkInterval);
+	// hardcoded at 5 seconds cause there's a race condition between this
+	// value and the dll reading it, so 0 or "right away" could potentially close
+	// the thread upon entering the game
+	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(5);
 
 public:
 	static void Init()
@@ -173,6 +178,8 @@ public:
 		}
 	}
 
+	
+
 	// hardcoded for now :(
 	static void RestoreAll()
 	{
@@ -187,5 +194,7 @@ public:
 		Memory::Write(Satellite::minZoom, 2.0f, true);
 
 		Memory::Write(Satellite::maxZoom, 8.0f, true);
+
+		LockCursor();
 	}
 };

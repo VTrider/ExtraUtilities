@@ -43,7 +43,7 @@ private:
 		CheckSize();
 		std::ofstream file(logPath, std::ios::app);
 		file << '\n';
-		file << "Extra Utilities started successfully!" << " Version: " << "0.6.0" << '\n';
+		file << "Extra Utilities started successfully!" << " Version: " << "0.6.3" << '\n';
 		file << "Logging level is: " << logLevel << '\n';
 		file.close();
 	}

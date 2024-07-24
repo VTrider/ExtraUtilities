@@ -21,6 +21,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx9.h"
 #include <stdexcept>
+#include "Offsets.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND window, UINT message, WPARAM wideParam, LPARAM longParam);
 
@@ -225,6 +226,23 @@ void gui::Render() noexcept
 	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 }
 
+DWORD temp;
+// this is insanely hacky, couldn't hook here so I'm just writing the opcode
+// to be je (lock) or jne (unlock) lol
+void FreeCursor()
+{
+	VirtualProtect(reinterpret_cast<void*>(Hooks::freeCursor), 1, PAGE_EXECUTE_READWRITE, &temp);
+	*reinterpret_cast<char*>(Hooks::freeCursor) = 0x75;
+	while (ShowCursor(TRUE) <= 0); // need to loop because it increments a counter not setting a direct value
+}
+
+void LockCursor()
+{
+	VirtualProtect(reinterpret_cast<void*>(Hooks::freeCursor), 1, PAGE_EXECUTE_READWRITE, &temp);
+	*reinterpret_cast<char*>(Hooks::freeCursor) = 0x74;
+	while (ShowCursor(FALSE) >= 0);
+}
+
 LRESULT CALLBACK WindowProcess(
 	HWND window,
 	UINT message,
@@ -236,36 +254,33 @@ LRESULT CALLBACK WindowProcess(
 	if (GetAsyncKeyState(VK_RSHIFT) & 1)
 	{
 		gui::open = !gui::open;
-		ClipCursor(NULL);
-		ReleaseCapture();
-		ShowCursor(TRUE);
+		if (gui::open)
+		{
+			FreeCursor();
+		}
+		else
+		{
+			LockCursor();
+		}
 	}
-		
-	// pass messages to imgui
-//	if (!gui::open && ImGui_ImplWin32_WndProcHandler( // negating open is a hack, idk why it's not initializing to true or something
-//		window,
-//		message,
-//		wideParam,
-//		longParam
-//	)) return 1L; // return 1L
 
-
-    if (!gui::open) {
+    if (gui::open) {
         if (ImGui_ImplWin32_WndProcHandler(window, message, wideParam, longParam))
             return true;
 
-        // Block all keyboard and mouse input messages from reaching the game
-        switch (message) {
-            case WM_MOUSEMOVE:
-            case WM_MOUSEWHEEL:
-            case WM_MOUSEHWHEEL:
-            case WM_INPUT:
-            case WM_CHAR:
-            case WM_SETCURSOR:
-                return 0;
-            default:
-                break;
-        }
+        // Block all keyboard and mouse input messages from reaching the game when the ui is open
+		if (message == WM_MOUSEMOVE
+			or message == WM_MOUSEWHEEL
+			or message == WM_INPUT
+			or message == WM_CHAR
+			or message == WM_SETCURSOR
+			or message == WM_KEYDOWN
+			or message == WM_KEYUP
+			or message == WM_SYSKEYDOWN
+			or message == WM_SYSKEYUP)
+		{
+			return 0;
+		}
     }
 
 	return CallWindowProc(
