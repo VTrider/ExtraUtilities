@@ -664,6 +664,79 @@ int lua_SetDiffuseColor(lua_State* L)
 	return 1;
 }
 
+std::uint32_t SetSpecularColor = static_cast<std::uint32_t>(Hooks::setSpecularColor);
+
+// this is essentially the same as diffuse color, gotta love OOP
+int lua_SetSpecularColor(lua_State* L)
+{
+	std::string myLabel = luaL_checkstring(L, 1);
+	r = static_cast<float>(luaL_checknumber(L, 2));
+	g = static_cast<float>(luaL_checknumber(L, 3));
+	b = static_cast<float>(luaL_checknumber(L, 4));
+
+	for (const auto& unit : Hook::unitLights)
+	{
+		if (unit.label == myLabel)
+		{
+			desiredLight = unit.light;
+		}
+	}
+
+	if (desiredLight == nullptr)
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	__asm
+	{
+		push ebp
+		mov ebp, esp
+
+		push eax
+		push ebx
+		push ecx
+		push edi
+		push esi
+		push edx
+
+		sub esp, 0x10
+		movdqu[esp], xmm0
+
+		sub esp, 0x4 // align stack
+
+		movss xmm0, [b]
+		movss[esp], xmm0
+		sub esp, 4
+
+		movss xmm0, [g]
+		movss[esp], xmm0
+		sub esp, 4
+
+		movss xmm0, [r]
+		movss[esp], xmm0
+
+		mov ecx, [desiredLight]
+		call SetSpecularColor
+
+		movdqu xmm0, [esp]
+		add esp, 0x10
+
+		pop edx
+		pop esi
+		pop edi
+		pop ecx
+		pop ebx
+		pop eax
+
+		mov esp, ebp
+		pop ebp
+	}
+
+	lua_pushboolean(L, true);
+	return 1;
+}
+
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
 
 extern "C" 
@@ -716,7 +789,8 @@ extern "C"
 			{ "FileRead",            lua_FileRead            },
 			{ "FileWrite",           lua_FileWrite           },
 			{ "CreateLog",           lua_CreateLog           },
-			{ "Test",                lua_Test                },
+			{ "SetDiffuseColor",     lua_SetDiffuseColor     },
+			{ "SetSpecularColor",    lua_SetSpecularColor    },
 			{0,                      0                       }
 		};
 		luaL_register(L, "exu", exu_export);

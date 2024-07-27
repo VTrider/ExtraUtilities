@@ -43,7 +43,8 @@ namespace Hooks // memory addresses of functions of interest
 	constexpr std::uintptr_t freeCursor = 0x0043510E;
 	constexpr std::uintptr_t getLightPtr = 0x0067FB13;
 	constexpr std::uintptr_t setDiffuseColor = 0x58AB0280;
-	constexpr std::uintptr_t setSpecularCololr = 0x58AB04B0;
+	constexpr std::uintptr_t setSpecularColor = 0x58AB04B0;
+	constexpr std::uintptr_t setSpotlightRange = 0x58AB0550;
 }
 
 namespace Environment

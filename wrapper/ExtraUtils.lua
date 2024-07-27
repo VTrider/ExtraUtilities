@@ -638,14 +638,29 @@ do
         return exu.CreateLog(path, level)
     end
 
-    local function Test(handle, r, g, b)
+    local function SetDiffuseColor(handle, r, g, b)
         local red = r or 1.0
         local green = g or 1.0
         local blue = b or 1.0
         
         local label = GetLabel(handle)
-        exu.Test(label, red, green, blue)
+        exu.SetDiffuseColor(label, red, green, blue)
     end
+
+    local function SetSpecularColor(handle, r, g, b)
+        local red = r or 1.0
+        local green = g or 1.0
+        local blue = b or 1.0
+        
+        local label = GetLabel(handle)
+        exu.SetSpecularColor(label, red, green, blue)
+    end
+
+    local function SetColor(handle, r, g, b)
+        SetDiffuseColor(handle, r, g, b)
+        SetSpecularColor(handle, r, g, b)
+    end
+
 
     -- Metadata
     extraUtils.version             = version
@@ -693,7 +708,9 @@ do
     extraUtils.FileRead              = FileRead
     extraUtils.FileWrite             = FileWrite
     extraUtils.CreateLog             = CreateLog
-    extraUtils.Test                  = Test
+    extraUtils.SetDiffuseColor       = SetDiffuseColor
+    extraUtils.SetSpecularColor      = SetSpecularColor
+    extraUtils.SetColor              = SetColor
 
 end
 return extraUtils
