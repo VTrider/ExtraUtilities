@@ -30,6 +30,12 @@ struct HookData
     int length;
 };
 
+struct UnitLight
+{
+    std::string label;
+    void* light;
+};
+
 class Hook
 {
 private:
@@ -50,6 +56,8 @@ private:
     }
 
 public:
+
+    static inline std::vector<UnitLight> unitLights;
 
     // WARNING: be extremely careful and triple check that you counted the right number of fking bytes,
     // if the hook is crashing despite proper usage, that probably means you interrupted some critical

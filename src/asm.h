@@ -26,6 +26,7 @@ void WeaponMaskHook();
 void OrdnanceVelocityHook();
 void OrdnancePositionHook();
 void ShotConvergenceHook();
+void LightPtrHook();
 
 // callable functions
 

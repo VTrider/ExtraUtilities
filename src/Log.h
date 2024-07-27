@@ -22,6 +22,7 @@
 #include <filesystem>
 #include <fstream>
 #include <chrono>
+#include <vector>
 
 class Log
 {
@@ -63,6 +64,13 @@ public:
 		LogInit();
 	}
 
+	~Log()
+	{
+		std::ofstream file(logPath, std::ios::app);
+		file << "Log succesfully closed";
+		file.close();
+	}
+
 	void Out(const std::string& content, const int level = 3)
 	{
 		if (logLevel < level)
@@ -96,5 +104,4 @@ public:
 	{
 		logPath = path;
 	}
-
 };

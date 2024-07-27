@@ -25,7 +25,9 @@
 #include "asm.h"
 #include "bzfunc.h"
 #include "filesystem.h"
+#include "Hook.h"
 #include "Memory.h"
+#include "Offsets.h"
 
 #include "lua.hpp"
 #include <Windows.h>
@@ -447,7 +449,6 @@ int lua_GetLives(lua_State* L)
 int lua_SetLives(lua_State* L)
 {
 	int newLives = luaL_checkinteger(L, 1);
-	lua_pop(L, 1);
 	Misc::SetLives(newLives);
 	return 1;
 }
@@ -501,9 +502,7 @@ int lua_SetAsUser(lua_State* L)
 {
 	void* handle = (void*)lua_touserdata(L, 1);
 	GameObject* gameObject = GetObj((unsigned int)handle);
-	Hooks::SetAsUser(gameObject);
-
-	lua_pop(L, 1);
+	FuncPtrs::SetAsUser(gameObject);
 	return 0;
 }
 
@@ -514,7 +513,6 @@ int lua_SetAsUser(lua_State* L)
 int lua_MakeDirectory(lua_State* L)
 {
 	const char* directory = luaL_checkstring(L, 1);
-	lua_pop(L, 1);
 	MakeDirectory(directory);
 	return 0;
 }
@@ -522,7 +520,6 @@ int lua_MakeDirectory(lua_State* L)
 int lua_FileRead(lua_State* L)
 {
 	const char* fileName = luaL_checkstring(L, 1);
-	lua_pop(L, 1);
 	lua_pushstring(L, FileRead(fileName));
 	return 1;
 }
@@ -531,9 +528,140 @@ int lua_FileWrite(lua_State* L)
 {
 	const char* fileName = luaL_checkstring(L, 1);
 	const char* content = luaL_checkstring(L, 2);
-	lua_pop(L, 2);
 	FileWrite(fileName, content);
 	return 0;
+}
+
+/*--------------
+* User Logging *
+---------------*/
+
+int lua_LogGC(lua_State* L) {
+	Log* instance = static_cast<Log*>(luaL_checkudata(L, 1, "LogMetatable"));
+	instance->~Log();  // Explicitly call the destructor
+	return 0;
+}
+
+int lua_LogOut(lua_State* L)
+{
+	Log* instance = static_cast<Log*>(luaL_checkudata(L, 1, "LogMetatable"));
+	const char* content = luaL_checkstring(L, 2);
+	int level = luaL_optinteger(L, 3, 3);
+	instance->Out(content, level);
+	return 0;
+}
+
+int lua_CreateLog(lua_State* L)
+{
+	std::string path = luaL_checkstring(L, 1);
+	int level = luaL_optinteger(L, 2, 3);
+
+	Log* instance = static_cast<Log*>(lua_newuserdata(L, sizeof(Log)));
+	new (instance) Log(path, level); // placement new since lua already allocated the memory
+
+	//luaL_newmetatable(L, "LogMetatable");
+
+	//lua_pushstring(L, "__gc");
+	//lua_pushcfunction(L, lua_LogGC);
+	//lua_settable(L, -3);
+
+	//lua_pushstring(L, "__index");
+	//lua_newtable(L);
+
+	//lua_pushstring(L, "Out");
+	//lua_pushcfunction(L, lua_LogOut);
+	//lua_settable(L, -3);
+
+	//lua_settable(L, -3); // set methods table to __index
+
+	//lua_setmetatable(L, -2); // set metatable for the log userdata
+
+	return 1;
+}
+
+std::uint32_t SetDiffuseColor = static_cast<std::uint32_t>(Hooks::setDiffuseColor);
+
+// THESE NEED TO BE GLOBAL - if they are local they get misaligned on the
+// stack when I make a new stack frame
+float r{};
+float g{};
+float b{};
+void* desiredLight{};
+
+int lua_SetDiffuseColor(lua_State* L)
+{
+	std::string myLabel = luaL_checkstring(L, 1);
+	r = static_cast<float>(luaL_checknumber(L, 2));
+	g = static_cast<float>(luaL_checknumber(L, 3));
+	b = static_cast<float>(luaL_checknumber(L, 4));
+
+	for (const auto& unit : Hook::unitLights)
+	{
+		if (unit.label == myLabel)
+		{
+			desiredLight = unit.light;
+		}
+	}
+
+	if (desiredLight == nullptr)
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	// wow this was utter BS to figure out
+	__asm
+	{
+		// setLightDiffuse erroneously requires its args to be at an offset of
+		// ebp+8 rather than ebp+4 so we subtract 4 from esp before the call to
+		// fix this and align the stack properly
+		push ebp // make new stack frame for good measure
+		mov ebp, esp
+
+		// I don't know which of these will fk stuff up so I'm just preserving all
+		// the general purpose registers as well as xmm0
+		push eax
+		push ebx
+		push ecx
+		push edi
+		push esi
+		push edx
+
+		sub esp, 0x10
+		movdqu [esp], xmm0
+
+		sub esp, 0x4 // align stack
+
+		movss xmm0, [b]
+		movss[esp], xmm0
+		sub esp, 4
+
+		movss xmm0, [g]
+		movss[esp], xmm0
+		sub esp, 4
+
+		movss xmm0, [r]
+		movss[esp], xmm0
+
+		mov ecx, [desiredLight]
+		call SetDiffuseColor
+
+		movdqu xmm0, [esp]
+		add esp, 0x10
+
+		pop edx
+		pop esi
+		pop edi
+		pop ecx
+		pop ebx
+		pop eax
+
+		mov esp, ebp
+		pop ebp
+	}
+
+	lua_pushboolean(L, true);
+	return 1;
 }
 
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
@@ -587,6 +715,8 @@ extern "C"
 			{ "MakeDirectory",       lua_MakeDirectory       },
 			{ "FileRead",            lua_FileRead            },
 			{ "FileWrite",           lua_FileWrite           },
+			{ "CreateLog",           lua_CreateLog           },
+			{ "Test",                lua_Test                },
 			{0,                      0                       }
 		};
 		luaL_register(L, "exu", exu_export);

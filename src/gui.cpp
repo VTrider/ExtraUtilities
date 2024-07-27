@@ -216,9 +216,8 @@ void gui::Render() noexcept
 	ImGui::NewFrame();
 
 	// do ui stuff here - widgets need to be within a window between imgui::begin and end
+	
 	ImGui::ShowDemoWindow();
-
-
 
 	// ImGui::Begin("cool menu", &open);
 	// ImGui::End();
@@ -271,7 +270,9 @@ LRESULT CALLBACK WindowProcess(
         if (ImGui_ImplWin32_WndProcHandler(window, message, wideParam, longParam))
             return true;
 
-        // Block all keyboard and mouse input messages from reaching the game when the ui is open
+        // Block all keyboard and mouse input messages from reaching the game when the ui is open,
+		// specifically if an input wasn't handled by imgui, yet the ui is still open, then it
+		// must be a "game input" so it should be blocked
 		if (message == WM_MOUSEMOVE
 			or message == WM_MOUSEWHEEL
 			or message == WM_INPUT

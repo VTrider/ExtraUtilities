@@ -30,6 +30,9 @@
 #include "Memory.h"
 #include "Offsets.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx9.h"
 #include <Windows.h>
 
 #include <chrono>
@@ -70,6 +73,7 @@ void CodeInjection()
     Hook::CreateHook(Hooks::ordnanceVelocity, OrdnanceVelocityHook, 5);
     Hook::CreateHook(Hooks::ordnancePosition, OrdnancePositionHook, 7);
     Hook::CreateHook(Hooks::shotConvergence, ShotConvergenceHook, 6);
+    Hook::CreateHook(Hooks::getLightPtr, LightPtrHook, 6);
 }
 
 void GUI()
@@ -133,12 +137,12 @@ DWORD WINAPI InitialThread(HMODULE hModule)
     InitializeConsole();
     FileSystem();
     CodeInjection();
-    
+
     // std::thread audio(AudioSystem);
     // audio.detach();
 
-    std::thread GUIThread(GUI);
-    GUIThread.detach();
+    // std::thread GUIThread(GUI);
+    // GUIThread.detach();
     return 0;
 }
 

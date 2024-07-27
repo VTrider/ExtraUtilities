@@ -23,6 +23,9 @@
 #include "Hook.h"
 #include "Offsets.h"
 
+#include <stdio.h>
+#include <string.h>
+
 int weaponMask;
 
 std::uint32_t jmpBackWeaponMask = static_cast<std::uint32_t>(Hooks::weaponMask) + 9; // this index is hardcoded for now unfortunately
@@ -236,5 +239,48 @@ void EnableShotConvergence()
 	if (!shotConvergenceApplied)
 	{
 		shotConvergenceApplied = true;
+	}
+}
+
+std::uint32_t jmpBackLightPtr = static_cast<std::uint32_t>(Hooks::getLightPtr) + 6;
+
+void* lightObj;
+
+const char* label;
+
+void __cdecl AddToUnitLights()
+{
+	UnitLight thisUnit{};
+
+	void* light = new void*;
+	light = lightObj;
+
+	thisUnit.label = label;
+	thisUnit.light = light;
+
+	Hook::unitLights.push_back(thisUnit);
+}
+
+void __declspec(naked) LightPtrHook()
+{
+	__asm
+	{
+		
+		push eax
+		push edx
+
+		lea eax, [ecx]
+		mov [lightObj], eax
+
+		lea eax, [ebp + 0xE0]
+		mov [label], eax
+
+		call AddToUnitLights
+
+		pop edx
+		pop eax
+
+		mov ecx, [ebp - 0xE8]
+		jmp [jmpBackLightPtr]
 	}
 }

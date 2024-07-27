@@ -37,6 +37,8 @@ namespace gui
 	inline LPDIRECT3DDEVICE9 device = nullptr;
 	inline LPDIRECT3D9 d3d9 = nullptr;
 
+	// window class
+
 	bool SetupWindowClass(const char* windowClassName) noexcept;
 	void DestroyWindowClass() noexcept;
 

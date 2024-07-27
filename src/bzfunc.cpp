@@ -498,8 +498,3 @@ namespace Misc
 		return 0;
 	}
 }
-
-namespace Hooks
-{
-	_SetAsUser SetAsUser = (_SetAsUser)0x004DB930;
-}

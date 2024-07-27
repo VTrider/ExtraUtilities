@@ -19,6 +19,8 @@
 #pragma once
 
 #include "bzr.h"
+#include "bzfunc.h"
+
 #include <iostream>
 
 // BZR 2.2.301
@@ -32,33 +34,36 @@ namespace Flags
 	constexpr std::uintptr_t inGame = 0x0091552A; // char static address maybe not 100% stable
 }
 
-namespace Hooks
+namespace Hooks // memory addresses of functions of interest
 {
 	constexpr std::uintptr_t weaponMask = 0x0060A8C6;
 	constexpr std::uintptr_t ordnanceVelocity = 0x004803D4;
 	constexpr std::uintptr_t ordnancePosition = 0x00480357;
 	constexpr std::uintptr_t shotConvergence = 0x004eb590;
 	constexpr std::uintptr_t freeCursor = 0x0043510E;
+	constexpr std::uintptr_t getLightPtr = 0x0067FB13;
+	constexpr std::uintptr_t setDiffuseColor = 0x58AB0280;
+	constexpr std::uintptr_t setSpecularCololr = 0x58AB04B0;
 }
 
 namespace Environment
 {
-	constexpr std::uintptr_t gravity = 0x00871A80;
+	constexpr std::uintptr_t gravity = 0x00871A80; // vec3
 }
 
 namespace Reticle
 {
 	constexpr std::uintptr_t angle = 0x025CE714; 
-	constexpr std::uintptr_t position = 0x025CE79C;
+	constexpr std::uintptr_t position = 0x025CE79C; // vec3
 	constexpr std::uintptr_t range = 0x00886B20;
 }
 
 namespace Satellite
 {
 	constexpr std::uintptr_t state = 0x008E8F9C; // char - old value bugged in MP 0x00917AF8
-	constexpr std::uintptr_t cursorPos = 0x009C9194;
-	constexpr std::uintptr_t camPos = 0x009C91B4;
-	constexpr std::uintptr_t clickPos = 0x009C9188; 
+	constexpr std::uintptr_t cursorPos = 0x009C9194; // vec3
+	constexpr std::uintptr_t camPos = 0x009C91B4; // vec3
+	constexpr std::uintptr_t clickPos = 0x009C9188; // vec3
 	constexpr std::uintptr_t panSpeed = 0x009C91D0;
 	constexpr std::uintptr_t minZoom = 0x00872400;
 	constexpr std::uintptr_t maxZoom = 0x008723F4;
@@ -84,4 +89,14 @@ namespace Misc
 	constexpr std::uintptr_t steam64 = 0x0260B1D0; // long long (8 bytes)
 	constexpr std::uintptr_t lives = 0x008E8D04; // int
 	constexpr std::uintptr_t difficulty = 0x25CFA1C; // char
+}
+
+namespace FuncPtrs
+{
+	typedef void(__thiscall* _SetAsUser)(GameObject* obj);
+	extern inline _SetAsUser SetAsUser = (_SetAsUser)0x004DB930;
+
+	// NOTE need to do this in assembly sub esp, 4 before the args are pushed
+	typedef void(__thiscall* _SetDiffuseColor)(void* light, float r, float g, float b);
+	extern inline _SetDiffuseColor SetDiffuseColor = (_SetDiffuseColor)0x5D8104B0;
 }

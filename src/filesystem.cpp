@@ -35,6 +35,11 @@ void CreateEXUDirectory()
 	}
 }
 
+std::string GetWorkingDirectory()
+{
+	return std::filesystem::current_path().string();
+}
+
 void MakeDirectory(const char* directory)
 {
 	std::filesystem::create_directories(directory);

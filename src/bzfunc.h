@@ -95,9 +95,3 @@ namespace Misc
 	const char* GetDifficulty();
 	int SetDifficulty(const std::string& newDifficulty);
 }
-
-namespace Hooks
-{
-	typedef void(__thiscall* _SetAsUser)(GameObject* obj);
-	extern _SetAsUser SetAsUser;
-}
