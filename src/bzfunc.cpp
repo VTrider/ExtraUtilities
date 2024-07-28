@@ -32,6 +32,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 extern Log* SystemLog;
@@ -246,153 +247,35 @@ namespace Camera
 
 namespace IO
 {
-	// there's probably a better way to do this, but oh well.
-// converts the inputted key into a virtual key for windows
+
 	int GetKeyCode(const std::string& key)
 	{
-		if (key == "0")
+		// this is still pretty aids but a lot better than if else hell lol
+		static const std::unordered_map<std::string, int> keyMap = {
+			{"0", 0x30}, {"1", 0x31}, {"2", 0x32}, {"3", 0x33}, {"4", 0x34},
+			{"5", 0x35}, {"6", 0x36}, {"7", 0x37}, {"8", 0x38}, {"9", 0x39},
+			{"A", 0x41}, {"B", 0x42}, {"C", 0x43}, {"D", 0x44}, {"E", 0x45},
+			{"F", 0x46}, {"G", 0x47}, {"H", 0x48}, {"I", 0x49}, {"J", 0x4A},
+			{"K", 0x4B}, {"L", 0x4C}, {"M", 0x4D}, {"N", 0x4E}, {"O", 0x4F},
+			{"P", 0x50}, {"Q", 0x51}, {"R", 0x52}, {"S", 0x53}, {"T", 0x54},
+			{"U", 0x55}, {"V", 0x56}, {"W", 0x57}, {"X", 0x58}, {"Y", 0x59},
+			{"Z", 0x5A}, {"CTRL", VK_CONTROL}, {"LCTRL", VK_LCONTROL}, {"RCTRL", VK_RCONTROL},
+			{"ALT", VK_MENU}, {"LALT", VK_LMENU}, {"RALT", VK_RMENU}, {"SHIFT", VK_SHIFT},
+			{"LSHIFT", VK_LSHIFT}, {"RSHIFT", VK_RSHIFT}, {"CAPSLOCK", VK_CAPITAL},
+			{"TAB", VK_TAB}, {"PAUSE", VK_PAUSE}, {"PAGEUP", VK_PRIOR}, {"PAGEDOWN", VK_NEXT},
+			{"END", VK_END}, {"HOME", VK_HOME}, {"INSERT", VK_INSERT}, {"DELETE", VK_DELETE},
+			{"BACKSPACE", VK_BACK}, {"ENTER", VK_RETURN}, {"SPACE", VK_SPACE},
+			{"LMB", VK_LBUTTON}, {"RMB", VK_RBUTTON}, {"MMB", VK_MBUTTON}, {"XB1", VK_XBUTTON1},
+			{"XB2", VK_XBUTTON2}, {"ESCAPE", VK_ESCAPE}, {"LARROW", VK_LEFT}, {"UARROW", VK_UP},
+			{"RARROW", VK_RIGHT}, {"DARROW", VK_DOWN}, {"F1", VK_F1}, {"F2", VK_F2}, {"F3", VK_F3},
+			{"F4", VK_F4}, {"F5", VK_F5}, {"F6", VK_F6}, {"F7", VK_F7}, {"F8", VK_F8},
+			{"F9", VK_F9}, {"F10", VK_F10}, {"F11", VK_F11}, {"F12", VK_F12},
+		};
+
+		auto it = keyMap.find(key);
+		if (it != keyMap.end())
 		{
-			return 0x30;
-		}
-		else if (key == "1")
-		{
-			return 0x31;
-		}
-		else if (key == "2")
-		{
-			return 0x32;
-		}
-		else if (key == "3")
-		{
-			return 0x33;
-		}
-		else if (key == "4")
-		{
-			return 0x34;
-		}
-		else if (key == "5")
-		{
-			return 0x35;
-		}
-		else if (key == "6")
-		{
-			return 0x36;
-		}
-		else if (key == "7")
-		{
-			return 0x37;
-		}
-		else if (key == "8")
-		{
-			return 0x38;
-		}
-		else if (key == "9")
-		{
-			return 0x39;
-		}
-		else if (key == "A")
-		{
-			return 0x41;
-		}
-		else if (key == "B")
-		{
-			return 0x42;
-		}
-		else if (key == "C")
-		{
-			return 0x43;
-		}
-		else if (key == "D")
-		{
-			return 0x44;
-		}
-		else if (key == "E")
-		{
-			return 0x45;
-		}
-		else if (key == "F")
-		{
-			return 0x46;
-		}
-		else if (key == "G")
-		{
-			return 0x47;
-		}
-		else if (key == "H")
-		{
-			return 0x48;
-		}
-		else if (key == "I")
-		{
-			return 0x49;
-		}
-		else if (key == "J")
-		{
-			return 0x4A;
-		}
-		else if (key == "K")
-		{
-			return 0x4B;
-		}
-		else if (key == "L")
-		{
-			return 0x4C;
-		}
-		else if (key == "M")
-		{
-			return 0x4D;
-		}
-		else if (key == "N")
-		{
-			return 0x4E;
-		}
-		else if (key == "O")
-		{
-			return 0x4F;
-		}
-		else if (key == "P")
-		{
-			return 0x50;
-		}
-		else if (key == "Q")
-		{
-			return 0x51;
-		}
-		else if (key == "R")
-		{
-			return 0x52;
-		}
-		else if (key == "S")
-		{
-			return 0x53;
-		}
-		else if (key == "T")
-		{
-			return 0x54;
-		}
-		else if (key == "U")
-		{
-			return 0x55;
-		}
-		else if (key == "V")
-		{
-			return 0x56;
-		}
-		else if (key == "W")
-		{
-			return 0x57;
-		}
-		else if (key == "X")
-		{
-			return 0x58;
-		}
-		else if (key == "Y")
-		{
-			return 0x59;
-		}
-		else if (key == "Z")
-		{
-			return 0x5A;
+			return it->second;
 		}
 		else
 		{
@@ -413,6 +296,11 @@ namespace IO
 			keyPressed = false;
 		}
 		return keyPressed;
+	}
+
+	bool GetGameKey2(int v2Key)
+	{
+		return GetAsyncKeyState(v2Key) != 0;
 	}
 }
 

@@ -585,7 +585,8 @@ do
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
             return
         end
-        local playerVelocity = GetVelocity(GetPlayerHandle())
+        local dot = DotProduct(GetVelocity(GetPlayerHandle()), GetFront(GetPlayerHandle()))
+        local playerVelocity = GetFront(GetPlayerHandle()) * dot
         local playerPosition = GetPosition(GetPlayerHandle())
         exu.UpdateOrdnance(playerVelocity.x, playerVelocity.y, playerVelocity.z, playerPosition.x, playerPosition.y, playerPosition.z)
     end
@@ -625,6 +626,14 @@ do
     end
 
     -- NO SAFEGUARDS ON THESE FUNCTIONS, BE CAREFUL LOL
+
+    local function GetWorkingDirectory()
+        return exu.GetWorkingDirectory()
+    end
+
+    local function MakeDirectory(name)
+        exu.MakeDirectory(name)
+    end
 
     local function FileRead(fileName)
         return exu.FileRead(fileName)
@@ -705,6 +714,8 @@ do
     extraUtils.UpdateOrdnance        = UpdateOrdnance
     extraUtils.EnableShotConvergence = EnableShotConvergence
     extraUtils.SetAsUser             = SetAsUser
+    extraUtils.GetWorkingDirectory   = GetWorkingDirectory
+    extraUtils.MakeDirectory         = MakeDirectory
     extraUtils.FileRead              = FileRead
     extraUtils.FileWrite             = FileWrite
     extraUtils.CreateLog             = CreateLog

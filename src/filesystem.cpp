@@ -64,6 +64,12 @@ const char* FileRead(const char* fileName)
 
 void FileWrite(const char* fileName, const char* content)
 {
+	std::filesystem::path path = fileName;
+	if (!std::filesystem::exists(path.parent_path()))
+	{
+		std::filesystem::create_directories(path.parent_path());
+	}
+
 	std::ofstream file(fileName);
 
 	file << content;

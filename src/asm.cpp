@@ -215,6 +215,8 @@ bool shotConvergenceApplied = false;
 
 std::uint32_t updateWeaponAimWalker = 0x0060f320;
 
+std::uint32_t jmpBackHovercraft = static_cast<std::uint32_t>(Hooks::shotConvergence) + 9;
+
 void __declspec(naked) ShotConvergenceHook()
 {
 	__asm
@@ -231,6 +233,7 @@ void __declspec(naked) ShotConvergenceHook()
 		push ebp
 		mov ebp, esp
 		sub esp, 0x318
+		jmp [jmpBackHovercraft]
 	}
 }
 

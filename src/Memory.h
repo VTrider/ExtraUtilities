@@ -45,6 +45,8 @@ private:
 	static inline HANDLE pHandle{};
 	static inline DWORD moduleBase{}; 
 
+	static inline HMODULE ogreMain;
+
 	static inline DWORD dummyOldProtection{}; // required arg for VirtualProtect
 
 	static inline int checkInterval{};
@@ -53,13 +55,31 @@ private:
 	// the thread upon entering the game
 	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(5);
 
+	// TODO FIX THIS FUCKING BULLSHIT
+	static std::uintptr_t GetOgreFunction(LPCSTR mangledName)
+	{
+		char* jmpAddress = reinterpret_cast<char*>(GetProcAddress(ogreMain, mangledName));
+		std::int32_t offset = *reinterpret_cast<std::int32_t*>(jmpAddress + 1);
+		std::uintptr_t realAddress = reinterpret_cast<std::uintptr_t>(jmpAddress + 5 + offset);
+		return realAddress;
+	}
+
 public:
+	static inline std::uintptr_t setDiffuseColour;
+
 	static void Init()
 	{
 		hWnd = FindWindowA(0, ("Battlezone 98 Redux (2.2.301)"));
 		GetWindowThreadProcessId(hWnd, &pid);
 		pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 		moduleBase = (DWORD)GetModuleHandle("Battlezone98Redux.exe"); // need to get the base address of the game in order to deal with multilevel pointers
+
+		//ogreMain = GetModuleHandle("OgreMain.dll");
+		//setDiffuseColour = GetOgreFunction("?setDiffuseColour@Light@Ogre@@QAEXMMM@Z");
+		//SystemLog->Out(std::format("Ogre is at {}", (int)ogreMain));
+		//SystemLog->Out(std::format("Ogre function is at {}", setDiffuseColour));
+		
+
 	}
 
 	static void SetAccessMode(int mode)

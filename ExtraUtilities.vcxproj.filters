@@ -69,15 +69,6 @@
     <ClCompile Include="src\gui.cpp">
       <Filter>Source Files\exu</Filter>
     </ClCompile>
-    <ClCompile Include="src\SoundDevice.cpp">
-      <Filter>Source Files\openal</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SoundBuffer.cpp">
-      <Filter>Source Files\openal</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SoundSource.cpp">
-      <Filter>Source Files\openal</Filter>
-    </ClCompile>
     <ClCompile Include="src\asm.cpp">
       <Filter>Source Files\exu</Filter>
     </ClCompile>
@@ -121,15 +112,6 @@
     </ClInclude>
     <ClInclude Include="src\Offsets.h">
       <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SoundDevice.h">
-      <Filter>Header Files\openal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SoundBuffer.h">
-      <Filter>Header Files\openal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SoundSource.h">
-      <Filter>Header Files\openal</Filter>
     </ClInclude>
     <ClInclude Include="src\Hook.h">
       <Filter>Header Files\exu</Filter>

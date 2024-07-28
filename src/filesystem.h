@@ -18,7 +18,13 @@
 
 #pragma once
 
+#include <filesystem>
+#include <iostream>
+#include <string>
+
 void CreateEXUDirectory();
+
+std::string GetWorkingDirectory();
 
 void MakeDirectory(const char* directory);
 

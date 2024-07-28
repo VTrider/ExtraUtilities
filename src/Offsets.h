@@ -21,6 +21,8 @@
 #include "bzr.h"
 #include "bzfunc.h"
 
+#include <Windows.h>
+
 #include <iostream>
 
 // BZR 2.2.301
@@ -42,9 +44,9 @@ namespace Hooks // memory addresses of functions of interest
 	constexpr std::uintptr_t shotConvergence = 0x004eb590;
 	constexpr std::uintptr_t freeCursor = 0x0043510E;
 	constexpr std::uintptr_t getLightPtr = 0x0067FB13;
-	constexpr std::uintptr_t setDiffuseColor = 0x58AB0280;
-	constexpr std::uintptr_t setSpecularColor = 0x58AB04B0;
-	constexpr std::uintptr_t setSpotlightRange = 0x58AB0550;
+	// static inline std::uintptr_t setDiffuseColour;
+	constexpr std::uintptr_t setSpecularColour = 0x123456;
+	extern std::uintptr_t setSpotlightRange;
 }
 
 namespace Environment

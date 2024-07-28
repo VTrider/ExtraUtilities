@@ -510,6 +510,13 @@ int lua_SetAsUser(lua_State* L)
 * Filesystem *
 -------------*/
 
+int lua_GetWorkingDirectory(lua_State* L)
+{
+	lua_pushstring(L, GetWorkingDirectory().c_str());
+	SystemLog->Out(GetWorkingDirectory());
+	return 1;
+}
+
 int lua_MakeDirectory(lua_State* L)
 {
 	const char* directory = luaL_checkstring(L, 1);
@@ -579,7 +586,7 @@ int lua_CreateLog(lua_State* L)
 	return 1;
 }
 
-std::uint32_t SetDiffuseColor = static_cast<std::uint32_t>(Hooks::setDiffuseColor);
+std::uint32_t* p_diffuseColor = &Memory::setDiffuseColour;
 
 // THESE NEED TO BE GLOBAL - if they are local they get misaligned on the
 // stack when I make a new stack frame
@@ -608,6 +615,8 @@ int lua_SetDiffuseColor(lua_State* L)
 		lua_pushboolean(L, false);
 		return 1;
 	}
+
+	std::uint32_t SetDiffuseColour = *p_diffuseColor;
 
 	// wow this was utter BS to figure out
 	__asm
@@ -644,7 +653,7 @@ int lua_SetDiffuseColor(lua_State* L)
 		movss[esp], xmm0
 
 		mov ecx, [desiredLight]
-		call SetDiffuseColor
+		call SetDiffuseColour
 
 		movdqu xmm0, [esp]
 		add esp, 0x10
@@ -664,7 +673,7 @@ int lua_SetDiffuseColor(lua_State* L)
 	return 1;
 }
 
-std::uint32_t SetSpecularColor = static_cast<std::uint32_t>(Hooks::setSpecularColor);
+std::uint32_t SetSpecularColour = static_cast<std::uint32_t>(Hooks::setSpecularColour);
 
 // this is essentially the same as diffuse color, gotta love OOP
 int lua_SetSpecularColor(lua_State* L)
@@ -717,7 +726,7 @@ int lua_SetSpecularColor(lua_State* L)
 		movss[esp], xmm0
 
 		mov ecx, [desiredLight]
-		call SetSpecularColor
+		call SetSpecularColour
 
 		movdqu xmm0, [esp]
 		add esp, 0x10
@@ -785,6 +794,7 @@ extern "C"
 			{ "GetDifficulty",       lua_GetDifficulty       },
 			{ "SetDifficulty",       lua_SetDifficulty       },
 			{ "SetAsUser",           lua_SetAsUser           },
+			{ "GetWorkingDirectory", lua_GetWorkingDirectory },
 			{ "MakeDirectory",       lua_MakeDirectory       },
 			{ "FileRead",            lua_FileRead            },
 			{ "FileWrite",           lua_FileWrite           },
