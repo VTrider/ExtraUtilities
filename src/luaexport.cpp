@@ -36,8 +36,6 @@
 #include <thread>
 #include "Log.h"
 
-extern Log* SystemLog;
-
 /*---------------------
 * Important Functions *
 ----------------------*/
@@ -586,10 +584,9 @@ int lua_CreateLog(lua_State* L)
 	return 1;
 }
 
-std::uint32_t* p_diffuseColor = &Memory::setDiffuseColour;
-
 // THESE NEED TO BE GLOBAL - if they are local they get misaligned on the
 // stack when I make a new stack frame
+std::uint32_t SetDiffuseColour{};
 float r{};
 float g{};
 float b{};
@@ -616,7 +613,7 @@ int lua_SetDiffuseColor(lua_State* L)
 		return 1;
 	}
 
-	std::uint32_t SetDiffuseColour = *p_diffuseColor;
+	SetDiffuseColour = static_cast<std::uint32_t>(setDiffuseColour);
 
 	// wow this was utter BS to figure out
 	__asm
@@ -673,7 +670,7 @@ int lua_SetDiffuseColor(lua_State* L)
 	return 1;
 }
 
-std::uint32_t SetSpecularColour = static_cast<std::uint32_t>(Hooks::setSpecularColour);
+std::uint32_t SetSpecularColour{};
 
 // this is essentially the same as diffuse color, gotta love OOP
 int lua_SetSpecularColor(lua_State* L)

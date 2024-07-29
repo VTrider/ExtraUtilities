@@ -25,8 +25,6 @@
 #include <string>
 #include "Log.h"
 
-extern Log* SystemLog;
-
 void CreateEXUDirectory()
 {
 	if (!std::filesystem::is_directory("Extra Utilities") || !std::filesystem::exists("Extra Utilities"))

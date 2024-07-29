@@ -35,8 +35,6 @@
 #include <unordered_map>
 #include <vector>
 
-extern Log* SystemLog;
-
 // Todo: 
 // - Dynamic Sunlight
 // - More TRN parameters, fog, time, and music maybe?

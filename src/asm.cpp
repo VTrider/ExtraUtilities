@@ -255,6 +255,8 @@ void __cdecl AddToUnitLights()
 {
 	UnitLight thisUnit{};
 
+	// this is leaking memory but it shouldn't matter unless you are playing
+	// for like 10 hours, calling delete in cleanup seems to crash the game
 	void* light = new void*;
 	light = lightObj;
 

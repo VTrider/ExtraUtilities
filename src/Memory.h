@@ -29,10 +29,6 @@
 #include <variant>
 #include <vector>
 
-// todo: restore values
-
-extern Log* SystemLog;
-
 void LockCursor();
 
 class Memory
@@ -55,7 +51,6 @@ private:
 	// the thread upon entering the game
 	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(5);
 
-	// TODO FIX THIS FUCKING BULLSHIT
 	static std::uintptr_t GetOgreFunction(LPCSTR mangledName)
 	{
 		char* jmpAddress = reinterpret_cast<char*>(GetProcAddress(ogreMain, mangledName));
@@ -65,7 +60,6 @@ private:
 	}
 
 public:
-	static inline std::uintptr_t setDiffuseColour;
 
 	static void Init()
 	{
@@ -74,13 +68,12 @@ public:
 		pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 		moduleBase = (DWORD)GetModuleHandle("Battlezone98Redux.exe"); // need to get the base address of the game in order to deal with multilevel pointers
 
-		//ogreMain = GetModuleHandle("OgreMain.dll");
-		//setDiffuseColour = GetOgreFunction("?setDiffuseColour@Light@Ogre@@QAEXMMM@Z");
-		//SystemLog->Out(std::format("Ogre is at {}", (int)ogreMain));
-		//SystemLog->Out(std::format("Ogre function is at {}", setDiffuseColour));
-		
+		ogreMain = GetModuleHandle("OgreMain.dll");
 
+		DefineOgreFunctions();
 	}
+
+	static void DefineOgreFunctions();
 
 	static void SetAccessMode(int mode)
 	{

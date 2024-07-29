@@ -19,8 +19,6 @@
 #include "Audio.h"
 #include "Log.h"
 
-extern Log* SystemLog;
-
 Audio::Audio()
 {
 	SystemLog->Out("Started audio thread", 3);

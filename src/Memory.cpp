@@ -16,19 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "gui.h"
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx9.h"
+#include "Memory.h"
 
-// write your custom ui here - widgets need to be within a window between imgui::begin and end,
-// the demo window contains those already so if you are showing the demo they aren't necessary
+#include "Offsets.h"
 
-void gui::UserGui() noexcept
+#include <iostream>
+#include <format>
+
+// this file is really just to define the ogre functions globally at runtime,
+// everything else is in the header
+
+std::uintptr_t setDiffuseColour{};
+
+void Memory::DefineOgreFunctions()
 {
-	// ImGui::Begin("cool menu", &open);
-
-	ImGui::ShowDemoWindow();
-
-	// ImGui::End();
+	setDiffuseColour = GetOgreFunction("?setDiffuseColour@Light@Ogre@@QAEXMMM@Z");
+	SystemLog->Out(std::format("Ogre is at {}", (int)ogreMain));
+	SystemLog->Out(std::format("Ogre function is at {}", setDiffuseColour));
 }

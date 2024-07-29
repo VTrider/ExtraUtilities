@@ -44,9 +44,6 @@ namespace Hooks // memory addresses of functions of interest
 	constexpr std::uintptr_t shotConvergence = 0x004eb590;
 	constexpr std::uintptr_t freeCursor = 0x0043510E;
 	constexpr std::uintptr_t getLightPtr = 0x0067FB13;
-	// static inline std::uintptr_t setDiffuseColour;
-	constexpr std::uintptr_t setSpecularColour = 0x123456;
-	extern std::uintptr_t setSpotlightRange;
 }
 
 namespace Environment
@@ -103,3 +100,7 @@ namespace FuncPtrs
 	typedef void(__thiscall* _SetDiffuseColor)(void* light, float r, float g, float b);
 	extern inline _SetDiffuseColor SetDiffuseColor = (_SetDiffuseColor)0x5D8104B0;
 }
+
+// Ogre
+
+extern std::uintptr_t setDiffuseColour;
