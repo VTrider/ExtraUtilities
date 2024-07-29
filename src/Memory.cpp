@@ -28,9 +28,11 @@
 
 std::uintptr_t setDiffuseColour{};
 std::uintptr_t setSpecularColour{};
+std::uintptr_t setSpotlightRange{};
 
 void Memory::DefineOgreFunctions()
 {
 	setDiffuseColour = GetOgreFunction("?setDiffuseColour@Light@Ogre@@QAEXMMM@Z");
 	setSpecularColour = GetOgreFunction("?setSpecularColour@Light@Ogre@@QAEXMMM@Z");
+	setSpotlightRange = GetOgreFunction("?setSpotlightRange@Light@Ogre@@QAEXABVRadian@2@0M@Z");
 }

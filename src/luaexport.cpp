@@ -443,7 +443,7 @@ int lua_GetLives(lua_State* L)
 	lua_pushnumber(L, Misc::GetLives());
 	return 1;
 }
-// 
+
 int lua_SetLives(lua_State* L)
 {
 	int newLives = luaL_checkinteger(L, 1);
@@ -747,6 +747,83 @@ int lua_SetSpecularColor(lua_State* L)
 	return 1;
 }
 
+float innerAngle{};
+float outerAngle{};
+float falloff{};
+
+std::uint32_t SetSpotlightRange{};
+
+// this is essentially the same as diffuse color, gotta love OOP
+int lua_SetSpotlightRange(lua_State* L)
+{
+	std::string myLabel = luaL_checkstring(L, 1);
+	innerAngle = static_cast<float>(luaL_checknumber(L, 2));
+	outerAngle = static_cast<float>(luaL_checknumber(L, 3));
+	falloff = static_cast<float>(luaL_checknumber(L, 4));
+
+	for (const auto& unit : Hook::unitLights)
+	{
+		if (unit.label == myLabel)
+		{
+			desiredLight = unit.light;
+		}
+	}
+
+	if (desiredLight == nullptr)
+	{
+		lua_pushboolean(L, false);
+		return 1;
+	}
+
+	SetSpotlightRange = static_cast<std::uint32_t>(setSpotlightRange);
+
+	__asm
+	{
+		push ebp
+		mov ebp, esp
+
+		push eax
+		push ebx
+		push ecx
+		push edi
+		push esi
+		push edx
+
+		sub esp, 0x10
+		movdqu[esp], xmm0
+
+		sub esp, 0x4 // align stack
+
+		movss xmm0, [falloff]
+		movss[esp], xmm0
+
+		lea eax, [outerAngle]
+		push eax
+
+		lea eax, [innerAngle]
+		push eax
+
+		mov ecx, [desiredLight]
+		call SetSpotlightRange
+
+		movdqu xmm0, [esp]
+		add esp, 0x10
+
+		pop edx
+		pop esi
+		pop edi
+		pop ecx
+		pop ebx
+		pop eax
+
+		mov esp, ebp
+		pop ebp
+	}
+
+	lua_pushboolean(L, true);
+	return 1;
+}
+
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
 
 extern "C" 
@@ -802,6 +879,7 @@ extern "C"
 			{ "CreateLog",           lua_CreateLog           },
 			{ "SetDiffuseColor",     lua_SetDiffuseColor     },
 			{ "SetSpecularColor",    lua_SetSpecularColor    },
+			{ "SetSpotlightRange",   lua_SetSpotlightRange   },
 			{0,                      0                       }
 		};
 		luaL_register(L, "exu", exu_export);

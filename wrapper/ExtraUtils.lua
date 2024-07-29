@@ -21,8 +21,8 @@ require("exu")
 local extraUtils = {}
 do
     -- Metadata
-    local version = "0.6.5"
-    local crc32 = "99952C72"
+    local version = "0.6.6"
+    local crc32 = "A700222E"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console
@@ -76,7 +76,7 @@ do
     *   Return Type: Userdata
     -------------------------------------------------------------
     ]]
-    
+
     local function GetGravity()
         local gravityVector = exu.GetGravity()
         local formattedVector = SetVector(gravityVector.x, gravityVector.y, gravityVector.z)
@@ -135,7 +135,7 @@ do
     *   Return Type: Number
     ------------------------------------------------------------------------
     ]]
-    
+
     local function GetReticleAngle()
         return exu.GetReticleAngle()
     end
@@ -155,7 +155,7 @@ do
         local formattedPos = SetVector(reticlePos.x, reticlePos.y, reticlePos.z) -- Make the table into a BZ-usable vector
         return formattedPos
     end
-    
+
     --[[
     -------------------------------------------------------------
     *   Name       : GetSatState
@@ -712,18 +712,18 @@ do
     *              : objects with lights will work, and the script must observe
     *              : the object being created to register the handle with the light,
     *              : pre-placed objects in the map will not work
+    *              : DEFAULT value = { 1.0, 1.0, 1.0 }
     *   Inputs     : Userdata handle, float color r, g, b
     *   Outputs    : Changes the diffuse color of the light
     *   Return Type: Bool - true if successful, false otherwise
     -------------------------------------------------------------------------------
     ]]
 
-    local function SetDiffuseColor(handle, r, g, b)
-        local red = r or 1.0
-        local green = g or 1.0
-        local blue = b or 1.0
-        
-        local label = GetLabel(handle)
+    local function SetDiffuseColor(_handle, _red, _green, _blue)
+        local red = _red or 1.0
+        local green = _green or 1.0
+        local blue = _blue or 1.0
+        local label = GetLabel(_handle)
         return exu.SetDiffuseColor(label, red, green, blue)
     end
 
@@ -735,22 +735,22 @@ do
     *              : objects with lights will work, and the script must observe
     *              : the object being created to register the handle with the light,
     *              : pre-placed objects in the map will not work
+    *              : DEFAULT value = { 1.0, 1.0, 1.0 }
     *   Inputs     : Userdata handle, float color r, g, b
     *   Outputs    : Changes the specular color of the light
     *   Return Type: Bool - true if successful, false otherwise
     -------------------------------------------------------------------------------
     ]]
 
-    local function SetSpecularColor(handle, r, g, b)
-        local red = r or 1.0
-        local green = g or 1.0
-        local blue = b or 1.0
-        
-        local label = GetLabel(handle)
+    local function SetSpecularColor(_handle, _red, _green, _blue)
+        local red = _red or 1.0
+        local green = _green or 1.0
+        local blue = _blue or 1.0
+        local label = GetLabel(_handle)
         return exu.SetSpecularColor(label, red, green, blue)
     end
 
-        --[[
+    --[[
     -------------------------------------------------------------------------------
     *   Name       : SetColor
     *   Description: Macro to use both light color functions at the same time
@@ -760,10 +760,34 @@ do
     -------------------------------------------------------------------------------
     ]]
 
-    local function SetColor(handle, r, g, b)
-        SetDiffuseColor(handle, r, g, b)
-        SetSpecularColor(handle, r, g, b)
+    local function SetColor(_handle, _red, _green, _blue)
+        SetDiffuseColor(_handle, _red, _green, _blue)
+        SetSpecularColor(_handle, _red, _green, _blue)
     end
+
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : SetSpotlightRange
+    *   Description: Copied from ogre docs: "Sets the range of a spotlight, i.e.
+    *              : the angle of the inner and outer cones and the rate of falloff 
+    *              : between them."
+    *   Inputs     : Userdata handle, float inner angle (bright inner cone) in
+    *              : radians, float outer angle (outer cone) in radians, float
+    *              : falloff (rate of falloff between cones), 1.0 is linear, 
+    *              : <1.0 is slower falloff, >1.0 is faster falloff 
+    *   Outputs    : Changes the range of the light
+    *   Return Type: Bool - true if successful, false otherwise
+    -------------------------------------------------------------------------------
+    ]]
+
+    local function SetSpotlightRange(_handle, _innerAngle, _outerAngle, _falloff)
+        local falloff = _falloff or 1.0 -- default value
+        local outerAngle = _outerAngle or 0.35 -- default value
+        local innerAngle = _innerAngle or 0.1745 -- default value
+        local label = GetLabel(_handle)
+        return exu.SetSpotlightRange(label, innerAngle, outerAngle, falloff)
+    end
+
 
 
     -- Metadata
@@ -817,6 +841,7 @@ do
     extraUtils.SetDiffuseColor       = SetDiffuseColor
     extraUtils.SetSpecularColor      = SetSpecularColor
     extraUtils.SetColor              = SetColor
+    extraUtils.SetSpotlightRange     = SetSpotlightRange
 
 end
 return extraUtils

@@ -101,3 +101,4 @@ namespace FuncPtrs
 
 extern std::uintptr_t setDiffuseColour;
 extern std::uintptr_t setSpecularColour;
+extern std::uintptr_t setSpotlightRange;
