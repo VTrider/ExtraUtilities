@@ -95,12 +95,8 @@ namespace FuncPtrs
 {
 	typedef void(__thiscall* _SetAsUser)(GameObject* obj);
 	extern inline _SetAsUser SetAsUser = (_SetAsUser)0x004DB930;
-
-	// NOTE need to do this in assembly sub esp, 4 before the args are pushed
-	typedef void(__thiscall* _SetDiffuseColor)(void* light, float r, float g, float b);
-	extern inline _SetDiffuseColor SetDiffuseColor = (_SetDiffuseColor)0x5D8104B0;
 }
 
-// Ogre
+// Ogre - these need to be extern since they're defined at runtime
 
 extern std::uintptr_t setDiffuseColour;

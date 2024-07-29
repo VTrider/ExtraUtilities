@@ -295,11 +295,6 @@ namespace IO
 		}
 		return keyPressed;
 	}
-
-	bool GetGameKey2(int v2Key)
-	{
-		return GetAsyncKeyState(v2Key) != 0;
-	}
 }
 
 namespace Misc
