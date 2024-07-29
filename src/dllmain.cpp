@@ -141,8 +141,8 @@ DWORD WINAPI InitialThread(HMODULE hModule)
     // std::thread audio(AudioSystem);
     // audio.detach();
 
-    std::thread GUIThread(GUI);
-    GUIThread.detach();
+    // std::thread GUIThread(GUI);
+    // GUIThread.detach();
     return 0;
 }
 
