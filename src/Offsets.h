@@ -100,3 +100,4 @@ namespace FuncPtrs
 // Ogre - these need to be extern since they're defined at runtime
 
 extern std::uintptr_t setDiffuseColour;
+extern std::uintptr_t setSpecularColour;

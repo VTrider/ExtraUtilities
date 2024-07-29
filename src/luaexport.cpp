@@ -586,11 +586,13 @@ int lua_CreateLog(lua_State* L)
 
 // THESE NEED TO BE GLOBAL - if they are local they get misaligned on the
 // stack when I make a new stack frame
-std::uint32_t SetDiffuseColour{};
+
 float r{};
 float g{};
 float b{};
 void* desiredLight{};
+
+std::uint32_t SetDiffuseColour{};
 
 int lua_SetDiffuseColor(lua_State* L)
 {
@@ -693,6 +695,8 @@ int lua_SetSpecularColor(lua_State* L)
 		lua_pushboolean(L, false);
 		return 1;
 	}
+
+	SetSpecularColour = static_cast<std::uint32_t>(setSpecularColour);
 
 	__asm
 	{

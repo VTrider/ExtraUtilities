@@ -191,8 +191,6 @@ public:
 		}
 	}
 
-	
-
 	// hardcoded for now :(
 	static void RestoreAll()
 	{

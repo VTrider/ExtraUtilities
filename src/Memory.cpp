@@ -27,10 +27,10 @@
 // everything else is in the header
 
 std::uintptr_t setDiffuseColour{};
+std::uintptr_t setSpecularColour{};
 
 void Memory::DefineOgreFunctions()
 {
 	setDiffuseColour = GetOgreFunction("?setDiffuseColour@Light@Ogre@@QAEXMMM@Z");
-	SystemLog->Out(std::format("Ogre is at {}", (int)ogreMain));
-	SystemLog->Out(std::format("Ogre function is at {}", setDiffuseColour));
+	setSpecularColour = GetOgreFunction("?setSpecularColour@Light@Ogre@@QAEXMMM@Z");
 }

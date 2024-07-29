@@ -549,14 +549,15 @@ do
     --[[
     --------------------------------------------------------------------------
     *   Name       : Ordnance Velocity Inheritance
-    *   Description: Enables full velocity inheritance on the local player's
+    *   Description: Enables velocity inheritance on the local player's
     *                ordnance. You can control the ratio of velocity inherited
     *                by providing a float argument from 0-1. The default value
     *                is 1 (full inheritance).
     *                WARNING: you MUST call Enable BEFORE calling Update,
     *                and you must call UpdateOrdnance in the update loop to
     *                apply the patch.
-    *   Inputs     : Optional float ratio
+    *   Inputs     : Optional float ratio, optional inheritance type "FULL" or
+    *              : "FRONT"
     *   Outputs    : Velocity inheritance patch
     *   Return Type: Void
     --------------------------------------------------------------------------
@@ -580,13 +581,25 @@ do
         exu.EnableOrdnanceTweak(velocityScalingFactor)
     end
 
-    local function UpdateOrdnance()
+    local function UpdateOrdnance(what)
         if IsNetGame == true and debug == false then
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
             return
         end
-        local dot = DotProduct(GetVelocity(GetPlayerHandle()), GetFront(GetPlayerHandle()))
-        local playerVelocity = GetFront(GetPlayerHandle()) * dot
+
+        inheritanceType = what or "FULL"
+        assert(type(inheritanceType) == "string", "Extra Utilities Error: to specify velocity inheritance, use one of the string parameters")
+
+        local playerVelocity
+
+        if inheritanceType == "FULL" then
+            playerVelocity = GetVelocity(GetPlayerHandle())
+        elseif inheritanceType == "FRONT" then
+            local dot = DotProduct(GetVelocity(GetPlayerHandle()), GetFront(GetPlayerHandle()))
+            local playerFront = GetFront(GetPlayerHandle()) * dot
+            playerVelocity = SetVector(playerFront.x, 0, playerFront.z) -- we only want the horizontal component
+        end
+
         local playerPosition = GetPosition(GetPlayerHandle())
         exu.UpdateOrdnance(playerVelocity.x, playerVelocity.y, playerVelocity.z, playerPosition.x, playerPosition.y, playerPosition.z)
     end
@@ -625,27 +638,85 @@ do
         exu.SetAsUser(handle)
     end
 
-    -- NO SAFEGUARDS ON THESE FUNCTIONS, BE CAREFUL LOL
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : GetWorkingDirectory
+    *   Description: Returns the current directory of the battlezone executable
+    *              : (should be the default game folder)
+    *   Inputs     : None
+    *   Outputs    : Game directory
+    *   Return Type: String
+    -------------------------------------------------------------------------------
+    ]]
 
     local function GetWorkingDirectory()
         return exu.GetWorkingDirectory()
     end
 
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : MakeDirectory
+    *   Description: Creates an empty folder at the given location - NOTE: use
+    *              : backslashes for path names
+    *   Inputs     : String path
+    *   Outputs    : New folder
+    *   Return Type: Void
+    -------------------------------------------------------------------------------
+    ]]
+
     local function MakeDirectory(name)
         exu.MakeDirectory(name)
     end
+
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : FileRead
+    *   Description: Reads the contents of the given file into a single formatted
+    *              : string
+    *   Inputs     : String path to file
+    *   Outputs    : Contents of given file
+    *   Return Type: String
+    -------------------------------------------------------------------------------
+    ]]
 
     local function FileRead(fileName)
         return exu.FileRead(fileName)
     end
 
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : FileWrite
+    *   Description: Writes the input string into the given file - NOTE: overwrites
+    *              : ALL contents of the file, so save it before if you need to
+    *   Inputs     : String path to file, string content
+    *   Outputs    : Writes the given string to the file
+    *   Return Type: Void
+    -------------------------------------------------------------------------------
+    ]]
+
     local function FileWrite(fileName, content)
         exu.FileWrite(fileName, content)
     end
 
+    -- Broken currently do not use
+
     local function CreateLog(path, level)
         return exu.CreateLog(path, level)
     end
+
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : SetDiffuseColor
+    *   Description: Changes the diffuse color of the headlight on the given ship
+    *              : LIMITATIONS: only tested on ships, unknown if other game
+    *              : objects with lights will work, and the script must observe
+    *              : the object being created to register the handle with the light,
+    *              : pre-placed objects in the map will not work
+    *   Inputs     : Userdata handle, float color r, g, b
+    *   Outputs    : Changes the diffuse color of the light
+    *   Return Type: Bool - true if successful, false otherwise
+    -------------------------------------------------------------------------------
+    ]]
 
     local function SetDiffuseColor(handle, r, g, b)
         local red = r or 1.0
@@ -653,8 +724,22 @@ do
         local blue = b or 1.0
         
         local label = GetLabel(handle)
-        exu.SetDiffuseColor(label, red, green, blue)
+        return exu.SetDiffuseColor(label, red, green, blue)
     end
+
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : SetSpecularColor
+    *   Description: Changes the diffuse color of the headlight on the given ship
+    *              : LIMITATIONS: only tested on ships, unknown if other game
+    *              : objects with lights will work, and the script must observe
+    *              : the object being created to register the handle with the light,
+    *              : pre-placed objects in the map will not work
+    *   Inputs     : Userdata handle, float color r, g, b
+    *   Outputs    : Changes the specular color of the light
+    *   Return Type: Bool - true if successful, false otherwise
+    -------------------------------------------------------------------------------
+    ]]
 
     local function SetSpecularColor(handle, r, g, b)
         local red = r or 1.0
@@ -662,8 +747,18 @@ do
         local blue = b or 1.0
         
         local label = GetLabel(handle)
-        exu.SetSpecularColor(label, red, green, blue)
+        return exu.SetSpecularColor(label, red, green, blue)
     end
+
+        --[[
+    -------------------------------------------------------------------------------
+    *   Name       : SetColor
+    *   Description: Macro to use both light color functions at the same time
+    *   Inputs     : Userdata handle, float color r, g, b
+    *   Outputs    : Changes the color of the light
+    *   Return Type: Void
+    -------------------------------------------------------------------------------
+    ]]
 
     local function SetColor(handle, r, g, b)
         SetDiffuseColor(handle, r, g, b)
