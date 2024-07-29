@@ -72,6 +72,9 @@
     <ClCompile Include="src\asm.cpp">
       <Filter>Source Files\exu</Filter>
     </ClCompile>
+    <ClCompile Include="src\usergui.cpp">
+      <Filter>Source Files\exu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">

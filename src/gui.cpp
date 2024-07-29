@@ -215,12 +215,9 @@ void gui::Render() noexcept
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// do ui stuff here - widgets need to be within a window between imgui::begin and end
+	// make your custom ui inside usergui.cpp where this function is defined
 	
-	ImGui::ShowDemoWindow();
-
-	// ImGui::Begin("cool menu", &open);
-	// ImGui::End();
+	gui::UserGui();
 
 	// end frame
 	ImGui::EndFrame();

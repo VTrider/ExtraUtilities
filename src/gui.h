@@ -55,4 +55,6 @@ namespace gui
 	void Destroy() noexcept;
 
 	void Render() noexcept;
+
+	void UserGui() noexcept;
 }
