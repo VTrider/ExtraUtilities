@@ -17,6 +17,9 @@ Compatibility:
 - Windows: Yes
 - Mac: No
 - Linux: No
+- DirectX9: Yes (note this is the default setting so don't worry about it unless you previously changed it)
+- DirectX11: No
+- OpenGL: No
 
 Contact me on discord: vtrider
 
