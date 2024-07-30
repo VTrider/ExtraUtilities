@@ -197,6 +197,7 @@
     <ClInclude Include="src\bzfunc.h" />
     <ClInclude Include="src\bzr.h" />
     <ClInclude Include="src\dx9hook.h" />
+    <ClInclude Include="src\exumeta.h" />
     <ClInclude Include="src\filesystem.h" />
     <ClInclude Include="src\gui.h" />
     <ClInclude Include="src\Hook.h" />

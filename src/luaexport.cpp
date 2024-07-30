@@ -22,8 +22,11 @@
 * lua stack						   *
 -----------------------------------*/
 
+#pragma warning(disable : 4731) // warning about modifying the stack frame in the assembly code, it's necessary here
+
 #include "asm.h"
 #include "bzfunc.h"
+#include "exumeta.h"
 #include "filesystem.h"
 #include "Hook.h"
 #include "Memory.h"
@@ -42,7 +45,7 @@
 
 int lua_GetVersion(lua_State* L) 
 {
-	lua_pushstring(L, "test");
+	lua_pushstring(L, Exu::version.c_str());
 	return 1;
 }
 
@@ -57,7 +60,6 @@ int lua_GetObj(lua_State* L)
 {
 	void* handle = (void*)lua_touserdata(L, 1);
 	GameObject* gameObject = GetObj((unsigned int)handle);
-	lua_pop(L, 1);
 	lua_pushlightuserdata(L, gameObject);
 	return 1;
 }
@@ -69,7 +71,6 @@ int lua_GetObj(lua_State* L)
 int lua_GetGravity(lua_State* L)
 {
 	VECTOR_3D gravity = Environment::GetGravity();
-	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
 	lua_pushnumber(L, gravity.x);
@@ -89,7 +90,6 @@ int	lua_SetGravity(lua_State* L)
 	float x = static_cast<float>(luaL_checknumber(L, 1));
 	float y = static_cast<float>(luaL_checknumber(L, 2));
 	float z = static_cast<float>(luaL_checknumber(L, 3));
-	lua_pop(L, 3);
 	Environment::SetGravity(x, y, z);
 	return 0;
 }
@@ -109,7 +109,6 @@ int lua_GetReticlePos(lua_State* L)
 	try
 	{
 		VECTOR_3D reticlePos = Reticle::GetReticlePos();
-		lua_pop(L, 1);
 		lua_createtable(L, 0, 3);
 
 		lua_pushnumber(L, reticlePos.x);
@@ -146,7 +145,6 @@ int lua_SetSmartCursorRange(lua_State* L)
 	try
 	{
 		float range = static_cast<float>(luaL_checknumber(L, 1));
-		lua_pop(L, 1);
 		Reticle::SetSmartCursorRange(range);
 		return 0;
 	}
@@ -218,7 +216,6 @@ int lua_GetSatCursorPos(lua_State* L)
 int lua_GetSatCamPos(lua_State* L)
 {
 	VECTOR_3D camPos = Satellite::GetSatCamPos();
-	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
 	lua_pushnumber(L, camPos.x);
@@ -236,7 +233,6 @@ int lua_GetSatCamPos(lua_State* L)
 int lua_GetSatClickPos(lua_State* L)
 {
 	VECTOR_3D clickPos = Satellite::GetSatClickPos();
-	lua_pop(L, 1);
 	lua_createtable(L, 0, 3);
 
 	lua_pushnumber(L, clickPos.x);
@@ -262,7 +258,6 @@ int lua_SetSatPanSpeed(lua_State* L)
 	try
 	{
 		float speed = static_cast<float>(luaL_checknumber(L, 1));
-		lua_pop(L, 1);
 		Satellite::SetSatPanSpeed(speed);
 		return 0;
 	}
@@ -287,7 +282,6 @@ int lua_GetMinSatZoom(lua_State* L)
 int lua_SetMinSatZoom(lua_State* L)
 {
 	float zoom = static_cast<float>(luaL_checknumber(L, 1));
-	lua_pop(L, 1);
 	Satellite::SetMinSatZoom(zoom);
 	return 0;
 }
@@ -301,7 +295,6 @@ int lua_GetMaxSatZoom(lua_State* L)
 int lua_SetMaxSatZoom(lua_State* L)
 {
 	float zoom = static_cast<float>(luaL_checknumber(L, 1));
-	lua_pop(L, 1);
 	Satellite::SetMaxSatZoom(zoom);
 	return 0;
 }
@@ -317,7 +310,6 @@ int lua_SetSatZoom(lua_State* L)
 	try
 	{
 		float zoom = static_cast<float>(luaL_checknumber(L, 1));
-		lua_pop(L, 1);
 		Satellite::SetSatZoom(zoom);
 		return 0;
 	}
@@ -346,7 +338,6 @@ int lua_GetRadarState(lua_State* L)
 int lua_SetRadarState(lua_State* L) 
 {
 	int state = luaL_checkinteger(L, 1);
-	lua_pop(L, 1);
 	Radar::SetRadarState(state);
 	return 0;
 }
@@ -833,6 +824,7 @@ extern "C"
 
 		const luaL_Reg exu_export[] = {
 			// EXU Functions:
+			{ "GetVersion",          lua_GetVersion          },
 			{ "SetAccessMode",       lua_SetAccessMode       },
 			{ "GetObj",			 	 lua_GetObj              },
 			{ "GetGravity",			 lua_GetGravity          },

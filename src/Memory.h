@@ -41,7 +41,7 @@ private:
 	static inline HANDLE pHandle{};
 	static inline DWORD moduleBase{}; 
 
-	static inline HMODULE ogreMain;
+	static inline HMODULE ogreMain{};
 
 	static inline DWORD dummyOldProtection{}; // required arg for VirtualProtect
 

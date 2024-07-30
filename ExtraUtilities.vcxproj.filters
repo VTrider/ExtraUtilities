@@ -128,5 +128,8 @@
     <ClInclude Include="src\Utils.h">
       <Filter>Header Files\exu</Filter>
     </ClInclude>
+    <ClInclude Include="src\exumeta.h">
+      <Filter>Header Files\exu</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

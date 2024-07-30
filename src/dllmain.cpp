@@ -48,7 +48,7 @@
 * Threads *
 ----------*/
 
-void FileSystem()
+static void FileSystem()
 {
     CreateEXUDirectory();
     std::cout << "EXU Directory Created" << '\n';
@@ -56,7 +56,7 @@ void FileSystem()
 
 bool enableConsole = false;
 
-void InitializeConsole()
+static void InitializeConsole()
 {
     if (enableConsole)
     {
@@ -67,7 +67,7 @@ void InitializeConsole()
     }
 }
 
-void CodeInjection()
+static void CodeInjection()
 {
     Hook::CreateHook(Hooks::weaponMask, WeaponMaskHook, 9);
     Hook::CreateHook(Hooks::ordnanceVelocity, OrdnanceVelocityHook, 5);
@@ -76,7 +76,7 @@ void CodeInjection()
     Hook::CreateHook(Hooks::getLightPtr, LightPtrHook, 6);
 }
 
-void GUI()
+static void GUI()
 {
     try
     {
@@ -111,7 +111,7 @@ UNLOAD:
 
 Log* SystemLog;
 
-void AudioSystem()
+static void AudioSystem()
 {
     Audio audioSystem;
 
@@ -130,7 +130,7 @@ void AudioSystem()
 }
 
 // it's okay to detach these threads cause they will stop automatically
-DWORD WINAPI InitialThread(HMODULE hModule) 
+static DWORD WINAPI InitialThread(HMODULE hModule) 
 {
     SystemLog = new Log();
     Memory::Init();

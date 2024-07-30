@@ -60,7 +60,7 @@ MAT_3D ordnancePosition;
 double ordnanceDistance;
 double ordPosTolerance = 5;
 
-double __cdecl Distance3D(VECTOR_3D_DOUBLE* a, VECTOR_3D_DOUBLE* b)
+static double __cdecl Distance3D(VECTOR_3D_DOUBLE* a, VECTOR_3D_DOUBLE* b)
 {
 	return sqrt(pow((b->x - a->x), 2) + pow((b->y - a->y), 2) + pow((b->z - a->z), 2));
 }
@@ -251,7 +251,7 @@ void* lightObj;
 
 const char* label;
 
-void __cdecl AddToUnitLights()
+static void __cdecl AddToUnitLights()
 {
 	UnitLight thisUnit{};
 

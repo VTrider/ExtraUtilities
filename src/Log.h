@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "exumeta.h"
+
 #include <iostream>
 #include <filesystem>
 #include <fstream>
@@ -39,14 +41,20 @@ private:
 		}
 	}
 
+	bool CheckEmpty(const std::filesystem::path& filePath)
+	{
+		std::ifstream file(filePath, std::ios::ate);
+		return file.tellg() == 0; // return 0 if file is empty
+	}
+
 	void LogInit()
 	{
 		CheckSize();
 		std::ofstream file(logPath, std::ios::app);
-		file << '\n';
-		file << "Extra Utilities started successfully!" << " Version: " << "0.6.3" << '\n';
-		file << "Logging level is: " << logLevel << '\n';
+		if (!CheckEmpty(logPath)) { file << '\n'; }
 		file.close();
+		Out(std::format("Extra Utilities started successfully! Version: {}", Exu::version));
+		Out(std::format("Logging level is: {}", logLevel));
 	}
 
 public:
@@ -62,13 +70,6 @@ public:
 		logPath = path;
 		logLevel = level;
 		LogInit();
-	}
-
-	~Log()
-	{
-		std::ofstream file(logPath, std::ios::app);
-		file << "Log succesfully closed";
-		file.close();
 	}
 
 	void Out(const std::string& content, const int level = 3)
