@@ -24,6 +24,7 @@
 #include <filesystem>
 #include <fstream>
 #include <chrono>
+#include <memory>
 #include <vector>
 
 class Log
@@ -107,4 +108,4 @@ public:
 	}
 };
 
-extern Log* SystemLog;
+extern std::unique_ptr<Log> SystemLog;

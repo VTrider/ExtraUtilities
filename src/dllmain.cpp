@@ -109,7 +109,7 @@ UNLOAD:
     gui::Destroy();
 }
 
-Log* SystemLog;
+std::unique_ptr<Log> SystemLog;
 
 static void AudioSystem()
 {
@@ -132,7 +132,7 @@ static void AudioSystem()
 // it's okay to detach these threads cause they will stop automatically
 static DWORD WINAPI InitialThread(HMODULE hModule) 
 {
-    SystemLog = new Log();
+    SystemLog = std::make_unique<Log>(Log());
     Memory::Init();
     InitializeConsole();
     FileSystem();
@@ -170,7 +170,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         Memory::RestoreAll();
         FreeConsole();
         SystemLog->Out("exu.dll detached from process", 3);
-        delete SystemLog;
         // MessageBox(NULL, "PROCESS DETACH!", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         break;
     }
