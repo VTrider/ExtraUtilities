@@ -472,15 +472,15 @@ do
     end
 
     --[[
-    ---------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------------
     *   Name       : GetGameKey
-    *   Description: Gets whether or not a key is held, currently only supports
-    *                alphanumeric characters
+    *   Description: Gets whether or not a key is held, a full list of keys can be found here:
+    *              : https://github.com/VTrider/ExtraUtilities/wiki/GetGameKey()-Keycodes
     *   Inputs     : String key (stock GameKey calling conventions, single 
     *                capital letter)
     *   Outputs    : True = is held, False = is not held
     *   Return Type: Bool
-    ---------------------------------------------------------------------------
+    ------------------------------------------------------------------------------------------
     ]]
 
     local function GetGameKey(key)
