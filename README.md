@@ -20,6 +20,8 @@ Compatibility:
 - DirectX9: Yes (note this is the default setting so don't worry about it unless you previously changed it)
 - DirectX11: No
 - OpenGL: No
+- Steam: Yes
+- GOG: No
 
 Contact me on discord: vtrider
 
