@@ -21,6 +21,7 @@
 #include <Windows.h>
 
 #include <iostream>
+#include <memory>
 #include <vector>
 
 struct HookData
@@ -33,7 +34,7 @@ struct HookData
 struct UnitLight
 {
     std::string label;
-    void* light;
+    std::unique_ptr<void*> light;
 };
 
 class Hook

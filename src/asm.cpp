@@ -23,6 +23,7 @@
 #include "Hook.h"
 #include "Offsets.h"
 
+#include <memory>
 #include <stdio.h>
 #include <string.h>
 
@@ -257,13 +258,12 @@ static void __cdecl AddToUnitLights()
 
 	// this is leaking memory but it shouldn't matter unless you are playing
 	// for like 10 hours, calling delete in cleanup seems to crash the game
-	void* light = new void*;
-	light = lightObj;
+	auto light = std::make_unique<void*>(lightObj);
 
 	thisUnit.label = label;
-	thisUnit.light = light;
+	thisUnit.light = std::move(light);
 
-	Hook::unitLights.push_back(thisUnit);
+	Hook::unitLights.push_back(std::move(thisUnit));
 }
 
 void __declspec(naked) LightPtrHook()

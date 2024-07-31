@@ -596,7 +596,10 @@ int lua_SetDiffuseColor(lua_State* L)
 	{
 		if (unit.label == myLabel)
 		{
-			desiredLight = unit.light;
+			SystemLog->Out(std::to_string((int)*unit.light));
+			SystemLog->Out(std::to_string((int)unit.light.get()));
+			desiredLight = *unit.light;
+			break;
 		}
 	}
 
@@ -677,7 +680,8 @@ int lua_SetSpecularColor(lua_State* L)
 	{
 		if (unit.label == myLabel)
 		{
-			desiredLight = unit.light;
+			desiredLight = *unit.light;
+			break;
 		}
 	}
 
@@ -756,7 +760,8 @@ int lua_SetSpotlightRange(lua_State* L)
 	{
 		if (unit.label == myLabel)
 		{
-			desiredLight = unit.light;
+			desiredLight = *unit.light;
+			break;
 		}
 	}
 
