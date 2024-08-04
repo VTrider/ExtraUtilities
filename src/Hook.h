@@ -40,7 +40,6 @@ struct UnitLight
 class Hook
 {
 private:
-
     static inline std::vector<HookData> hookData{};
 
     static void Restore(std::uintptr_t address, unsigned char* originalBytes, int length)
@@ -57,7 +56,6 @@ private:
     }
 
 public:
-
     static inline std::vector<UnitLight> unitLights;
 
     // WARNING: be extremely careful and triple check that you counted the right number of fking bytes,
@@ -80,8 +78,8 @@ public:
 
         memset(reinterpret_cast<void*>(hookAddress), 0x90, length); // nops the hooked code so nothing bad happens
 
-        DWORD relativeAddress = ((DWORD)function - (DWORD)hookAddress) - 5; // calculate the address of the function to jmp to
-        *(BYTE*)hookAddress = 0xE9; // sets jmp instruction at hook address
+        DWORD relativeAddress = ((DWORD)function - (DWORD)hookAddress) - 5; // calculate the relative address of the function
+        *(BYTE*)hookAddress = 0xE9; // jump near - probably fine but might have to change to jump far (0xEA) in an edge case
         *(DWORD*)((DWORD)hookAddress + 1) = relativeAddress; // writes the next 4 bytes with the target address (opcode is 5 bytes total)
 
         DWORD temp;

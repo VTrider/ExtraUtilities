@@ -1,7 +1,7 @@
 --[[
 =====================================================
 *   Extra Utilities
-*   Version 0.6.7
+*   Version 0.6.8
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -22,7 +22,7 @@ local extraUtils = {}
 do
     -- Metadata
     local version = exu.GetVersion()
-    local crc32 = "F19F3F8A"
+    local crc32 = "08C7DEC0"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console

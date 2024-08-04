@@ -230,7 +230,6 @@ void __declspec(naked) ShotConvergenceHook()
 
 		notEnabled:
 
-		// game code, doesn't really matter cause we won't return
 		push ebp
 		mov ebp, esp
 		sub esp, 0x318
@@ -256,8 +255,6 @@ static void __cdecl AddToUnitLights()
 {
 	UnitLight thisUnit{};
 
-	// this is leaking memory but it shouldn't matter unless you are playing
-	// for like 10 hours, calling delete in cleanup seems to crash the game
 	auto light = std::make_unique<void*>(lightObj);
 
 	thisUnit.label = label;

@@ -102,14 +102,7 @@ namespace Satellite
 	{
 		char state = Memory::Read<char>(Satellite::state);
 		// need to get the inverse for satellite state
-		if (state == 1)
-		{
-			return 0;
-		}
-		else
-		{
-			return 1;
-		}
+		return (state ? 0 : 1);
 	}
 
 	VECTOR_3D GetSatCursorPos()
@@ -245,7 +238,6 @@ namespace Camera
 
 namespace IO
 {
-
 	int GetKeyCode(const std::string& key)
 	{
 		// this is still pretty aids but a lot better than if else hell lol

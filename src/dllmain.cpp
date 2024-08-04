@@ -38,7 +38,6 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-#include <print>
 #include <vector>
 
 // Todo: free cursor frame game while gui is active

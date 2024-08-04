@@ -596,8 +596,6 @@ int lua_SetDiffuseColor(lua_State* L)
 	{
 		if (unit.label == myLabel)
 		{
-			SystemLog->Out(std::to_string((int)*unit.light));
-			SystemLog->Out(std::to_string((int)unit.light.get()));
 			desiredLight = *unit.light;
 			break;
 		}
@@ -748,7 +746,6 @@ float falloff{};
 
 std::uint32_t SetSpotlightRange{};
 
-// this is essentially the same as diffuse color, gotta love OOP
 int lua_SetSpotlightRange(lua_State* L)
 {
 	std::string myLabel = luaL_checkstring(L, 1);
