@@ -711,7 +711,7 @@ do
     *              : LIMITATIONS: only tested on ships, unknown if other game
     *              : objects with lights will work, and the script must observe
     *              : the object being created to register the handle with the light,
-    *              : pre-placed objects in the map will not work
+    *              : pre-placed objects on the map will not work
     *              : DEFAULT value = { 1.0, 1.0, 1.0 }
     *   Inputs     : Userdata handle, float color r, g, b
     *   Outputs    : Changes the diffuse color of the light
@@ -734,7 +734,7 @@ do
     *              : LIMITATIONS: only tested on ships, unknown if other game
     *              : objects with lights will work, and the script must observe
     *              : the object being created to register the handle with the light,
-    *              : pre-placed objects in the map will not work
+    *              : pre-placed objects on the map will not work
     *              : DEFAULT value = { 1.0, 1.0, 1.0 }
     *   Inputs     : Userdata handle, float color r, g, b
     *   Outputs    : Changes the specular color of the light
