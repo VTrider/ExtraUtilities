@@ -41,7 +41,6 @@
 // - More sat parameters, wasDown, gameobject under cursor, gameobject it's centered on - you
 // - Who am I looking at?
 
-
 // For reticle cone angle degrees/3.75 = value needed
 
 /*---------------------
@@ -83,7 +82,7 @@ namespace Reticle
 	{
 		return Memory::Read<VECTOR_3D>(Reticle::position);
 	}
-
+	
 	float GetSmartCursorRange()
 	{
 		return Memory::Read<float>(Reticle::range);
@@ -95,14 +94,12 @@ namespace Reticle
 	}
 }
 
-
 namespace Satellite
 {
 	char GetSatState()
 	{
 		char state = Memory::Read<char>(Satellite::state);
-		// need to get the inverse for satellite state
-		return (state ? 0 : 1);
+		return state ? 0 : 1; // need to get the inverse for satellite state
 	}
 
 	VECTOR_3D GetSatCursorPos()
@@ -172,7 +169,6 @@ namespace Radar
 	{
 		Memory::Write(Radar::state, state);
 	}
-
 }
 
 namespace Camera
@@ -233,7 +229,6 @@ namespace Camera
 	{
 		return Memory::Read<Frustum>(Camera::viewFrustum);
 	}
-
 }
 
 namespace IO
@@ -277,15 +272,7 @@ namespace IO
 
 	bool GetGameKey(int vKey) // takes the virtual key to use in GetAsyncKeyState
 	{
-		if (GetAsyncKeyState(vKey))
-		{
-			keyPressed = true;
-		}
-		else
-		{
-			keyPressed = false;
-		}
-		return keyPressed;
+		return GetAsyncKeyState(vKey) ? true : false; // TODO: TEST
 	}
 }
 

@@ -33,7 +33,7 @@ private:
 	std::filesystem::path logPath;
 	int logLevel; // 0 = off | 1 = Error | 2 = Warning | 3 = Info
 
-	void CheckSize()
+	void CheckSize() const
 	{
 		auto size = std::filesystem::file_size(logPath);
 		if (size/1000 > 100) // delete file if bigger than 100 kb
@@ -42,7 +42,7 @@ private:
 		}
 	}
 
-	bool CheckEmpty(const std::filesystem::path& filePath)
+	bool CheckEmpty(const std::filesystem::path& filePath) const
 	{
 		std::ifstream file(filePath, std::ios::ate);
 		return file.tellg() == 0; // return 0 if file is empty
@@ -73,7 +73,7 @@ public:
 		LogInit();
 	}
 
-	void Out(const std::string& content, const int level = 3)
+	void Out(const std::string& content, const int level = 3) const
 	{
 		if (logLevel < level)
 			return;
@@ -87,7 +87,7 @@ public:
 		file.close();
 	}
 
-	int GetLogLevel()
+	int GetLogLevel() const
 	{
 		return logLevel;
 	}
@@ -97,7 +97,7 @@ public:
 		logLevel = level;
 	}
 
-	std::filesystem::path GetLogPath()
+	std::filesystem::path GetLogPath() const
 	{
 		return logPath;
 	}

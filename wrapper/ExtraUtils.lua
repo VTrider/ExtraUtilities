@@ -14,7 +14,7 @@
 =======================================================
 *   - Script and DLL extension made by VTrider
 =======================================================
-]]
+--]]
 
 local exu = require("exu")
 
@@ -42,7 +42,7 @@ do
     *   Outputs    : New access mode
     *   Return Type: Void
     -----------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetAccessMode(mode)
         if mode ~= 0 and mode ~= 1 then
@@ -61,7 +61,7 @@ do
     *   Outputs    : GameObject pointer
     *   Return Type: Userdata
     ---------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetObj(handle)
         return exu.GetObj(handle)
@@ -75,7 +75,7 @@ do
     *   Outputs    : VECTOR_3D velocity: X, Y, Z
     *   Return Type: Userdata
     -------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetGravity()
         local gravityVector = exu.GetGravity()
@@ -91,7 +91,7 @@ do
     *   Outputs    : New gravity value
     *   Return Type: Void
     --------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetGravity(x, y, z)
         exu.SetGravity(x, y, z)
@@ -105,7 +105,7 @@ do
     *   Outputs    : Current range of smart cursor
     *   Return Type: Number
     ---------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSmartCursorRange()
         return exu.GetSmartCursorRange()
@@ -119,7 +119,7 @@ do
     *   Outputs    : New smart cursor range
     *   Return Type: Void
     ---------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetSmartCursorRange(range)
         exu.SetSmartCursorRange(range)
@@ -134,7 +134,7 @@ do
     *                with world not local rotation
     *   Return Type: Number
     ------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetReticleAngle()
         return exu.GetReticleAngle()
@@ -148,7 +148,7 @@ do
     *   Outputs    : VECTOR_3D coordinates: X, Y, Z
     *   Return Type: Userdata
     ------------------------------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetReticlePos()
         local reticlePos = exu.GetReticlePos() -- The vector components arrive in a table from the DLL
@@ -164,7 +164,7 @@ do
     *   Outputs    : 1 = enabled, 0 = disabled
     *   Return Type: Number
     -------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSatState()
         return exu.GetSatState()
@@ -181,7 +181,7 @@ do
     *   Outputs    : VECTOR_3D coordinates: X, Y, Z
     *   Return Type: Userdata
     ---------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSatCursorPos()
         local cursorPos = exu.GetSatCursorPos()
@@ -200,7 +200,7 @@ do
     *   Outputs    : VECTOR_3D coordinates: X, Y, Z
     *   Return Type: Userdata
     ----------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSatCamPos()
         local camPos = exu.GetSatCamPos()
@@ -219,7 +219,7 @@ do
     *   Outputs    : VECTOR_3D coordinates: X, Y, Z
     *   Return Type: Userdata
     -------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSatClickPos()
         local clickPos = exu.GetSatClickPos()
@@ -236,7 +236,7 @@ do
     *   Outputs    : Current pan speed
     *   Return Type: Number
     --------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSatPanSpeed()
         return exu.GetSatPanSpeed()
@@ -251,7 +251,7 @@ do
     *   Outputs    : New pan speed
     *   Return Type: Void
     --------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetSatPanSpeed(speed)
         exu.SetSatPanSpeed(speed)
@@ -266,7 +266,7 @@ do
     *   Outputs    : Current minimum zoom
     *   Return Type: Number
     ---------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetMinSatZoom()
         return exu.GetMinSatZoom()
@@ -281,7 +281,7 @@ do
     *   Outputs    : New minimum zoom
     *   Return Type: Void
     ---------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetMinSatZoom(zoom)
         exu.SetMinSatZoom(zoom)
@@ -296,7 +296,7 @@ do
     *   Outputs    : Current Maximum zoom
     *   Return Type: Number
     ---------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetMaxSatZoom()
         return exu.GetMaxSatZoom()
@@ -311,7 +311,7 @@ do
     *   Outputs    : New Maximum zoom
     *   Return Type: Void
     ---------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetMaxSatZoom(zoom)
         exu.SetMaxSatZoom(zoom)
@@ -326,7 +326,7 @@ do
     *   Outputs    : Current satellite zoom level
     *   Return Type: Number
     ---------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSatZoom()
         return exu.GetSatZoom()
@@ -342,7 +342,7 @@ do
     *   Outputs    : New satellite zoom level
     *   Return Type: Void
     ------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetSatZoom(zoom)
         exu.SetSatZoom(zoom)
@@ -356,7 +356,7 @@ do
     *   Outputs    : 1 = radar, 0 = minimap
     *   Return Type: Number
     ---------------------------------------------------------
-    ]]
+    --]]
 
     local function GetRadarState()
         return exu.GetRadarState()
@@ -370,7 +370,7 @@ do
     *   Outputs    : New radar state
     *   Return Type: Void
     ---------------------------------------------------------
-    ]]
+    --]]
 
     local function SetRadarState(state)
         exu.SetRadarState(state)
@@ -386,7 +386,7 @@ do
     *   Outputs    : Current zoom factor
     *   Return Type: Float
     ----------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetZoomFactor(camera)
         if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
@@ -405,7 +405,7 @@ do
     *   Outputs    : New zoom factor
     *   Return Type: Void
     -----------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetZoomFactor(factor, camera)
         if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
@@ -423,7 +423,7 @@ do
     *   Outputs    : Current minimum zoom factor
     *   Return Type: Float
     -----------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetMinZoomFactor()
         return exu.GetMinZoomFactor()
@@ -437,7 +437,7 @@ do
     *   Outputs    : New minimum zoom factor
     *   Return Type: Void
     -----------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetMinZoomFactor(factor)
         exu.SetMinZoomFactor(factor)
@@ -451,7 +451,7 @@ do
     *   Outputs    : Current maximum zoom factor
     *   Return Type: Float
     -----------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetMaxZoomFactor()
         return exu.GetMaxZoomFactor()
@@ -465,7 +465,7 @@ do
     *   Outputs    : New maximum zoom factor
     *   Return Type: Void
     -----------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetMaxZoomFactor(factor)
         exu.SetMaxZoomFactor(factor)
@@ -481,7 +481,7 @@ do
     *   Outputs    : True = is held, False = is not held
     *   Return Type: Bool
     ------------------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetGameKey(key)
         return exu.GetGameKey(key)
@@ -495,7 +495,7 @@ do
     *   Outputs    : Steam64 ID
     *   Return Type: String
     ---------------------------------------------------------
-    ]]
+    --]]
 
     local function GetSteam64()
         return exu.GetSteam64()
@@ -511,7 +511,7 @@ do
     *   Outputs    : Current weapon mask
     *   Return Type: Number
     -----------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetWeaponMask()
         return exu.GetWeaponMask()
@@ -525,7 +525,7 @@ do
     *   Outputs    : Lives
     *   Return Type: Number
     ----------------------------------------
-    ]]
+    --]]
 
     local function GetLives()
         return exu.GetLives()
@@ -540,7 +540,7 @@ do
     *   Outputs    : New lives
     *   Return Type: Void
     -----------------------------------------------------------
-    ]]
+    --]]
 
     local function SetLives(lives)
         exu.SetLives(lives)
@@ -561,7 +561,7 @@ do
     *   Outputs    : Velocity inheritance patch
     *   Return Type: Void
     --------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function EnableOrdnanceTweak(ratio)
         if IsNetGame == true and debug == false then
@@ -587,7 +587,7 @@ do
             return
         end
 
-        inheritanceType = what or "FULL"
+        local inheritanceType = what or "FULL"
         assert(type(inheritanceType) == "string", "Extra Utilities Error: to specify velocity inheritance, use one of the string parameters")
 
         local playerVelocity
@@ -612,7 +612,7 @@ do
     *   Outputs    : Shot convergence 
     *   Return Type: Void
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function EnableShotConvergence()
         exu.EnableShotConvergence()
@@ -626,7 +626,7 @@ do
     *   Outputs    : Local user assumes control of the given vehicle
     *   Return Type: Void
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetAsUser(handle)
         if not IsValid(handle) then -- needs to exist, otherwise access violation
@@ -647,7 +647,7 @@ do
     *   Outputs    : Game directory
     *   Return Type: String
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function GetWorkingDirectory()
         return exu.GetWorkingDirectory()
@@ -662,7 +662,7 @@ do
     *   Outputs    : New folder
     *   Return Type: Void
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function MakeDirectory(name)
         exu.MakeDirectory(name)
@@ -677,7 +677,7 @@ do
     *   Outputs    : Contents of given file
     *   Return Type: String
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function FileRead(fileName)
         return exu.FileRead(fileName)
@@ -692,7 +692,7 @@ do
     *   Outputs    : Writes the given string to the file
     *   Return Type: Void
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function FileWrite(fileName, content)
         exu.FileWrite(fileName, content)
@@ -717,7 +717,7 @@ do
     *   Outputs    : Changes the diffuse color of the light
     *   Return Type: Bool - true if successful, false otherwise
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetDiffuseColor(_handle, _red, _green, _blue)
         local red = _red or 1.0
@@ -740,7 +740,7 @@ do
     *   Outputs    : Changes the specular color of the light
     *   Return Type: Bool - true if successful, false otherwise
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetSpecularColor(_handle, _red, _green, _blue)
         local red = _red or 1.0
@@ -758,7 +758,7 @@ do
     *   Outputs    : Changes the color of the light
     *   Return Type: Void
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetColor(_handle, _red, _green, _blue)
         SetDiffuseColor(_handle, _red, _green, _blue)
@@ -778,7 +778,7 @@ do
     *   Outputs    : Changes the range of the light
     *   Return Type: Bool - true if successful, false otherwise
     -------------------------------------------------------------------------------
-    ]]
+    --]]
 
     local function SetSpotlightRange(_handle, _innerAngle, _outerAngle, _falloff)
         local falloff = _falloff or 1.0 -- default value

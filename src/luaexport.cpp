@@ -43,20 +43,20 @@
 * Important Functions *
 ----------------------*/
 
-int lua_GetVersion(lua_State* L) 
+static int lua_GetVersion(lua_State* L)
 {
 	lua_pushstring(L, Exu::version.c_str());
 	return 1;
 }
 
-int lua_SetAccessMode(lua_State* L)
+static int lua_SetAccessMode(lua_State* L)
 {
 	int mode = luaL_checkinteger(L, 1);
 	Memory::SetAccessMode(mode);
 	return 0;
 }
 
-int lua_GetObj(lua_State* L)
+static int lua_GetObj(lua_State* L)
 {
 	void* handle = (void*)lua_touserdata(L, 1);
 	GameObject* gameObject = GetObj((unsigned int)handle);
@@ -68,7 +68,7 @@ int lua_GetObj(lua_State* L)
 * Environment Functions *
 ----------------------- */
 
-int lua_GetGravity(lua_State* L)
+static int lua_GetGravity(lua_State* L)
 {
 	VECTOR_3D gravity = Environment::GetGravity();
 	lua_createtable(L, 0, 3);
@@ -98,13 +98,13 @@ int	lua_SetGravity(lua_State* L)
 * Reticle Functions *
 ------------------- */
 
-int lua_GetReticleAngle(lua_State* L)
+static int lua_GetReticleAngle(lua_State* L)
 {
 	lua_pushnumber(L, Reticle::GetReticleAngle());
 	return 1;
 }
 
-int lua_GetReticlePos(lua_State* L) 
+static int lua_GetReticlePos(lua_State* L) 
 {
 	try
 	{
@@ -134,13 +134,13 @@ int lua_GetReticlePos(lua_State* L)
 	}
 }
 
-int lua_GetSmartCursorRange(lua_State* L)
+static int lua_GetSmartCursorRange(lua_State* L)
 {
 	lua_pushnumber(L, Reticle::GetSmartCursorRange());
 	return 1;
 }
 
-int lua_SetSmartCursorRange(lua_State* L)
+static int lua_SetSmartCursorRange(lua_State* L)
 {
 	try
 	{
@@ -164,7 +164,7 @@ int lua_SetSmartCursorRange(lua_State* L)
 * Satellite Functions *
 --------------------- */
 
-int lua_GetSatState(lua_State* L)
+static int lua_GetSatState(lua_State* L)
 {
 	try
 	{
@@ -183,7 +183,7 @@ int lua_GetSatState(lua_State* L)
 	}
 }
 
-int lua_GetSatCursorPos(lua_State* L)
+static int lua_GetSatCursorPos(lua_State* L)
 {
 	try
 	{
@@ -213,7 +213,7 @@ int lua_GetSatCursorPos(lua_State* L)
 	}
 }
 
-int lua_GetSatCamPos(lua_State* L)
+static int lua_GetSatCamPos(lua_State* L)
 {
 	VECTOR_3D camPos = Satellite::GetSatCamPos();
 	lua_createtable(L, 0, 3);
@@ -230,7 +230,7 @@ int lua_GetSatCamPos(lua_State* L)
 	return 1;
 }
 
-int lua_GetSatClickPos(lua_State* L)
+static int lua_GetSatClickPos(lua_State* L)
 {
 	VECTOR_3D clickPos = Satellite::GetSatClickPos();
 	lua_createtable(L, 0, 3);
@@ -247,13 +247,13 @@ int lua_GetSatClickPos(lua_State* L)
 	return 1;
 }
 
-int lua_GetSatPanSpeed(lua_State* L)
+static int lua_GetSatPanSpeed(lua_State* L)
 {
 	lua_pushnumber(L, Satellite::GetSatPanSpeed());
 	return 1;
 }
 
-int lua_SetSatPanSpeed(lua_State* L)
+static int lua_SetSatPanSpeed(lua_State* L)
 {
 	try
 	{
@@ -273,39 +273,39 @@ int lua_SetSatPanSpeed(lua_State* L)
 	}
 }
 
-int lua_GetMinSatZoom(lua_State* L)
+static int lua_GetMinSatZoom(lua_State* L)
 {
 	lua_pushnumber(L, Satellite::GetMinSatZoom());
 	return 1;
 }
 
-int lua_SetMinSatZoom(lua_State* L)
+static int lua_SetMinSatZoom(lua_State* L)
 {
 	float zoom = static_cast<float>(luaL_checknumber(L, 1));
 	Satellite::SetMinSatZoom(zoom);
 	return 0;
 }
 
-int lua_GetMaxSatZoom(lua_State* L)
+static int lua_GetMaxSatZoom(lua_State* L)
 {
 	lua_pushnumber(L, Satellite::GetMaxSatZoom());
 	return 1;
 }
 
-int lua_SetMaxSatZoom(lua_State* L)
+static int lua_SetMaxSatZoom(lua_State* L)
 {
 	float zoom = static_cast<float>(luaL_checknumber(L, 1));
 	Satellite::SetMaxSatZoom(zoom);
 	return 0;
 }
 
-int lua_GetSatZoom(lua_State* L)
+static int lua_GetSatZoom(lua_State* L)
 {
 	lua_pushnumber(L, Satellite::GetSatZoom());
 	return 1;
 }
 
-int lua_SetSatZoom(lua_State* L)
+static int lua_SetSatZoom(lua_State* L)
 {
 	try
 	{
@@ -329,13 +329,13 @@ int lua_SetSatZoom(lua_State* L)
 * Radar Functions *
 ------------------*/
 
-int lua_GetRadarState(lua_State* L) 
+static int lua_GetRadarState(lua_State* L) 
 {
 	lua_pushnumber(L, Radar::GetRadarState());
 	return 1;
 }
 
-int lua_SetRadarState(lua_State* L) 
+static int lua_SetRadarState(lua_State* L) 
 {
 	int state = luaL_checkinteger(L, 1);
 	Radar::SetRadarState(state);
@@ -346,14 +346,14 @@ int lua_SetRadarState(lua_State* L)
 * Camera Functions *
 -------------------*/
 
-int lua_GetZoomFactor(lua_State* L)
+static int lua_GetZoomFactor(lua_State* L)
 {
 	std::string camera = luaL_checkstring(L, 1);
 	lua_pushnumber(L, Camera::GetZoomFactor(camera));
 	return 1;
 }
 
-int lua_SetZoomFactor(lua_State* L)
+static int lua_SetZoomFactor(lua_State* L)
 {
 	float factor = static_cast<float>(luaL_checknumber(L, 1));
 	std::string camera = luaL_checkstring(L, 2);
@@ -361,26 +361,26 @@ int lua_SetZoomFactor(lua_State* L)
 	return 0;
 }
 
-int lua_GetMinZoomFactor(lua_State* L)
+static int lua_GetMinZoomFactor(lua_State* L)
 {
 	lua_pushnumber(L, Camera::GetMinZoomFactor());
 	return 1;
 }
 
-int lua_SetMinZoomFactor(lua_State* L)
+static int lua_SetMinZoomFactor(lua_State* L)
 {
 	float factor = static_cast<float>(luaL_checknumber(L, 1));
 	Camera::SetMinZoomFactor(factor);
 	return 0;
 }
 
-int lua_GetMaxZoomFactor(lua_State* L)
+static int lua_GetMaxZoomFactor(lua_State* L)
 {
 	lua_pushnumber(L, Camera::GetMaxZoomFactor());
 	return 1;
 }
 
-int lua_SetMaxZoomFactor(lua_State* L)
+static int lua_SetMaxZoomFactor(lua_State* L)
 {
 	float factor = static_cast<float>(luaL_checknumber(L, 1));
 	Camera::SetMaxZoomFactor(factor);
@@ -391,7 +391,7 @@ int lua_SetMaxZoomFactor(lua_State* L)
 * Input/Output *
 ---------------*/
 
-int lua_GetGameKey(lua_State* L)
+static int lua_GetGameKey(lua_State* L)
 {
 	std::string key = luaL_checkstring(L, 1);
 	int vKey = (IO::GetKeyCode(key));
@@ -403,7 +403,7 @@ int lua_GetGameKey(lua_State* L)
 * Misc Functions *
 -----------------*/
 
-int lua_GetSteam64(lua_State* L) 
+static int lua_GetSteam64(lua_State* L) 
 {
 	try
 	{
@@ -422,33 +422,33 @@ int lua_GetSteam64(lua_State* L)
 	}
 }
 
-int lua_GetWeaponMask(lua_State* L)
+static int lua_GetWeaponMask(lua_State* L)
 {
 	lua_pushnumber(L, Misc::GetWeaponMask());
 	
 	return 1;
 }
 
-int lua_GetLives(lua_State* L)
+static int lua_GetLives(lua_State* L)
 {
 	lua_pushnumber(L, Misc::GetLives());
 	return 1;
 }
 
-int lua_SetLives(lua_State* L)
+static int lua_SetLives(lua_State* L)
 {
 	int newLives = luaL_checkinteger(L, 1);
 	Misc::SetLives(newLives);
 	return 1;
 }
 
-int lua_GetDifficulty(lua_State* L)
+static int lua_GetDifficulty(lua_State* L)
 {
 	lua_pushstring(L, Misc::GetDifficulty());
 	return 1;
 }
 
-int lua_SetDifficulty(lua_State* L)
+static int lua_SetDifficulty(lua_State* L)
 {
 	std::string newDifficulty = luaL_checkstring(L, 1);
 	if (Misc::SetDifficulty(newDifficulty) == 1 )
@@ -458,14 +458,14 @@ int lua_SetDifficulty(lua_State* L)
 	return 0;
 }
 
-int lua_EnableOrdnanceTweak(lua_State* L)
+static int lua_EnableOrdnanceTweak(lua_State* L)
 {
 	float scalingFactor = static_cast<float>(luaL_checknumber(L, 1));
 	EnableOrdnanceTweak(scalingFactor);
 	return 0;
 }
 
-int lua_UpdateOrdnance(lua_State* L)
+static int lua_UpdateOrdnance(lua_State* L)
 {
 	float vx = static_cast<float>(luaL_checknumber(L, 1));
 	float vy = static_cast<float>(luaL_checknumber(L, 2));
@@ -477,7 +477,7 @@ int lua_UpdateOrdnance(lua_State* L)
 	return 0;
 }
 
-int lua_EnableShotConvergence(lua_State* L)
+static int lua_EnableShotConvergence(lua_State* L)
 {
 	EnableShotConvergence();
 	return 0;
@@ -487,7 +487,7 @@ int lua_EnableShotConvergence(lua_State* L)
 * Internal Function Hooks *
 --------------------------*/
 
-int lua_SetAsUser(lua_State* L) 
+static int lua_SetAsUser(lua_State* L) 
 {
 	void* handle = (void*)lua_touserdata(L, 1);
 	GameObject* gameObject = GetObj((unsigned int)handle);
@@ -499,28 +499,28 @@ int lua_SetAsUser(lua_State* L)
 * Filesystem *
 -------------*/
 
-int lua_GetWorkingDirectory(lua_State* L)
+static int lua_GetWorkingDirectory(lua_State* L)
 {
 	lua_pushstring(L, GetWorkingDirectory().c_str());
 	SystemLog->Out(GetWorkingDirectory());
 	return 1;
 }
 
-int lua_MakeDirectory(lua_State* L)
+static int lua_MakeDirectory(lua_State* L)
 {
 	const char* directory = luaL_checkstring(L, 1);
 	MakeDirectory(directory);
 	return 0;
 }
 
-int lua_FileRead(lua_State* L)
+static int lua_FileRead(lua_State* L)
 {
 	const char* fileName = luaL_checkstring(L, 1);
 	lua_pushstring(L, FileRead(fileName));
 	return 1;
 }
 
-int lua_FileWrite(lua_State* L)
+static int lua_FileWrite(lua_State* L)
 {
 	const char* fileName = luaL_checkstring(L, 1);
 	const char* content = luaL_checkstring(L, 2);
@@ -532,13 +532,13 @@ int lua_FileWrite(lua_State* L)
 * User Logging *
 ---------------*/
 
-int lua_LogGC(lua_State* L) {
+static int lua_LogGC(lua_State* L) {
 	Log* instance = static_cast<Log*>(luaL_checkudata(L, 1, "LogMetatable"));
 	instance->~Log();  // Explicitly call the destructor
 	return 0;
 }
 
-int lua_LogOut(lua_State* L)
+static int lua_LogOut(lua_State* L)
 {
 	Log* instance = static_cast<Log*>(luaL_checkudata(L, 1, "LogMetatable"));
 	const char* content = luaL_checkstring(L, 2);
@@ -547,7 +547,7 @@ int lua_LogOut(lua_State* L)
 	return 0;
 }
 
-int lua_CreateLog(lua_State* L)
+static int lua_CreateLog(lua_State* L)
 {
 	std::string path = luaL_checkstring(L, 1);
 	int level = luaL_optinteger(L, 2, 3);
@@ -585,7 +585,7 @@ void* desiredLight{};
 
 std::uint32_t SetDiffuseColour{};
 
-int lua_SetDiffuseColor(lua_State* L)
+static int lua_SetDiffuseColor(lua_State* L)
 {
 	std::string myLabel = luaL_checkstring(L, 1);
 	r = static_cast<float>(luaL_checknumber(L, 2));
@@ -667,7 +667,7 @@ int lua_SetDiffuseColor(lua_State* L)
 std::uint32_t SetSpecularColour{};
 
 // this is essentially the same as diffuse color, gotta love OOP
-int lua_SetSpecularColor(lua_State* L)
+static int lua_SetSpecularColor(lua_State* L)
 {
 	std::string myLabel = luaL_checkstring(L, 1);
 	r = static_cast<float>(luaL_checknumber(L, 2));
@@ -746,7 +746,7 @@ float falloff{};
 
 std::uint32_t SetSpotlightRange{};
 
-int lua_SetSpotlightRange(lua_State* L)
+static int lua_SetSpotlightRange(lua_State* L)
 {
 	std::string myLabel = luaL_checkstring(L, 1);
 	innerAngle = static_cast<float>(luaL_checknumber(L, 2));
