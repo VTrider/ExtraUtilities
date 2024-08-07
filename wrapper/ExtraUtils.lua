@@ -1,7 +1,7 @@
 --[[
-=====================================================
+=======================================================
 *   Extra Utilities
-*   Version 0.6.8
+*   Version 0.7.0
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -22,7 +22,7 @@ local extraUtils = {}
 do
     -- Metadata
     local version = exu.GetVersion()
-    local crc32 = "08C7DEC0"
+    local crc32 = "EB227D80"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console
@@ -546,6 +546,135 @@ do
         exu.SetLives(lives)
     end
 
+   --[[
+    =======================================================
+    *   IMPORTANT NOTICE REGARDING THE NEXT FUNCTIONS!
+    *   These functions have accessibility implications
+    *   due to modifying things like difficulty and mouse
+    *   settings, please use them responsibly
+    =======================================================
+    --]]
+
+    --[[
+    -----------------------------------------------------------
+    *   Name       : GetDifficulty
+    *   Description: Gets the local player's difficulty setting
+    *   Inputs     : None
+    *   Outputs    : Current difficulty setting
+    *   Return Type: String
+    -----------------------------------------------------------
+    --]]
+
+    local function GetDifficulty()
+        return exu.GetDifficulty()
+    end
+
+    --[[
+    ---------------------------------------------------------------------------
+    *   Name       : SetDifficulty
+    *   Description: Sets the local player's difficulty setting note that it
+    *              : won't change what it says in the menu, but it will in fact
+    *              : change in-game, note it also won't work in multiplayer
+    *              : where the difficulty is locked to very hard
+    *   Inputs     : String difficulty as it appears in game, ie. "Very Easy",
+    *              : "Medium", "Very Hard", etc.
+    *   Outputs    : New difficulty setting
+    *   Return Type: Void
+    ---------------------------------------------------------------------------
+    --]]
+
+    local function SetDifficulty(newDifficulty)
+        exu.SetDifficulty(newDifficulty)
+    end
+
+    --[[
+    -------------------------------------------------------------------
+    *   Name       : GetAutoLevel
+    *   Description: Gets the local player's automatic leveling setting
+    *   Inputs     : None
+    *   Outputs    : Current automatic leveling setting on or off
+    *   Return Type: Bool
+    -------------------------------------------------------------------
+    --]]
+
+    local function GetAutoLevel()
+        return exu.GetAutoLevel()
+    end
+
+    --[[
+    -------------------------------------------------------------------
+    *   Name       : SetAutoLevel
+    *   Description: Sets the local player's automatic leveling setting
+    *   Inputs     : Bool on or off
+    *   Outputs    : New automatic leveling setting
+    *   Return Type: Void
+    -------------------------------------------------------------------
+    --]]
+
+    local function SetAutoLevel(newAL)
+        if type(newAL) ~= "boolean" then return end
+        -- C api doesn't have a get boolean so we just cast it back here lol
+        exu.SetAutoLevel(newAL and 1 or 0) -- pretty ugly but it works
+    end
+
+    --[[
+    ----------------------------------------------------------------------
+    *   Name       : GetTLI
+    *   Description: Gets the local player's target lead indicator setting
+    *   Inputs     : None
+    *   Outputs    : Current target lead indicator setting on or off
+    *   Return Type: Bool
+    ----------------------------------------------------------------------
+    --]]
+
+    local function GetTLI()
+        return exu.GetTLI()
+    end
+
+    --[[
+    ----------------------------------------------------------------------
+    *   Name       : SetTLI
+    *   Description: Sets the local player's target lead indicator setting
+    *   Inputs     : Bool on or off
+    *   Outputs    : New target lead indicator setting on or off
+    *   Return Type: Void
+    ----------------------------------------------------------------------
+    --]]
+
+    local function SetTLI(newTLI)
+        if type(newTLI) ~= "boolean" then return end
+        exu.SetTLI(newTLI and 1 or 0)
+    end
+
+    --[[
+    ----------------------------------------------------------------------
+    *   Name       : GetReverseMouse
+    *   Description: Gets the local player's reverse mouse setting
+    *   Inputs     : None
+    *   Outputs    : Current reverse mouse setting setting on or off
+    *   Return Type: Bool
+    ----------------------------------------------------------------------
+    --]]
+
+    local function GetReverseMouse()
+        return exu.GetReverseMouse()
+    end
+
+    --[[
+    ----------------------------------------------------------------------
+    *   Name       : SetReverseMouse
+    *   Description: Sets the local player's reverse mouse setting
+    *   Inputs     : Bool on or off
+    *   Outputs    : New reverse mouse setting on or off
+    *   Return Type: Void
+    ----------------------------------------------------------------------
+    --]]
+
+    local function SetReverseMouse(newSetting)
+        if type(newSetting) ~= "boolean" then return end
+        exu.SetReverseMouse(newSetting and 1 or 0)
+    end
+
     --[[
     --------------------------------------------------------------------------
     *   Name       : Ordnance Velocity Inheritance
@@ -636,6 +765,69 @@ do
             return
         end
         exu.SetAsUser(handle)
+    end
+
+    --[[
+    ----------------------------------------------------------------
+    *   Name       : SelectOne
+    *   Description: Selects one unit, overrides previous selections
+    *   Inputs     : Game object handle
+    *   Outputs    : Unit is selected
+    *   Return Type: Void
+    ----------------------------------------------------------------
+    --]]
+
+    local function SelectOne(handle)
+        if not IsValid(handle) then
+            return
+        end
+        if IsBuilding(handle) then
+            return
+        end
+        -- commands don't work on selected enemies and it makes the game unstable
+        if GetTeamNum(handle) ~= GetTeamNum(GetPlayerHandle()) then
+            return
+        end
+        exu.SelectOne(handle)
+    end
+
+    --[[
+    ----------------------------------------------------------------
+    *   Name       : SelectOne
+    *   Description: Deselects all units, equivalent to pressing tab
+    *   Inputs     : None
+    *   Outputs    : Deselects all units
+    *   Return Type: Void
+    ----------------------------------------------------------------
+    --]]
+
+    local function SelectNone()
+        exu.SelectNone()
+    end
+
+    --[[
+    ----------------------------------------------------------------
+    *   Name       : SelectAdd
+    *   Description: Adds a unit to the current selection, selecting
+    *              : across categories is possible but may break
+    *              : certain behavior eg. hunt, get repair, defend
+    *   Inputs     : Game object handle
+    *   Outputs    : Adds the given unit to the selection
+    *   Return Type: Void
+    ----------------------------------------------------------------
+    --]]
+
+    local function SelectAdd(handle)
+        if not IsValid(handle) then
+            return
+        end
+        if IsBuilding(handle) then
+            return
+        end
+        if GetTeamNum(handle) ~= GetTeamNum(GetPlayerHandle()) then
+            return
+        end
+        exu.SelectAdd(handle)
     end
 
     --[[
@@ -829,10 +1021,21 @@ do
     extraUtils.GetWeaponMask         = GetWeaponMask
     extraUtils.GetLives              = GetLives
     extraUtils.SetLives              = SetLives
+    extraUtils.GetDifficulty         = GetDifficulty
+    extraUtils.SetDifficulty         = SetDifficulty
+    extraUtils.GetAutoLevel          = GetAutoLevel
+    extraUtils.SetAutoLevel          = SetAutoLevel
+    extraUtils.GetTLI                = GetTLI
+    extraUtils.SetTLI                = SetTLI
+    extraUtils.GetReverseMouse       = GetReverseMouse
+    extraUtils.SetReverseMouse       = SetReverseMouse
     extraUtils.EnableOrdnanceTweak   = EnableOrdnanceTweak
     extraUtils.UpdateOrdnance        = UpdateOrdnance
     extraUtils.EnableShotConvergence = EnableShotConvergence
     extraUtils.SetAsUser             = SetAsUser
+    extraUtils.SelectOne             = SelectOne
+    extraUtils.SelectNone            = SelectNone
+    extraUtils.SelectAdd             = SelectAdd
     extraUtils.GetWorkingDirectory   = GetWorkingDirectory
     extraUtils.MakeDirectory         = MakeDirectory
     extraUtils.FileRead              = FileRead

@@ -268,11 +268,9 @@ namespace IO
 		}
 	}
 
-	bool keyPressed = false;
-
 	bool GetGameKey(int vKey) // takes the virtual key to use in GetAsyncKeyState
 	{
-		return GetAsyncKeyState(vKey) ? true : false; // TODO: TEST
+		return GetAsyncKeyState(vKey) ? true : false;
 	}
 }
 

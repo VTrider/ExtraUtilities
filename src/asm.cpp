@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int weaponMask;
+std::uint32_t Misc::weaponMask;
 
 std::uint32_t jmpBackWeaponMask = static_cast<std::uint32_t>(Hooks::weaponMask) + 9; // this index is hardcoded for now unfortunately
 
@@ -38,7 +38,7 @@ void  __declspec(naked) WeaponMaskHook()
         // the value of the player's weapon mask is in the edx register at 
         // this location, this moves it into a variable before it executes 
         // the rest of the code normally
-        mov[weaponMask], edx
+        mov[Misc::weaponMask], edx
         mov[ecx + 0x1C], edx
         mov eax, [ebp - 0x00000110]
         jmp[jmpBackWeaponMask] // jumps back to the original code to resume normal execution
@@ -284,5 +284,26 @@ void __declspec(naked) LightPtrHook()
 
 		mov ecx, [ebp - 0xE8]
 		jmp [jmpBackLightPtr]
+	}
+}
+
+std::uintptr_t Misc::playOption;
+
+std::uint32_t jmpBackPlayOption = static_cast<std::uint32_t>(Hooks::playOption) + 9;
+
+void __declspec(naked) PlayOptionHook()
+{
+	__asm
+	{
+		push eax
+
+		lea eax, [ecx+0x30]
+		mov [Misc::playOption], eax
+
+		pop eax
+
+		mov edx, [ecx+0x30]
+		and edx, 0x00000200 // lol syntax highlighting for 'and' here
+		jmp [jmpBackPlayOption]
 	}
 }

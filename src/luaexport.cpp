@@ -39,9 +39,7 @@
 #include <thread>
 #include "Log.h"
 
-/*---------------------
-* Important Functions *
-----------------------*/
+#pragma region IMPORTANT_FUNCTIONS
 
 static int lua_GetVersion(lua_State* L)
 {
@@ -64,9 +62,9 @@ static int lua_GetObj(lua_State* L)
 	return 1;
 }
 
-/*-----------------------
-* Environment Functions *
------------------------ */
+#pragma endregion IMPORTANT_FUNCTIONS
+
+#pragma region ENVIRONMENT
 
 static int lua_GetGravity(lua_State* L)
 {
@@ -94,9 +92,9 @@ int	lua_SetGravity(lua_State* L)
 	return 0;
 }
 
-/*-------------------
-* Reticle Functions *
-------------------- */
+#pragma endregion ENVIRONMENT
+
+#pragma region RETICLE
 
 static int lua_GetReticleAngle(lua_State* L)
 {
@@ -160,9 +158,9 @@ static int lua_SetSmartCursorRange(lua_State* L)
 	}
 }
 
-/*---------------------
-* Satellite Functions *
---------------------- */
+#pragma endregion RETICLE
+
+#pragma region SATELLITE
 
 static int lua_GetSatState(lua_State* L)
 {
@@ -325,6 +323,10 @@ static int lua_SetSatZoom(lua_State* L)
 	}
 }
 
+#pragma endregion SATELLITE
+
+#pragma region RADAR
+
 /*-----------------
 * Radar Functions *
 ------------------*/
@@ -342,9 +344,9 @@ static int lua_SetRadarState(lua_State* L)
 	return 0;
 }
 
-/*------------------
-* Camera Functions *
--------------------*/
+#pragma endregion RADAR
+
+#pragma region CAMERA
 
 static int lua_GetZoomFactor(lua_State* L)
 {
@@ -387,9 +389,9 @@ static int lua_SetMaxZoomFactor(lua_State* L)
 	return 0;
 }
 
-/*--------------
-* Input/Output *
----------------*/
+#pragma endregion CAMERA
+
+#pragma region IO
 
 static int lua_GetGameKey(lua_State* L)
 {
@@ -399,9 +401,9 @@ static int lua_GetGameKey(lua_State* L)
 	return 1;
 }
 
-/*----------------
-* Misc Functions *
------------------*/
+#pragma endregion IO
+
+#pragma region MISC
 
 static int lua_GetSteam64(lua_State* L) 
 {
@@ -425,7 +427,6 @@ static int lua_GetSteam64(lua_State* L)
 static int lua_GetWeaponMask(lua_State* L)
 {
 	lua_pushnumber(L, Misc::GetWeaponMask());
-	
 	return 1;
 }
 
@@ -458,6 +459,85 @@ static int lua_SetDifficulty(lua_State* L)
 	return 0;
 }
 
+#pragma endregion MISC
+
+#pragma region PLAYER_OPTIONS
+
+static int lua_GetAutoLevel(lua_State* L)
+{
+	int playOption = Memory::Read<int>(Misc::playOption);
+	bool autoLevel = playOption >> 4 & 1;
+	lua_pushboolean(L, autoLevel);
+	return 1;
+}
+
+static int lua_SetAutoLevel(lua_State* L)
+{
+	int newAL = luaL_checkinteger(L, 1);
+	int playOption = Memory::Read<int>(Misc::playOption);
+
+	int mask = 1 << 4; // value is at the 5th bit 00010000
+	playOption &= ~mask; // zero out the bit
+
+	if (newAL == 1) { playOption |= mask; } // set it to 1 if true
+
+	Memory::Write(Misc::playOption, playOption);
+
+	return 0;
+}
+
+static int lua_GetTLI(lua_State* L)
+{
+	int playOption = Memory::Read<int>(Misc::playOption);
+	bool TLI = playOption >> 5 & 1;
+	lua_pushboolean(L, TLI);
+	return 1;
+}
+
+static int lua_SetTLI(lua_State* L)
+{
+	int newTLI = luaL_checkinteger(L, 1);
+	int playOption = Memory::Read<int>(Misc::playOption);
+
+	int mask = 1 << 5; // value is at the 6th bit 00100000
+	playOption &= ~mask;
+
+	if (newTLI == 1) { playOption |= mask; }
+
+	Memory::Write(Misc::playOption, playOption);
+
+	return 0;
+}
+
+static int lua_GetReverseMouse(lua_State* L)
+{
+	int playOption = Memory::Read<int>(Misc::playOption);
+	bool reverseMouse = playOption >> 6 & 1;
+	lua_pushboolean(L, !reverseMouse); // inversed, see note below
+	return 1;
+}
+
+static int lua_SetReverseMouse(lua_State* L)
+{
+	int newMouse = luaL_checkinteger(L, 1);
+	int playOption = Memory::Read<int>(Misc::playOption);
+
+	int mask = 1 << 6; // value is at the 7th bit
+	playOption &= ~mask;
+
+	// important note: this is inverted because the devs are insane and have
+	// reversed mouse as the "default" in the code LOL
+	if (newMouse == 0) { playOption |= mask; }
+
+	Memory::Write(Misc::playOption, playOption);
+
+	return 0;
+}
+
+#pragma endregion PLAYER_OPTIONS
+
+#pragma region PATCHES
+
 static int lua_EnableOrdnanceTweak(lua_State* L)
 {
 	float scalingFactor = static_cast<float>(luaL_checknumber(L, 1));
@@ -483,21 +563,45 @@ static int lua_EnableShotConvergence(lua_State* L)
 	return 0;
 }
 
-/*-------------------------
-* Internal Function Hooks *
---------------------------*/
+#pragma endregion PATCHES
+
+#pragma region FUNCTION_HOOKS
 
 static int lua_SetAsUser(lua_State* L) 
 {
 	void* handle = (void*)lua_touserdata(L, 1);
-	GameObject* gameObject = GetObj((unsigned int)handle);
+	GameObject* gameObject = GetObj(reinterpret_cast<unsigned int>(handle));
 	FuncPtrs::SetAsUser(gameObject);
 	return 0;
 }
 
-/*------------
-* Filesystem *
--------------*/
+ControlPanel* p_ControlPanel = reinterpret_cast<ControlPanel*>(Misc::controlPanel);
+
+static int lua_SelectOne(lua_State* L)
+{
+	void* handle = reinterpret_cast<void*>(lua_touserdata(L, 1));
+	GameObject* gameObject = GetObj(reinterpret_cast<unsigned int>(handle));
+	FuncPtrs::SelectOne(p_ControlPanel, gameObject);
+	return 0;
+}
+
+static int lua_SelectNone(lua_State* L)
+{
+	FuncPtrs::SelectNone(p_ControlPanel);
+	return 0;
+}
+
+static int lua_SelectAdd(lua_State* L)
+{
+	void* handle = reinterpret_cast<void*>(lua_touserdata(L, 1));
+	GameObject* gameObject = GetObj(reinterpret_cast<unsigned int>(handle));
+	FuncPtrs::SelectAdd(p_ControlPanel, gameObject);
+	return 0;
+}
+
+#pragma endregion FUNCTION_HOOKS
+
+#pragma region FILESYSTEM
 
 static int lua_GetWorkingDirectory(lua_State* L)
 {
@@ -528,9 +632,9 @@ static int lua_FileWrite(lua_State* L)
 	return 0;
 }
 
-/*--------------
-* User Logging *
----------------*/
+#pragma endregion FILESYSTEM
+
+#pragma region USER_LOGGING
 
 static int lua_LogGC(lua_State* L) {
 	Log* instance = static_cast<Log*>(luaL_checkudata(L, 1, "LogMetatable"));
@@ -574,6 +678,10 @@ static int lua_CreateLog(lua_State* L)
 
 	return 1;
 }
+
+#pragma endregion USER_LOGGING
+
+#pragma region OGRE_HOOKS
 
 // THESE NEED TO BE GLOBAL - if they are local they get misaligned on the
 // stack when I make a new stack frame
@@ -817,6 +925,8 @@ static int lua_SetSpotlightRange(lua_State* L)
 	return 1;
 }
 
+#pragma endregion OGRE_HOOKS
+
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
 
 extern "C" 
@@ -865,7 +975,16 @@ extern "C"
 			{ "EnableShotConvergence", lua_EnableShotConvergence },
 			{ "GetDifficulty",       lua_GetDifficulty       },
 			{ "SetDifficulty",       lua_SetDifficulty       },
+			{ "GetAutoLevel",        lua_GetAutoLevel        },
+			{ "SetAutoLevel",        lua_SetAutoLevel        },
+			{ "GetTLI",              lua_GetTLI              },
+			{ "SetTLI",              lua_SetTLI              },
+			{ "GetReverseMouse",     lua_GetReverseMouse     },
+			{ "SetReverseMouse",     lua_SetReverseMouse     },
 			{ "SetAsUser",           lua_SetAsUser           },
+			{ "SelectOne",           lua_SelectOne           },
+			{ "SelectNone",          lua_SelectNone          },
+			{ "SelectAdd",           lua_SelectAdd           },
 			{ "GetWorkingDirectory", lua_GetWorkingDirectory },
 			{ "MakeDirectory",       lua_MakeDirectory       },
 			{ "FileRead",            lua_FileRead            },

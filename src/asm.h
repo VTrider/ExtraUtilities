@@ -18,8 +18,6 @@
 
 #pragma once
 
-extern int weaponMask;
-
 // asm functions
 
 void WeaponMaskHook();
@@ -27,6 +25,7 @@ void OrdnanceVelocityHook();
 void OrdnancePositionHook();
 void ShotConvergenceHook();
 void LightPtrHook();
+void PlayOptionHook();
 
 // callable functions
 

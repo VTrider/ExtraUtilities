@@ -82,7 +82,6 @@ namespace Camera
 namespace IO
 {
 	int GetKeyCode(const std::string& keycode);
-	extern bool keyPressed;
 	bool GetGameKey(int key);
 }
 

@@ -73,6 +73,7 @@ static void CodeInjection()
     Hook::CreateHook(Hooks::ordnancePosition, OrdnancePositionHook, 7);
     Hook::CreateHook(Hooks::shotConvergence, ShotConvergenceHook, 9);
     Hook::CreateHook(Hooks::getLightPtr, LightPtrHook, 6);
+    Hook::CreateHook(Hooks::playOption, PlayOptionHook, 9);
 }
 
 static void GUI()
