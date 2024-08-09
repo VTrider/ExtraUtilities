@@ -657,7 +657,7 @@ static int lua_LogOut(lua_State* L)
 static int lua_GetLogLevel(lua_State* L)
 {
 	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
-	int level = instance->GetLogLevel();
+	int level = instance->GetLevel();
 	lua_pushinteger(L, level);
 	return 1;
 }
@@ -666,14 +666,14 @@ static int lua_SetLogLevel(lua_State* L)
 {
 	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
 	int level = luaL_checkinteger(L, 2);
-	instance->SetLogLevel(level);
+	instance->SetLevel(level);
 	return 0;
 }
 
 static int lua_GetLogPath(lua_State* L)
 {
 	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
-	std::filesystem::path path = instance->GetLogPath();
+	std::filesystem::path path = instance->GetPath();
 	lua_pushstring(L, path.string().c_str());
 	return 1;
 }
@@ -682,7 +682,7 @@ static int lua_SetLogPath(lua_State* L)
 {
 	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
 	const char* path = luaL_checkstring(L, 2);
-	instance->SetLogPath(path);
+	instance->SetPath(path);
 	return 0;
 }
 
@@ -1010,6 +1010,10 @@ extern "C"
 			{ "FileRead",            lua_FileRead            },
 			{ "FileWrite",           lua_FileWrite           },
 			{ "LogOut",              lua_LogOut              },
+			{ "GetLogLevel",         lua_GetLogLevel         },
+			{ "SetLogLevel",         lua_SetLogLevel         },
+			{ "GetLogPath",          lua_GetLogPath          },
+			{ "SetLogPath",          lua_SetLogPath          },
 			{ "CreateLog",           lua_CreateLog           },
 			{ "SetDiffuseColor",     lua_SetDiffuseColor     },
 			{ "SetSpecularColor",    lua_SetSpecularColor    },

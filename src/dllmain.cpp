@@ -135,7 +135,7 @@ static DWORD WINAPI InitialThread(HMODULE hModule)
 {
     SystemLog = std::make_unique<Log>(Log());
     SystemLog->Out(std::format("Extra Utilities started successfully! Version: {}", Exu::version));
-    SystemLog->Out(std::format("Logging level is: {}", SystemLog->GetLogLevel()));
+    SystemLog->Out(std::format("Logging level is: {}", SystemLog->GetLevel()));
     Memory::Init();
     InitializeConsole();
     FileSystem();

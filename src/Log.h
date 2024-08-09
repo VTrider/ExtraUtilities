@@ -92,22 +92,22 @@ public:
 		file.close();
 	}
 
-	int GetLogLevel() const
+	int GetLevel() const
 	{
 		return logLevel;
 	}
 	
-	void SetLogLevel(int level)
+	void SetLevel(int level)
 	{
 		logLevel = level;
 	}
 
-	std::filesystem::path GetLogPath() const
+	std::filesystem::path GetPath() const
 	{
 		return logPath;
 	}
 
-	void SetLogPath(const std::filesystem::path& path)
+	void SetPath(const std::filesystem::path& path)
 	{
 		logPath = path;
 	}

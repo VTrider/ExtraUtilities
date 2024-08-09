@@ -1,7 +1,7 @@
 --[[
 =======================================================
 *   Extra Utilities
-*   Version 0.7.0
+*   Version 0.7.1
 =======================================================
 *   This module extends scripting functionality
 *   through a custom DLL and adds some useful 
@@ -1014,7 +1014,24 @@ do
         exu.FileWrite(fileName, content)
     end
 
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : User Logging Class
+    *   Description: Allows users to create a custom log object to easily write
+    *              : debug, warning, or error information to a file that is
+    *              : timestamped, but without the bloat of stock bz print.
+    *              : The log will automatically clear itself if the size exceeds
+    *              : 100kb, otherwise it will continue to write to the same file.
+    *              : IO operations are expensive so don't make like 100 logs that
+    *              : are writing many times per frame.
+    *              : The predefined levels are: 0: OFF, 1: WARNING, 2: ERROR,
+    *              : 3: INFO, but you can use them as you please.
+    -------------------------------------------------------------------------------
+    --]]
+
     -- OOP Bindings are done in here in lua because doing it in C is aids
+    --- @class UserLog
+    --- @field pointer lightuserdata DO NOT MODIFY THIS VALUE
     local UserLog = {}
     UserLog.__index = UserLog
 
@@ -1024,26 +1041,53 @@ do
         return instance
     end
 
+    --- This method outputs the `content` to the log if the `level` of the message is greater than or equal
+    --- to the log level.
+    --- 
+    --- It will always be casted to a string so no need to call tostring() beforehand
+    --- 
+    --- The default `level` if none is given is `3`, or `INFO`
+    --- @param content any
+    --- @param level? integer
+    --- @return void
     function UserLog:Out(content, level)
-       exu.LogOut(self.pointer, content, level)
+       exu.LogOut(self.pointer, tostring(content), level)
     end
 
-    function UserLog:GetLogLevel()
+    --- This method returns the current `level` of the log
+    --- @return integer
+    function UserLog:GetLevel()
         return exu.GetLogLevel(self.pointer)
     end
 
-    function UserLog:SetLogLevel()
-        
+    --- This method sets the `level` of the log to the given value
+    --- @param level integer
+    --- @return void
+    function UserLog:SetLevel(level)
+        exu.SetLogLevel(self.pointer, level)
     end
 
-    function UserLog:GetLogPath()
-        
+    --- This method returns the current `path` of the log
+    --- @return string
+    function UserLog:GetPath()
+        return exu.GetLogPath(self.pointer)
     end
 
-    function UserLog:SetLogPath()
-        
+    --- This method sets the current `path` of the log
+    --- @param path string
+    --- @return void
+    function UserLog:SetPath(path)
+        exu.SetLogPath(self.pointer, path)
     end
 
+    --- Creates a unique log object
+    --- 
+    --- `path` is the relative path from the root directory (Battlezone 98 Redux), but it can also be an absolute path (not recommended)
+    --- 
+    --- `level` is the user defined logging level to describe how verbose the log will be, default if none given is 3
+    --- @param path string
+    --- @param level? integer
+    --- @return UserLog
     local function CreateLog(path, level)
         return RegisterLogObject(exu.CreateLog(path, level))
     end
