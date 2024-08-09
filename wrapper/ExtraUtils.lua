@@ -16,6 +16,17 @@
 =======================================================
 --]]
 
+--- To use function/type annotations install the Lua langauge server plugin
+--- for vscode by sumneko
+
+--- Typedefs for annotations
+--- @alias handle lightuserdata
+--- @alias pointer lightuserdata
+--- @alias float number
+--- @alias vector userdata
+--- @alias matrix userdata
+--- @alias void nil
+
 local exu = require("exu")
 
 local extraUtils = {}
@@ -31,6 +42,20 @@ do
         print("--------------------------------------------------------------------------------------")
     end
 
+    -- Helpers
+
+    --- Lua C API doesn't have a check boolean function so this casts
+    --- a bool to an integer
+    ---@param value boolean
+    ---@return integer | nil
+    local function CastBool(value) -- TODO FIX ALWAYS RETURNING 0
+        if type(value) ~= "boolean" then 
+            error("Extra Utilities Error: input must be a bool")
+            return
+        end
+        return value and 1 or 0
+    end
+
     --[[
     ------------------------------------------------------------------------------------
     *   Name       : SetAccessMode
@@ -44,6 +69,8 @@ do
     -----------------------------------------------------------------------------------
     --]]
 
+    --- @param mode integer
+    --- @return void
     local function SetAccessMode(mode)
         if mode ~= 0 and mode ~= 1 then
             error("Extra Utilities Error: input must be either 0 or 1")
@@ -59,10 +86,12 @@ do
     *                purposes 
     *   Inputs     : Handle to an object
     *   Outputs    : GameObject pointer
-    *   Return Type: Userdata
+    *   Return Type: Lightuserdata
     ---------------------------------------------------------------------------
     --]]
 
+    --- @param handle handle
+    --- @return pointer
     local function GetObj(handle)
         return exu.GetObj(handle)
     end
@@ -77,6 +106,7 @@ do
     -------------------------------------------------------------
     --]]
 
+    --- @return vector
     local function GetGravity()
         local gravityVector = exu.GetGravity()
         local formattedVector = SetVector(gravityVector.x, gravityVector.y, gravityVector.z)
@@ -93,6 +123,10 @@ do
     --------------------------------------------------------------
     --]]
 
+    --- @param x float
+    --- @param y float
+    --- @param z float
+    --- @return void
     local function SetGravity(x, y, z)
         exu.SetGravity(x, y, z)
     end
@@ -107,6 +141,7 @@ do
     ---------------------------------------------------------------------------
     --]]
 
+    --- @return float
     local function GetSmartCursorRange()
         return exu.GetSmartCursorRange()
     end
@@ -121,6 +156,8 @@ do
     ---------------------------------------------------------------------------
     --]]
 
+    --- @param range float
+    --- @return void
     local function SetSmartCursorRange(range)
         exu.SetSmartCursorRange(range)
     end
@@ -136,6 +173,7 @@ do
     ------------------------------------------------------------------------
     --]]
 
+    --- @return float
     local function GetReticleAngle()
         return exu.GetReticleAngle()
     end
@@ -150,6 +188,7 @@ do
     ------------------------------------------------------------------------------------------------------
     --]]
 
+    ---@return vector
     local function GetReticlePos()
         local reticlePos = exu.GetReticlePos() -- The vector components arrive in a table from the DLL
         local formattedPos = SetVector(reticlePos.x, reticlePos.y, reticlePos.z) -- Make the table into a BZ-usable vector
@@ -166,6 +205,7 @@ do
     -------------------------------------------------------------
     --]]
 
+    --- @return boolean
     local function GetSatState()
         return exu.GetSatState()
     end
@@ -183,6 +223,7 @@ do
     ---------------------------------------------------------------------------
     --]]
 
+    --- @return vector
     local function GetSatCursorPos()
         local cursorPos = exu.GetSatCursorPos()
         local formattedPos = SetVector(cursorPos.x, cursorPos.y, cursorPos.z)
@@ -202,6 +243,7 @@ do
     ----------------------------------------------------------------------
     --]]
 
+    --- @return vector
     local function GetSatCamPos()
         local camPos = exu.GetSatCamPos()
         local formattedPos = SetVector(camPos.x, camPos.y, camPos.z)
@@ -221,6 +263,7 @@ do
     -------------------------------------------------------------------------
     --]]
 
+    --- @return vector
     local function GetSatClickPos()
         local clickPos = exu.GetSatClickPos()
         local formattedPos = SetVector(clickPos.x, clickPos.y, clickPos.z)
@@ -238,6 +281,8 @@ do
     --------------------------------------------------------------
     --]]
 
+
+    --- @return float
     local function GetSatPanSpeed()
         return exu.GetSatPanSpeed()
     end
@@ -253,6 +298,8 @@ do
     --------------------------------------------------------------
     --]]
 
+    --- @param speed float
+    --- @return void
     local function SetSatPanSpeed(speed)
         exu.SetSatPanSpeed(speed)
     end
@@ -268,6 +315,7 @@ do
     ---------------------------------------------------------------
     --]]
 
+    --- @return float
     local function GetMinSatZoom()
         return exu.GetMinSatZoom()
     end
@@ -283,6 +331,8 @@ do
     ---------------------------------------------------------------
     --]]
 
+    --- @param zoom float
+    --- @return void
     local function SetMinSatZoom(zoom)
         exu.SetMinSatZoom(zoom)
     end
@@ -298,6 +348,7 @@ do
     ---------------------------------------------------------------
     --]]
 
+    --- @return float
     local function GetMaxSatZoom()
         return exu.GetMaxSatZoom()
     end
@@ -313,6 +364,8 @@ do
     ---------------------------------------------------------------
     --]]
 
+    --- @param zoom float
+    --- @return void
     local function SetMaxSatZoom(zoom)
         exu.SetMaxSatZoom(zoom)
     end
@@ -328,6 +381,7 @@ do
     ---------------------------------------------------------------
     --]]
 
+    --- @return float
     local function GetSatZoom()
         return exu.GetSatZoom()
     end
@@ -344,6 +398,8 @@ do
     ------------------------------------------------------------------
     --]]
 
+    --- @param zoom float
+    --- @return void
     local function SetSatZoom(zoom)
         exu.SetSatZoom(zoom)
     end
@@ -358,6 +414,7 @@ do
     ---------------------------------------------------------
     --]]
 
+    --- @return integer
     local function GetRadarState()
         return exu.GetRadarState()
     end
@@ -372,6 +429,8 @@ do
     ---------------------------------------------------------
     --]]
 
+    --- @param state integer
+    --- @return void
     local function SetRadarState(state)
         exu.SetRadarState(state)
     end
@@ -388,6 +447,8 @@ do
     ----------------------------------------------------------------------------------
     --]]
 
+    --- @param camera string
+    --- @return float | nil
     local function GetZoomFactor(camera)
         if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
             error("Extra Utilities Error: Invalid camera")
@@ -407,6 +468,9 @@ do
     -----------------------------------------------------------------------------
     --]]
 
+    --- @param factor float
+    --- @param camera string
+    --- @return void
     local function SetZoomFactor(factor, camera)
         if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
             error("Extra Utilities Error: Invalid camera")
@@ -425,6 +489,7 @@ do
     -----------------------------------------------------------------------------
     --]]
 
+    --- @return float
     local function GetMinZoomFactor()
         return exu.GetMinZoomFactor()
     end
@@ -439,6 +504,8 @@ do
     -----------------------------------------------------------------------------
     --]]
 
+    --- @param factor float
+    --- @return void
     local function SetMinZoomFactor(factor)
         exu.SetMinZoomFactor(factor)
     end
@@ -453,6 +520,7 @@ do
     -----------------------------------------------------------------------------
     --]]
 
+    --- @return float
     local function GetMaxZoomFactor()
         return exu.GetMaxZoomFactor()
     end
@@ -467,6 +535,8 @@ do
     -----------------------------------------------------------------------------
     --]]
 
+    --- @param factor float
+    --- @return void
     local function SetMaxZoomFactor(factor)
         exu.SetMaxZoomFactor(factor)
     end
@@ -483,6 +553,8 @@ do
     ------------------------------------------------------------------------------------------
     --]]
 
+    --- @param key string
+    --- @return boolean
     local function GetGameKey(key)
         return exu.GetGameKey(key)
     end
@@ -497,6 +569,7 @@ do
     ---------------------------------------------------------
     --]]
 
+    --- @return string
     local function GetSteam64()
         return exu.GetSteam64()
     end
@@ -513,6 +586,7 @@ do
     -----------------------------------------------------------------
     --]]
 
+    --- @return integer
     local function GetWeaponMask()
         return exu.GetWeaponMask()
     end
@@ -527,6 +601,7 @@ do
     ----------------------------------------
     --]]
 
+    --- @return integer
     local function GetLives()
         return exu.GetLives()
     end
@@ -542,6 +617,8 @@ do
     -----------------------------------------------------------
     --]]
 
+    --- @param lives integer
+    --- @return void
     local function SetLives(lives)
         exu.SetLives(lives)
     end
@@ -565,6 +642,7 @@ do
     -----------------------------------------------------------
     --]]
 
+    --- @return string
     local function GetDifficulty()
         return exu.GetDifficulty()
     end
@@ -583,6 +661,8 @@ do
     ---------------------------------------------------------------------------
     --]]
 
+    --- @param newDifficulty string
+    --- @return void
     local function SetDifficulty(newDifficulty)
         exu.SetDifficulty(newDifficulty)
     end
@@ -597,6 +677,7 @@ do
     -------------------------------------------------------------------
     --]]
 
+    --- @return boolean
     local function GetAutoLevel()
         return exu.GetAutoLevel()
     end
@@ -611,10 +692,10 @@ do
     -------------------------------------------------------------------
     --]]
 
+    --- @param newAL boolean
+    --- @return void
     local function SetAutoLevel(newAL)
-        if type(newAL) ~= "boolean" then return end
-        -- C api doesn't have a get boolean so we just cast it back here lol
-        exu.SetAutoLevel(newAL and 1 or 0) -- pretty ugly but it works
+        exu.SetAutoLevel(CastBool(newAL))
     end
 
     --[[
@@ -627,6 +708,7 @@ do
     ----------------------------------------------------------------------
     --]]
 
+    --- @return boolean
     local function GetTLI()
         return exu.GetTLI()
     end
@@ -641,9 +723,10 @@ do
     ----------------------------------------------------------------------
     --]]
 
+    --- @param newTLI boolean
+    --- @return boolean
     local function SetTLI(newTLI)
-        if type(newTLI) ~= "boolean" then return end
-        exu.SetTLI(newTLI and 1 or 0)
+        exu.SetTLI(CastBool(newTLI))
     end
 
     --[[
@@ -656,6 +739,7 @@ do
     ----------------------------------------------------------------------
     --]]
 
+    --- @return boolean
     local function GetReverseMouse()
         return exu.GetReverseMouse()
     end
@@ -670,9 +754,10 @@ do
     ----------------------------------------------------------------------
     --]]
 
+    --- @param newSetting boolean
+    --- @return void
     local function SetReverseMouse(newSetting)
-        if type(newSetting) ~= "boolean" then return end
-        exu.SetReverseMouse(newSetting and 1 or 0)
+        exu.SetReverseMouse(CastBool(newSetting))
     end
 
     --[[
@@ -692,6 +777,8 @@ do
     --------------------------------------------------------------------------
     --]]
 
+    --- @param ratio? float
+    --- @return void
     local function EnableOrdnanceTweak(ratio)
         if IsNetGame == true and debug == false then
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
@@ -710,6 +797,8 @@ do
         exu.EnableOrdnanceTweak(velocityScalingFactor)
     end
 
+    --- @param what? string
+    --- @return void
     local function UpdateOrdnance(what)
         if IsNetGame == true and debug == false then
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
@@ -743,8 +832,28 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @return void
     local function EnableShotConvergence()
         exu.EnableShotConvergence()
+    end
+
+    --[[
+    ---------------------------------------------------------------------------------
+    *   Name       : SetSelectNone
+    *   Description: Sets the behavior of selections when performing certain actions,
+    *              : for example if it is set to false, giving a move order will not
+    *              : deselect units, and the tab key will not work (you'll be locked
+    *              : into your selection), true makes it behave normally
+    *   Inputs     : Bool true or false
+    *   Outputs    : New selection behavior
+    *   Return Type: Void
+    ---------------------------------------------------------------------------------
+    --]]
+
+    --- @param setting boolean
+    --- @return  void
+    local function SetSelectNone(setting)
+        exu.SetSelectNone(CastBool(setting))
     end
 
     --[[
@@ -757,6 +866,8 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param handle handle
+    --- @return void
     local function SetAsUser(handle)
         if not IsValid(handle) then -- needs to exist, otherwise access violation
             return
@@ -777,6 +888,8 @@ do
     ----------------------------------------------------------------
     --]]
 
+    ---@param handle handle
+    ---@return void
     local function SelectOne(handle)
         if not IsValid(handle) then
             return
@@ -801,6 +914,7 @@ do
     ----------------------------------------------------------------
     --]]
 
+    --- @return void
     local function SelectNone()
         exu.SelectNone()
     end
@@ -817,6 +931,8 @@ do
     ----------------------------------------------------------------
     --]]
 
+    --- @param handle handle
+    --- @return void
     local function SelectAdd(handle)
         if not IsValid(handle) then
             return
@@ -841,6 +957,7 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @return string 
     local function GetWorkingDirectory()
         return exu.GetWorkingDirectory()
     end
@@ -856,6 +973,8 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param name string
+    --- @return void
     local function MakeDirectory(name)
         exu.MakeDirectory(name)
     end
@@ -871,6 +990,8 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param fileName string
+    --- @return string
     local function FileRead(fileName)
         return exu.FileRead(fileName)
     end
@@ -886,15 +1007,47 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param fileName string
+    --- @param content string
+    --- @return void
     local function FileWrite(fileName, content)
         exu.FileWrite(fileName, content)
     end
 
-    -- Broken currently do not use
+    -- OOP Bindings are done in here in lua because doing it in C is aids
+    local UserLog = {}
+    UserLog.__index = UserLog
+
+    local function RegisterLogObject(logPointer)
+        local instance = setmetatable({}, UserLog)
+        instance.pointer = logPointer
+        return instance
+    end
+
+    function UserLog:Out(content, level)
+       exu.LogOut(self.pointer, content, level)
+    end
+
+    function UserLog:GetLogLevel()
+        return exu.GetLogLevel(self.pointer)
+    end
+
+    function UserLog:SetLogLevel()
+        
+    end
+
+    function UserLog:GetLogPath()
+        
+    end
+
+    function UserLog:SetLogPath()
+        
+    end
 
     local function CreateLog(path, level)
-        return exu.CreateLog(path, level)
+        return RegisterLogObject(exu.CreateLog(path, level))
     end
+
 
     --[[
     -------------------------------------------------------------------------------
@@ -911,6 +1064,11 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param _handle handle
+    --- @param _red float
+    --- @param _green float
+    --- @param _blue float
+    --- @return boolean
     local function SetDiffuseColor(_handle, _red, _green, _blue)
         local red = _red or 1.0
         local green = _green or 1.0
@@ -934,6 +1092,11 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param _handle handle
+    --- @param _red float
+    --- @param _green float
+    --- @param _blue float
+    --- @return boolean
     local function SetSpecularColor(_handle, _red, _green, _blue)
         local red = _red or 1.0
         local green = _green or 1.0
@@ -952,6 +1115,11 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param _handle handle
+    --- @param _red float
+    --- @param _green float
+    --- @param _blue float
+    --- @return boolean
     local function SetColor(_handle, _red, _green, _blue)
         SetDiffuseColor(_handle, _red, _green, _blue)
         SetSpecularColor(_handle, _red, _green, _blue)
@@ -972,6 +1140,11 @@ do
     -------------------------------------------------------------------------------
     --]]
 
+    --- @param _handle handle
+    --- @param _innerAngle float
+    --- @param _outerAngle float
+    --- @param _falloff float
+    --- @return boolean
     local function SetSpotlightRange(_handle, _innerAngle, _outerAngle, _falloff)
         local falloff = _falloff or 1.0 -- default value
         local outerAngle = _outerAngle or 0.35 -- default value
@@ -979,8 +1152,6 @@ do
         local label = GetLabel(_handle)
         return exu.SetSpotlightRange(label, innerAngle, outerAngle, falloff)
     end
-
-
 
     -- Metadata
     extraUtils.version             = version
@@ -1032,6 +1203,7 @@ do
     extraUtils.EnableOrdnanceTweak   = EnableOrdnanceTweak
     extraUtils.UpdateOrdnance        = UpdateOrdnance
     extraUtils.EnableShotConvergence = EnableShotConvergence
+    extraUtils.SetSelectNone         = SetSelectNone
     extraUtils.SetAsUser             = SetAsUser
     extraUtils.SelectOne             = SelectOne
     extraUtils.SelectNone            = SelectNone
