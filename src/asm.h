@@ -26,12 +26,12 @@ void OrdnancePositionHook();
 void ShotConvergenceHook();
 void LightPtrHook();
 void PlayOptionHook();
+void SelectNoneHook();
 
 // callable functions
 
 void EnableOrdnanceTweak(float scalingFactor);
-
 void UpdateOrdnance(float vx, float vy, float vz, float px, float py, float pz);
-
 void EnableShotConvergence();
+void SetSelectNone(bool setting);
 

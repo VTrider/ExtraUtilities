@@ -307,3 +307,32 @@ void __declspec(naked) PlayOptionHook()
 		jmp [jmpBackPlayOption]
 	}
 }
+
+bool disableSelectNone = false;
+std::uint32_t jmpBackSelectNone = static_cast<std::uint32_t>(Hooks::selectNone) + 6;
+std::uint32_t selectNoneRet = 0x004A6DC5;
+
+void __declspec(naked) SelectNoneHook()
+{
+	__asm
+	{
+		cmp [disableSelectNone], 0x1
+		jne [notEnabled]
+
+		// if disabled select none is true then jump to the end of the function
+		// and immediately return
+		jmp [selectNoneRet]
+
+		notEnabled:
+
+		push ebp
+		mov ebp, esp
+		sub esp, 0xC
+		jmp [jmpBackSelectNone]
+	}
+}
+
+void SetSelectNone(bool setting)
+{
+	disableSelectNone = setting;
+}

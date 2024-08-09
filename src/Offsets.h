@@ -45,6 +45,7 @@ namespace Hooks // memory addresses of functions of interest
 	constexpr std::uintptr_t freeCursor       = 0x0043510E;
 	constexpr std::uintptr_t getLightPtr      = 0x0067FB13;
 	constexpr std::uintptr_t playOption       = 0x005C18B7;
+	constexpr std::uintptr_t selectNone       = 0x004A6D50;
 }
 
 namespace Environment

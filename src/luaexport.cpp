@@ -473,7 +473,7 @@ static int lua_GetAutoLevel(lua_State* L)
 
 static int lua_SetAutoLevel(lua_State* L)
 {
-	int newAL = luaL_checkinteger(L, 1);
+	int newAL = luaL_checkinteger(L, 1); // this is actually a bool
 	int playOption = Memory::Read<int>(Misc::playOption);
 
 	int mask = 1 << 4; // value is at the 5th bit 00010000
@@ -560,6 +560,13 @@ static int lua_UpdateOrdnance(lua_State* L)
 static int lua_EnableShotConvergence(lua_State* L)
 {
 	EnableShotConvergence();
+	return 0;
+}
+
+static int lua_SetSelectNone(lua_State* L)
+{
+	bool setting = luaL_checkinteger(L, 1); // this is being type checked in lua
+	SetSelectNone(setting);
 	return 0;
 }
 
@@ -973,6 +980,7 @@ extern "C"
 			{ "EnableOrdnanceTweak", lua_EnableOrdnanceTweak },
 			{ "UpdateOrdnance",      lua_UpdateOrdnance      },
 			{ "EnableShotConvergence", lua_EnableShotConvergence },
+			{ "SetSelectNone",       lua_SetSelectNone       },
 			{ "GetDifficulty",       lua_GetDifficulty       },
 			{ "SetDifficulty",       lua_SetDifficulty       },
 			{ "GetAutoLevel",        lua_GetAutoLevel        },

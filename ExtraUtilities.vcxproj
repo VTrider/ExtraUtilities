@@ -41,6 +41,7 @@
     <UseOfMfc>Static</UseOfMfc>
     <PreferredToolArchitecture>x86</PreferredToolArchitecture>
     <VCToolsVersion>14.40.33807</VCToolsVersion>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
