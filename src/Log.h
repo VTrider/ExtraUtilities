@@ -35,6 +35,10 @@ private:
 
 	void CheckSize() const
 	{
+		if (!std::filesystem::exists(logPath))
+		{
+			return;
+		}
 		auto size = std::filesystem::file_size(logPath);
 		if (size/1000 > 100) // delete file if bigger than 100 kb
 		{
@@ -51,14 +55,15 @@ private:
 	void LogInit()
 	{
 		CheckSize();
+		std::filesystem::create_directories(logPath.parent_path());
 		std::ofstream file(logPath, std::ios::app);
 		if (!CheckEmpty(logPath)) { file << '\n'; }
 		file.close();
-		Out(std::format("Extra Utilities started successfully! Version: {}", Exu::version));
-		Out(std::format("Logging level is: {}", logLevel));
 	}
 
 public:
+	static inline std::vector<std::shared_ptr<Log>> userLogs;
+
 	Log()
 	{
 		logPath = ".\\Extra Utilities\\exulog.txt";

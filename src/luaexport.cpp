@@ -37,6 +37,7 @@
 
 #include <chrono>
 #include <thread>
+#include <vector>
 #include "Log.h"
 
 #pragma region IMPORTANT_FUNCTIONS
@@ -643,46 +644,57 @@ static int lua_FileWrite(lua_State* L)
 
 #pragma region USER_LOGGING
 
-static int lua_LogGC(lua_State* L) {
-	Log* instance = static_cast<Log*>(luaL_checkudata(L, 1, "LogMetatable"));
-	instance->~Log();  // Explicitly call the destructor
+// this feels very unsafe and it probably is LOL but it works
+static int lua_LogOut(lua_State* L)
+{
+	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
+	const char* content = luaL_checkstring(L, 2);
+	int level = luaL_optint(L, 3, 3);
+	instance->Out(content, level);
 	return 0;
 }
 
-static int lua_LogOut(lua_State* L)
+static int lua_GetLogLevel(lua_State* L)
 {
-	Log* instance = static_cast<Log*>(luaL_checkudata(L, 1, "LogMetatable"));
-	const char* content = luaL_checkstring(L, 2);
-	int level = luaL_optinteger(L, 3, 3);
-	instance->Out(content, level);
+	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
+	int level = instance->GetLogLevel();
+	lua_pushinteger(L, level);
+	return 1;
+}
+
+static int lua_SetLogLevel(lua_State* L)
+{
+	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
+	int level = luaL_checkinteger(L, 2);
+	instance->SetLogLevel(level);
+	return 0;
+}
+
+static int lua_GetLogPath(lua_State* L)
+{
+	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
+	std::filesystem::path path = instance->GetLogPath();
+	lua_pushstring(L, path.string().c_str());
+	return 1;
+}
+
+static int lua_SetLogPath(lua_State* L)
+{
+	auto instance = static_cast<Log*>(lua_touserdata(L, 1));
+	const char* path = luaL_checkstring(L, 2);
+	instance->SetLogPath(path);
 	return 0;
 }
 
 static int lua_CreateLog(lua_State* L)
 {
 	std::string path = luaL_checkstring(L, 1);
-	int level = luaL_optinteger(L, 2, 3);
+	int level = luaL_optint(L, 2, 3);
 
-	Log* instance = static_cast<Log*>(lua_newuserdata(L, sizeof(Log)));
-	new (instance) Log(path, level); // placement new since lua already allocated the memory
+	auto instance = std::make_shared<Log>(Log(path, level));
+	Log::userLogs.push_back(instance);
 
-	//luaL_newmetatable(L, "LogMetatable");
-
-	//lua_pushstring(L, "__gc");
-	//lua_pushcfunction(L, lua_LogGC);
-	//lua_settable(L, -3);
-
-	//lua_pushstring(L, "__index");
-	//lua_newtable(L);
-
-	//lua_pushstring(L, "Out");
-	//lua_pushcfunction(L, lua_LogOut);
-	//lua_settable(L, -3);
-
-	//lua_settable(L, -3); // set methods table to __index
-
-	//lua_setmetatable(L, -2); // set metatable for the log userdata
-
+	lua_pushlightuserdata(L, instance.get());
 	return 1;
 }
 
@@ -997,6 +1009,7 @@ extern "C"
 			{ "MakeDirectory",       lua_MakeDirectory       },
 			{ "FileRead",            lua_FileRead            },
 			{ "FileWrite",           lua_FileWrite           },
+			{ "LogOut",              lua_LogOut              },
 			{ "CreateLog",           lua_CreateLog           },
 			{ "SetDiffuseColor",     lua_SetDiffuseColor     },
 			{ "SetSpecularColor",    lua_SetSpecularColor    },
