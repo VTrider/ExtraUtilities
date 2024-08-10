@@ -194,7 +194,6 @@
     <ClCompile Include="src\gui.cpp" />
     <ClCompile Include="src\luaexport.cpp" />
     <ClCompile Include="src\Memory.cpp" />
-    <ClCompile Include="src\SoundBuffer.cpp" />
     <ClCompile Include="src\SoundDevice.cpp" />
     <ClCompile Include="src\SoundSource.cpp" />
     <ClCompile Include="src\usergui.cpp" />
@@ -216,7 +215,6 @@
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Memory.h" />
     <ClInclude Include="src\Offsets.h" />
-    <ClInclude Include="src\SoundBuffer.h" />
     <ClInclude Include="src\SoundDevice.h" />
     <ClInclude Include="src\SoundSource.h" />
     <ClInclude Include="src\Utils.h" />

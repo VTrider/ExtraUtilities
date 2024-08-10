@@ -4,11 +4,6 @@
 
 #include <vector>
 
-SoundSource::SoundSource()
-{
-	alGenSources(1, &sourceID);
-}
-
 SoundSource::~SoundSource()
 {
 	alDeleteSources(1, &sourceID);

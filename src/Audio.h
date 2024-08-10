@@ -18,12 +18,33 @@
 
 #pragma once
 
+#include <AL\al.h>
+#include <AL\alc.h>
+#include <AL\alext.h>
+
 #include <mutex>
+#include <queue>
+#include <unordered_map>
+#include <vector>
 
 class Audio
 {
 private:
+	static inline std::unordered_map<std::string, ALuint> buffers;
+	static inline std::vector<ALuint> sources;
+	static inline std::queue<ALuint> requestQueue;
+	static inline std::mutex requestLock;
+
+	static ALuint MakeBuffer(std::string& filePath);
+	static ALuint MakeSource();
+
+	static void SendSoundRequest(ALuint source);
+
+	static void CleanSources();
 
 public:
-	static inline std::mutex m;
+	static void ProcessSoundRequests();
+
+	static ALuint PlaySound(std::string& filePath);
+
 };

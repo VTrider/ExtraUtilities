@@ -21,3 +21,110 @@
 #include "Log.h"
 
 #include <sndfile.h>
+
+ALuint Audio::MakeBuffer(std::string& filePath)
+{
+	ALuint bufferID;
+	SF_INFO fileInfo;
+	SNDFILE* sndFile = sf_open(filePath.c_str(), SFM_READ, &fileInfo);
+
+	if (!sndFile)
+	{
+		SystemLog->Out("Failed to open sound file", 1);
+		return;
+	}
+
+	std::vector<short> samples(fileInfo.frames * fileInfo.channels);
+	sf_read_short(sndFile, samples.data(), samples.size());
+	sf_close(sndFile);
+
+	alGenBuffers(1, &bufferID);
+
+	ALenum format;
+
+	if (fileInfo.channels == 1)
+		format = AL_FORMAT_MONO16;
+	else if (fileInfo.channels == 2)
+		format = AL_FORMAT_STEREO16;
+	else
+	{
+		SystemLog->Out("Unsupported channel count", 1);
+		return;
+	}
+
+	alBufferData(bufferID, format, samples.data(), samples.size() * sizeof(short), fileInfo.samplerate);
+
+	buffers.emplace(filePath, bufferID);
+	return bufferID;
+}
+
+ALuint Audio::MakeSource()
+{
+	ALuint sourceID;
+	alGenSources(1, &sourceID);
+	requestLock.lock();
+	sources.push_back(sourceID);
+	requestLock.unlock();
+	return sourceID;
+}
+
+void Audio::SendSoundRequest(ALuint source)
+{
+	requestLock.lock();
+	requestQueue.push(source);
+	requestLock.unlock();
+}
+
+void Audio::CleanSources()
+{
+	requestLock.lock();
+	for (const auto& source : sources)
+	{
+		ALint playing;
+		alGetSourcei(source, AL_SOURCE_STATE, &playing);
+		if (playing != AL_PLAYING)
+		{
+			alDeleteSources(1, &source);
+		}
+	}
+	requestLock.unlock();
+}
+
+void Audio::ProcessSoundRequests()
+{
+	requestLock.lock();
+	if (requestQueue.empty())
+	{
+		requestLock.unlock();
+		return;
+	}
+
+	ALuint sourceToPlay = requestQueue.front();
+	requestQueue.pop();
+	requestLock.unlock();
+
+	alSourcePlay(sourceToPlay);
+}
+
+ALuint Audio::PlaySound(std::string& filePath)
+{
+	ALuint buffer;
+
+	// If the buffer already exists ie. you already loaded that sound file
+	// into memory then use it, otherwise make a new one
+	auto it = buffers.find(filePath);
+	if (it != buffers.end())
+	{
+		buffer = it->second;
+	}
+	else
+	{
+		buffer = MakeBuffer(filePath);
+	}
+
+	ALuint source = MakeSource();
+
+	alSourcei(source, AL_BUFFER, buffer);
+	SendSoundRequest(source);
+	return source;
+}
