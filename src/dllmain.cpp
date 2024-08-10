@@ -43,6 +43,10 @@
 // Todo: free cursor frame game while gui is active
 // fix open AL holding on to a handle or something
 
+#include "SoundBuffer.h"
+#include "SoundDevice.h"
+#include "SoundSource.h"
+
 /*---------
 * Threads *
 ----------*/
@@ -51,19 +55,6 @@ static void FileSystem()
 {
     CreateEXUDirectory();
     std::cout << "EXU Directory Created" << '\n';
-}
-
-bool enableConsole = false;
-
-static void InitializeConsole()
-{
-    if (enableConsole)
-    {
-        AllocConsole();
-        FILE* f;
-        freopen_s(&f, "CONOUT$", "w", stdout);
-        std::cout << "Console Initialized" << '\n';
-    }
 }
 
 static void CodeInjection()
@@ -103,6 +94,7 @@ static void GUI()
         {
             break;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 
 UNLOAD:
@@ -112,21 +104,22 @@ UNLOAD:
 
 std::unique_ptr<Log> SystemLog;
 
-static void AudioSystem()
-{
-    Audio audioSystem;
+std::vector<SoundBuffer> test;
 
+static void AudioThread()
+{
+    SoundDevice device = SoundDevice();
+    SoundBuffer buffer = SoundBuffer("D:\\Downloads\\John_Tosser.ogg");
+    SoundSource source = SoundSource();
+
+    source.Play(buffer);
     while (true)
     {
         if (Memory::CheckExitCondition(5, "Exit condition detected, exiting audio thread"))
         {
             break;
         }
-    
-
-    
-        
-        
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
@@ -137,12 +130,11 @@ static DWORD WINAPI InitialThread(HMODULE hModule)
     SystemLog->Out(std::format("Extra Utilities started successfully! Version: {}", Exu::version));
     SystemLog->Out(std::format("Logging level is: {}", SystemLog->GetLevel()));
     Memory::Init();
-    InitializeConsole();
     FileSystem();
     CodeInjection();
 
-    // std::thread audio(AudioSystem);
-    // audio.detach();
+    std::thread audioThread(AudioThread);
+    audioThread.detach();
 
     // std::thread GUIThread(GUI);
     // GUIThread.detach();
@@ -159,7 +151,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     switch (ul_reason_for_call)
     { // make sure to break to avoid erroneous calls
     case DLL_PROCESS_ATTACH:
-        //MessageBox(NULL, "ATTACH", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL
         CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)InitialThread, hModule, 0, nullptr));
         break;
     case DLL_THREAD_ATTACH:
@@ -171,9 +162,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         // Also resets values that don't reset because they aren't expecting to be changed
         Hook::RestoreAll();
         Memory::RestoreAll();
-        FreeConsole();
         SystemLog->Out("exu.dll detached from process", 3);
-        // MessageBox(NULL, "PROCESS DETACH!", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
         break;
     }
     return TRUE;

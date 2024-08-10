@@ -33,7 +33,7 @@ local extraUtils = {}
 do
     -- Metadata
     local version = exu.GetVersion()
-    local crc32 = "EB227D80"
+    local crc32 = "EDC53BCB"
     local debug = false
 
     local function Start() -- put this in function Start() to print out metadata to console

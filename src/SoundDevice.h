@@ -1,17 +1,18 @@
 #pragma once
 
+#include <AL\al.h>
 #include <AL\alc.h>
+#include <AL\alext.h>
+
+#include <vector>
 
 class SoundDevice
 {
 private:
-	SoundDevice();
-	~SoundDevice();
-
 	ALCdevice* p_ALCDevice;
 	ALCcontext* p_ALCContext;
 
 public:
-	static SoundDevice* Get();
-
+	SoundDevice();
+	~SoundDevice();
 };

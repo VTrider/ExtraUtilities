@@ -946,6 +946,15 @@ static int lua_SetSpotlightRange(lua_State* L)
 
 #pragma endregion OGRE_HOOKS
 
+#pragma region AUDIO_SYSTEM
+
+static int lua_PlaySound(lua_State* L)
+{
+
+}
+
+#pragma endregion AUDIO_SYSTEM
+
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
 
 extern "C" 

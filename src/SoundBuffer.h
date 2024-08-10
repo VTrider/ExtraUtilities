@@ -1,19 +1,20 @@
 #pragma once
 
 #include <AL\al.h>
+#include <AL\alc.h>
+#include <AL\alext.h>
+
 #include <vector>
 
 class SoundBuffer
 {
 private:
-	SoundBuffer();
-	~SoundBuffer();
-
-	std::vector<ALuint> p_SoundEffectBuffers;	
+	ALuint bufferID;
 
 public:
-	static SoundBuffer* Get();
 
-	ALuint AddSoundEffect(const char* filename);
-	bool RemoveSoundEffect(const ALuint& buffer);
+	SoundBuffer(const char* filePath);
+	~SoundBuffer();
+
+	ALuint GetID() const { return bufferID; }
 };

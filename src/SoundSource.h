@@ -1,21 +1,26 @@
 #pragma once
 
-#include "AL\al.h"
+#include "SoundBuffer.h"
+
+#include <AL\al.h>
+#include <AL\alc.h>
+#include <AL\alext.h>
+
+#include <vector>
 
 class SoundSource
 {
 private:
-	ALuint p_Source;
-	float p_Pitch = 1.0f;
-	float p_Gain = 1.0f;
-	float p_Position[3] = { 0, 0, 0 };
-	float p_Velocity[3] = { 0, 0, 0 };
-	bool p_LoopSound = false;
-	ALuint p_Buffer = 0;
+	ALuint sourceID;
 
 public:
+
 	SoundSource();
 	~SoundSource();
 
-	void Play(const ALuint buffer_to_play);
+	static inline std::vector<ALuint> sourceList;
+	ALuint GetID() const { return sourceID; }
+
+	void Play(SoundBuffer& buffer) const;
+
 };
