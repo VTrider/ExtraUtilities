@@ -25,6 +25,7 @@
 #pragma warning(disable : 4731) // warning about modifying the stack frame in the assembly code, it's necessary here
 
 #include "asm.h"
+#include "Audio.h"
 #include "bzfunc.h"
 #include "exumeta.h"
 #include "filesystem.h"
@@ -950,7 +951,11 @@ static int lua_SetSpotlightRange(lua_State* L)
 
 static int lua_PlaySound(lua_State* L)
 {
-
+	std::string soundPath = luaL_checkstring(L, 1);
+	ALuint source = Audio::PlaySoundEffect(soundPath);
+	SystemLog->Out(std::to_string(source));
+	lua_pushnumber(L, source);
+	return 1;
 }
 
 #pragma endregion AUDIO_SYSTEM
@@ -1027,6 +1032,7 @@ extern "C"
 			{ "SetDiffuseColor",     lua_SetDiffuseColor     },
 			{ "SetSpecularColor",    lua_SetSpecularColor    },
 			{ "SetSpotlightRange",   lua_SetSpotlightRange   },
+			{ "PlaySound",           lua_PlaySound           },
 			{0,                      0                       }
 		};
 		luaL_register(L, "exu", exu_export);

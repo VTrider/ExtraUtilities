@@ -22,7 +22,7 @@
 
 #include <sndfile.h>
 
-ALuint Audio::MakeBuffer(std::string& filePath)
+ALuint Audio::MakeBuffer(const std::string& filePath)
 {
 	ALuint bufferID;
 	SF_INFO fileInfo;
@@ -31,7 +31,7 @@ ALuint Audio::MakeBuffer(std::string& filePath)
 	if (!sndFile)
 	{
 		SystemLog->Out("Failed to open sound file", 1);
-		return;
+		return 0;
 	}
 
 	std::vector<short> samples(fileInfo.frames * fileInfo.channels);
@@ -49,7 +49,7 @@ ALuint Audio::MakeBuffer(std::string& filePath)
 	else
 	{
 		SystemLog->Out("Unsupported channel count", 1);
-		return;
+		return 0;
 	}
 
 	alBufferData(bufferID, format, samples.data(), samples.size() * sizeof(short), fileInfo.samplerate);
@@ -75,21 +75,6 @@ void Audio::SendSoundRequest(ALuint source)
 	requestLock.unlock();
 }
 
-void Audio::CleanSources()
-{
-	requestLock.lock();
-	for (const auto& source : sources)
-	{
-		ALint playing;
-		alGetSourcei(source, AL_SOURCE_STATE, &playing);
-		if (playing != AL_PLAYING)
-		{
-			alDeleteSources(1, &source);
-		}
-	}
-	requestLock.unlock();
-}
-
 void Audio::ProcessSoundRequests()
 {
 	requestLock.lock();
@@ -106,8 +91,24 @@ void Audio::ProcessSoundRequests()
 	alSourcePlay(sourceToPlay);
 }
 
-ALuint Audio::PlaySound(std::string& filePath)
+void Audio::CleanSources()
 {
+	requestLock.lock();
+	for (const auto& source : sources)
+	{
+		ALint playing;
+		alGetSourcei(source, AL_SOURCE_STATE, &playing);
+		if (playing != AL_PLAYING)
+		{
+			alDeleteSources(1, &source);
+		}
+	}
+	requestLock.unlock();
+}
+
+ALuint Audio::PlaySoundEffect(const std::string& filePath)
+{
+
 	ALuint buffer;
 
 	// If the buffer already exists ie. you already loaded that sound file

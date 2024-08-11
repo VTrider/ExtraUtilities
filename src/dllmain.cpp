@@ -43,9 +43,7 @@
 // Todo: free cursor frame game while gui is active
 // fix open AL holding on to a handle or something
 
-#include "SoundBuffer.h"
 #include "SoundDevice.h"
-#include "SoundSource.h"
 
 /*---------
 * Threads *
@@ -104,21 +102,23 @@ UNLOAD:
 
 std::unique_ptr<Log> SystemLog;
 
-std::vector<SoundBuffer> test;
-
 static void AudioThread()
 {
     SoundDevice device = SoundDevice();
-    SoundBuffer buffer = SoundBuffer("D:\\Downloads\\John_Tosser.ogg");
-    SoundSource source = SoundSource();
 
-    source.Play(buffer);
     while (true)
     {
         if (Memory::CheckExitCondition(5, "Exit condition detected, exiting audio thread"))
         {
             break;
         }
+
+        Audio::ProcessSoundRequests();
+        Audio::CleanSources();
+
+
+
+
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }

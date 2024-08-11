@@ -35,16 +35,17 @@ private:
 	static inline std::queue<ALuint> requestQueue;
 	static inline std::mutex requestLock;
 
-	static ALuint MakeBuffer(std::string& filePath);
+	static ALuint MakeBuffer(const std::string& filePath);
 	static ALuint MakeSource();
 
 	static void SendSoundRequest(ALuint source);
 
-	static void CleanSources();
+	
 
 public:
 	static void ProcessSoundRequests();
+	static void CleanSources();
 
-	static ALuint PlaySound(std::string& filePath);
+	static ALuint PlaySoundEffect(const std::string& filePath);
 
 };
