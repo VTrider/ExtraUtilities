@@ -22,6 +22,18 @@
 
 #include <sndfile.h>
 
+ALuint Audio::GetSource()
+{
+	if (availableSources.empty()) // this really shouldn't happen
+	{
+		return -1;
+	}
+
+	ALuint source = availableSources.front();
+	availableSources.pop();
+	return source;
+}
+
 ALuint Audio::MakeBuffer(const std::string& filePath)
 {
 	ALuint bufferID;
@@ -39,6 +51,7 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 	sf_close(sndFile);
 
 	alGenBuffers(1, &bufferID);
+	CheckError();
 
 	ALenum format;
 
@@ -53,26 +66,82 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 	}
 
 	alBufferData(bufferID, format, samples.data(), samples.size() * sizeof(short), fileInfo.samplerate);
+	CheckError();
 
 	buffers.emplace(filePath, bufferID);
 	return bufferID;
 }
 
-ALuint Audio::MakeSource()
+void Audio::SendSoundRequest(Request request)
 {
-	ALuint sourceID;
-	alGenSources(1, &sourceID);
 	requestLock.lock();
-	sources.push_back(sourceID);
+	requestQueue.push(request);
 	requestLock.unlock();
-	return sourceID;
 }
 
-void Audio::SendSoundRequest(ALuint source)
+void Audio::InitSourcePool()
+{
+	for (int i = 0; i < 256; i++) // this is a workaround for alGenSources(256) not working for some reason
+	{
+		ALuint source;
+		alGenSources(1, &source);
+		CheckError();
+		sourcePool.push_back(source);
+	}
+	for (ALuint source : sourcePool)
+	{
+		availableSources.push(source);
+	}
+}
+
+void Audio::FreeSources()
 {
 	requestLock.lock();
-	requestQueue.push(source);
+	ALint state;
+	for (auto it = activeSources.begin(); it != activeSources.end();)
+	{	
+		alGetSourcei(*it, AL_SOURCE_STATE, &state);
+		CheckError();
+
+		if (state != AL_PLAYING && state != AL_PAUSED)
+		{
+			availableSources.push(*it);
+			it = activeSources.erase(it);
+			SystemLog->Out(std::format("Freed source {}", *it));
+		}
+		else
+		{
+			++it; // move to the next source
+		}
+	}
 	requestLock.unlock();
+}
+
+void Audio::CheckError()
+{
+	ALenum error = alGetError();
+	if (error != AL_NO_ERROR) {
+		switch (error) {
+		case AL_INVALID_NAME:
+			SystemLog->Out("OpenAL Error: Invalid Name", 1);
+			break;
+		case AL_INVALID_ENUM:
+			SystemLog->Out("OpenAL Error: Invalid Enum", 1);
+			break;
+		case AL_INVALID_VALUE:
+			SystemLog->Out("OpenAL Error: Invalid Value", 1);
+			break;
+		case AL_INVALID_OPERATION:
+			SystemLog->Out("OpenAL Error: Invalid Operation", 1);
+			break;
+		case AL_OUT_OF_MEMORY:
+			SystemLog->Out("OpenAL Error: Out Of Memory", 1);
+			break;
+		default:
+			SystemLog->Out("OpenAL Error: Unknown Error", 1);
+			break;
+		}
+	}
 }
 
 void Audio::ProcessSoundRequests()
@@ -84,48 +153,36 @@ void Audio::ProcessSoundRequests()
 		return;
 	}
 
-	ALuint sourceToPlay = requestQueue.front();
-	requestQueue.pop();
-	requestLock.unlock();
-
-	alSourcePlay(sourceToPlay);
-}
-
-void Audio::CleanSources()
-{
-	requestLock.lock();
-	for (const auto& source : sources)
-	{
-		ALint playing;
-		alGetSourcei(source, AL_SOURCE_STATE, &playing);
-		if (playing != AL_PLAYING)
-		{
-			alDeleteSources(1, &source);
-		}
-	}
-	requestLock.unlock();
-}
-
-ALuint Audio::PlaySoundEffect(const std::string& filePath)
-{
-
 	ALuint buffer;
 
 	// If the buffer already exists ie. you already loaded that sound file
 	// into memory then use it, otherwise make a new one
-	auto it = buffers.find(filePath);
+	auto it = buffers.find(requestQueue.front().filePath);
 	if (it != buffers.end())
 	{
 		buffer = it->second;
 	}
 	else
 	{
-		buffer = MakeBuffer(filePath);
+		buffer = MakeBuffer(requestQueue.front().filePath);
 	}
 
-	ALuint source = MakeSource();
+	ALuint sourceToPlay = requestQueue.front().source;
+	
+	requestQueue.pop();
+	activeSources.push_back(sourceToPlay);
+	requestLock.unlock();
 
-	alSourcei(source, AL_BUFFER, buffer);
-	SendSoundRequest(source);
+	alSourcei(sourceToPlay, AL_BUFFER, buffer);
+	alSourcePlay(sourceToPlay);
+	CheckError();
+}
+
+ALuint Audio::PlaySoundEffect(const std::string& filePath)
+{
+	ALuint source = GetSource();
+	if (source == -1) { return -1; }
+	Request soundRequest = { source, filePath };
+	SendSoundRequest(soundRequest);
 	return source;
 }

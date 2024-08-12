@@ -44,6 +44,7 @@ namespace Reticle
 	VECTOR_3D GetReticlePos();
 	float GetSmartCursorRange();
 	void SetSmartCursorRange(float range);
+	void* GetReticleObject();
 }
 
 namespace Satellite

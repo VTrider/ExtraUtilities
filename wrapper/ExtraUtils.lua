@@ -25,53 +25,50 @@
 --- @alias float number
 --- @alias vector userdata
 --- @alias matrix userdata
---- @alias void nil
 
 local exu = require("exu")
 
-local extraUtils = {}
+local ExtraUtils = {}
 do
-    -- Metadata
-    local version = exu.GetVersion()
-    local crc32 = "EDC53BCB"
-    local debug = false
+    --------------
+    -- Metadata --
+    --------------
 
-    local function Start() -- put this in function Start() to print out metadata to console
-        print("--------------------------------------------------------------------------------------")
-        print("Extra Utilities loaded! Version: " .. version .. "                                                  ")
-        print("--------------------------------------------------------------------------------------")
-    end
+    ExtraUtils.version = exu.GetVersion()
+    ExtraUtils.crc32 = "EB227D80"
+    ExtraUtils.debug = false
 
-    -- Helpers
+    -------------
+    -- Helpers --
+    -------------
 
     --- Lua C API doesn't have a check boolean function so this casts
     --- a bool to an integer
     ---@param value boolean
     ---@return integer | nil
-    local function CastBool(value) -- TODO FIX ALWAYS RETURNING 0
-        if type(value) ~= "boolean" then 
+    local function CastBool(value)
+        if type(value) ~= "boolean" then
             error("Extra Utilities Error: input must be a bool")
             return
         end
         return value and 1 or 0
     end
 
-    --[[
-    ------------------------------------------------------------------------------------
-    *   Name       : SetAccessMode
-    *   Description: Sets the method for accessing the game's memory, valid
-    *                options: 0 (direct access - blazing fast but potentially unstable),
-    *                1 (windows api - much slower but potentially more stable), default
-    *                is 0 (direct access)
-    *   Inputs     : Int mode 0 or 1
-    *   Outputs    : New access mode
-    *   Return Type: Void
-    -----------------------------------------------------------------------------------
-    --]]
+    -------------
+    -- Exports --
+    -------------
 
-    --- @param mode integer
-    --- @return void
-    local function SetAccessMode(mode)
+    --- Sets the method for accessing the game's memory, valid
+    --- options:
+    --- 
+    --- 0: (direct access - blazing fast but potentially unstable)
+    --- 
+    --- 1: (windows api - much slower but potentially more stable)
+    --- 
+    --- Default is 0 (direct access)
+    --- @param mode integer 0 or 1
+    --- @return nil void
+    function ExtraUtils.SetAccessMode(mode)
         if mode ~= 0 and mode ~= 1 then
             error("Extra Utilities Error: input must be either 0 or 1")
             return
@@ -79,377 +76,210 @@ do
         exu.SetAccessMode(mode)
     end
 
-    --[[
-    ---------------------------------------------------------------------------
-    *   Name       : GetObj
-    *   Description: Converts a handle to it's memory address, mainly for debug
-    *                purposes 
-    *   Inputs     : Handle to an object
-    *   Outputs    : GameObject pointer
-    *   Return Type: Lightuserdata
-    ---------------------------------------------------------------------------
-    --]]
-
+    --- Gets the GameObject* for the given handle, useful for debugging
+    --- reverse engineered stuff
     --- @param handle handle
-    --- @return pointer
-    local function GetObj(handle)
+    --- @return pointer GameObject*
+    function ExtraUtils.GetObj(handle)
         return exu.GetObj(handle)
     end
 
-    --[[
-    -------------------------------------------------------------
-    *   Name       : GetGravity
-    *   Description: Gets the current value of the gravity vector
-    *   Inputs     : None
-    *   Outputs    : VECTOR_3D velocity: X, Y, Z
-    *   Return Type: Userdata
-    -------------------------------------------------------------
-    --]]
-
-    --- @return vector
-    local function GetGravity()
+    --- Gets the current value of the gravity velocity vector
+    --- @return userdata vector
+    function ExtraUtils.GetGravity()
         local gravityVector = exu.GetGravity()
         local formattedVector = SetVector(gravityVector.x, gravityVector.y, gravityVector.z)
         return formattedVector
     end
 
-    --[[
-    --------------------------------------------------------------
-    *   Name       : SetGravity
-    *   Description: Sets the current value of the gravity vector 
-    *   Inputs     : Float X, Y, Z values
-    *   Outputs    : New gravity value
-    *   Return Type: Void
-    --------------------------------------------------------------
-    --]]
-
+    --- Sets the current gravity velocity vector
+    --- 
+    --- This affects all units owned by the local player
     --- @param x float
     --- @param y float
     --- @param z float
-    --- @return void
-    local function SetGravity(x, y, z)
+    --- @return nil void
+    function ExtraUtils.SetGravity(x, y, z)
         exu.SetGravity(x, y, z)
     end
 
-    --[[
-    ---------------------------------------------------------------------------
-    *   Name       : GetSmartCursorRange
-    *   Description: Gets the current range of the smart cursor (stock is 200m)
-    *   Inputs     : None
-    *   Outputs    : Current range of smart cursor
-    *   Return Type: Number
-    ---------------------------------------------------------------------------
-    --]]
-
-    --- @return float
-    local function GetSmartCursorRange()
+    --- Gets the current range of the smart cursor (default 200m)
+    --- @return float range
+    function ExtraUtils.GetSmartCursorRange()
         return exu.GetSmartCursorRange()
     end
 
-    --[[
-    ---------------------------------------------------------------------------
-    *   Name       : SetSmartCursorRange
-    *   Description: Sets the current range of the smart cursor
-    *   Inputs     : Float new range
-    *   Outputs    : New smart cursor range
-    *   Return Type: Void
-    ---------------------------------------------------------------------------
-    --]]
-
+    --- Sets the current range of the smart cursor
     --- @param range float
-    --- @return void
-    local function SetSmartCursorRange(range)
+    --- @return nil void
+    function ExtraUtils.SetSmartCursorRange(range)
         exu.SetSmartCursorRange(range)
     end
 
-    --[[
-    ------------------------------------------------------------------------
-    *   Name       : GetReticleAngle
-    *   Description: Gets the reticle angle of the local player
-    *   Inputs     : None
-    *   Outputs    : -1.0 to 1.0 with 0 as level with horizon, note: aligned
-    *                with world not local rotation
-    *   Return Type: Number
-    ------------------------------------------------------------------------
-    --]]
-
-    --- @return float
-    local function GetReticleAngle()
+    --- Gets the reticle angle of the local player ranging from -1.0 to 1.0
+    --- 
+    --- Aligned with the world not local rotation
+    --- @return float angle
+    function ExtraUtils.GetReticleAngle()
         return exu.GetReticleAngle()
     end
 
-    --[[
-    ------------------------------------------------------------------------------------------------------
-    *   Name       : GetReticlePos
-    *   Description: Gets the location on terrain of the player's reticle
-    *   Inputs     : None
-    *   Outputs    : VECTOR_3D coordinates: X, Y, Z
-    *   Return Type: Userdata
-    ------------------------------------------------------------------------------------------------------
-    --]]
-
-    ---@return vector
-    local function GetReticlePos()
+    --- Gets the location on terrain of the player's reticle
+    --- 
+    --- Must be within smart reticle range, otherwise it will return the last known value
+    --- 
+    --- Additionally, while looking at an object or into the sky it will return the last known value
+    --- @return userdata vector 
+    function ExtraUtils.GetReticlePos()
         local reticlePos = exu.GetReticlePos() -- The vector components arrive in a table from the DLL
         local formattedPos = SetVector(reticlePos.x, reticlePos.y, reticlePos.z) -- Make the table into a BZ-usable vector
         return formattedPos
     end
 
-    --[[
-    -------------------------------------------------------------
-    *   Name       : GetSatState
-    *   Description: Gets the satellite state of the local player
-    *   Inputs     : None
-    *   Outputs    : 1 = enabled, 0 = disabled
-    *   Return Type: Number
-    -------------------------------------------------------------
-    --]]
+    --- Gets the handle of the object under the local user's reticle, as well as the satellite cursor
+    --- 
+    --- (The object that appears next to "SPACE No Action (object)" in the command interface)
+    --- 
+    --- The object must be within smart reticle range in order to be detected
+    --- @return handle | nil handle
+    function ExtraUtils.GetReticleObject()
+        local handle = exu.GetReticleObject()
+        if handle == 0 then
+            return nil
+        else
+            return handle
+        end
+    end
 
-    --- @return boolean
-    local function GetSatState()
+    --- Gets the satellite state of the local player
+    --- 
+    --- `1` = enabled
+    --- 
+    --- `0` = disabled
+    --- @return boolean state
+    function ExtraUtils.GetSatState()
         return exu.GetSatState()
     end
 
-    --[[
-    ---------------------------------------------------------------------------
-    *   Name       : GetSatCursorPos
-    *   Description: Gets the current position of the cursor in satellite view,
-    *                if satellite is disabled then it will return the LAST
-    *                known position of the cursor, or possibly an undefined
-    *                value under some circumstances, be careful
-    *   Inputs     : None
-    *   Outputs    : VECTOR_3D coordinates: X, Y, Z
-    *   Return Type: Userdata
-    ---------------------------------------------------------------------------
-    --]]
-
-    --- @return vector
-    local function GetSatCursorPos()
+    --- Gets the current position of the cursor in satellite view, if satellite
+    --- is disabled it will return the last known position of the cursor
+    --- @return userdata vector
+    function ExtraUtils.GetSatCursorPos()
         local cursorPos = exu.GetSatCursorPos()
         local formattedPos = SetVector(cursorPos.x, cursorPos.y, cursorPos.z)
         return formattedPos
     end
 
-    --[[
-    ----------------------------------------------------------------------
-    *   Name       : GetSatCamPos
-    *   Description: Gets the current position of the player's camera in
-    *                satellite view. Note: the Y coordinate becomes static
-    *                when you pan the camera, otherwise it follows the
-    *                player's Y coordinate
-    *   Inputs     : None
-    *   Outputs    : VECTOR_3D coordinates: X, Y, Z
-    *   Return Type: Userdata
-    ----------------------------------------------------------------------
-    --]]
-
-    --- @return vector
-    local function GetSatCamPos()
+    --- Gets the current position of the player's camera in satellite view
+    --- 
+    --- The Y coordinate becomes static when you pan the camera, otherwise it follows
+    --- the player's Y coordinate
+    --- @return userdata vector
+    function ExtraUtils.GetSatCamPos()
         local camPos = exu.GetSatCamPos()
         local formattedPos = SetVector(camPos.x, camPos.y, camPos.z)
         return formattedPos
     end
 
-    --[[
-    -------------------------------------------------------------------------
-    *   Name       : GetSatClickPos
-    *   Description: Gets the last position the player clicked in satellite
-    *                view. NOTE: value will persist even after satellite view
-    *                is closed, make sure to handle this to avoid unintended
-    *                behavior
-    *   Inputs     : None
-    *   Outputs    : VECTOR_3D coordinates: X, Y, Z
-    *   Return Type: Userdata
-    -------------------------------------------------------------------------
-    --]]
-
-    --- @return vector
-    local function GetSatClickPos()
+    --- Gets the last position the player clicked in satellite view
+    --- 
+    --- Persists after satellite is closed so be sure to handle this case
+    --- @return userdata vector
+    function ExtraUtils.GetSatClickPos()
         local clickPos = exu.GetSatClickPos()
         local formattedPos = SetVector(clickPos.x, clickPos.y, clickPos.z)
         return formattedPos
     end
 
-    --[[
-    --------------------------------------------------------------
-    *   Name       : GetSatPanSpeed
-    *   Description: Gets the current pan speed of satellite view.
-    *                Default = 1250
-    *   Inputs     : None
-    *   Outputs    : Current pan speed
-    *   Return Type: Number
-    --------------------------------------------------------------
-    --]]
-
-
-    --- @return float
-    local function GetSatPanSpeed()
+    --- Gets the current pan speed of satellite view
+    --- 
+    --- Default = `1250`
+    --- @return float speed
+    function ExtraUtils.GetSatPanSpeed()
         return exu.GetSatPanSpeed()
     end
 
-    --[[
-    --------------------------------------------------------------
-    *   Name       : SetSatPanSpeed
-    *   Description: Sets the current pan speed of satellite view.
-    *                Default = 1250
-    *   Inputs     : Float pan speed
-    *   Outputs    : New pan speed
-    *   Return Type: Void
-    --------------------------------------------------------------
-    --]]
-
+    --- Sets the current pan speed of satellite view
+    --- 
+    --- Default = `1250`
     --- @param speed float
-    --- @return void
-    local function SetSatPanSpeed(speed)
+    --- @return nil void
+    function ExtraUtils.SetSatPanSpeed(speed)
         exu.SetSatPanSpeed(speed)
     end
 
-    --[[
-    ---------------------------------------------------------------
-    *   Name       : GetMinSatZoom
-    *   Description: Gets the minimum zoom level of satellite view.
-    *                Default = 2
-    *   Inputs     : None
-    *   Outputs    : Current minimum zoom
-    *   Return Type: Number
-    ---------------------------------------------------------------
-    --]]
-
+    --- Gets the minimum zoom level of satellite view.
+    --- 
+    --- Default = `2`
     --- @return float
-    local function GetMinSatZoom()
+    function ExtraUtils.GetMinSatZoom()
         return exu.GetMinSatZoom()
     end
 
-    --[[
-    ---------------------------------------------------------------
-    *   Name       : SetMinSatZoom
-    *   Description: Sets the minimum zoom level of satellite view.
-    *                Default = 2
-    *   Inputs     : Float new minimum zoom
-    *   Outputs    : New minimum zoom
-    *   Return Type: Void
-    ---------------------------------------------------------------
-    --]]
-
+    --- Sets the minimum zoom level of satellite view.
+    --- 
+    --- Default = `2`
     --- @param zoom float
-    --- @return void
-    local function SetMinSatZoom(zoom)
+    --- @return nil void
+    function ExtraUtils.SetMinSatZoom(zoom)
         exu.SetMinSatZoom(zoom)
     end
 
-    --[[
-    ---------------------------------------------------------------
-    *   Name       : GetMaxSatZoom
-    *   Description: Gets the Maximum zoom level of satellite view.
-    *                Default = 8
-    *   Inputs     : None
-    *   Outputs    : Current Maximum zoom
-    *   Return Type: Number
-    ---------------------------------------------------------------
-    --]]
-
+    --- Gets the maximum zoom level of satellite view.
+    --- 
+    --- Default = `8`
     --- @return float
-    local function GetMaxSatZoom()
+    function ExtraUtils.GetMaxSatZoom()
         return exu.GetMaxSatZoom()
     end
 
-    --[[
-    ---------------------------------------------------------------
-    *   Name       : SetMaxSatZoom
-    *   Description: Sets the Maximum zoom level of satellite view.
-    *                Default = 8
-    *   Inputs     : Float new Maximum zoom
-    *   Outputs    : New Maximum zoom
-    *   Return Type: Void
-    ---------------------------------------------------------------
-    --]]
-
+    --- Sets the maximum zoom level of satellite view.
+    --- 
+    --- Default = `8`
     --- @param zoom float
-    --- @return void
-    local function SetMaxSatZoom(zoom)
+    --- @return nil void
+    function ExtraUtils.SetMaxSatZoom(zoom)
         exu.SetMaxSatZoom(zoom)
     end
 
-    --[[
-    ---------------------------------------------------------------
-    *   Name       : GetSatZoom
-    *   Description: Gets the current zoom level of satellite view.
-    *                Default = 4
-    *   Inputs     : None
-    *   Outputs    : Current satellite zoom level
-    *   Return Type: Number
-    ---------------------------------------------------------------
-    --]]
-
+    --- Gets the current zoom level of satellite view.
+    --- 
+    --- Default = `4`
     --- @return float
-    local function GetSatZoom()
+    function ExtraUtils.GetSatZoom()
         return exu.GetSatZoom()
     end
 
-    --[[
-    ------------------------------------------------------------------
-    *   Name       : SetSatZoom
-    *   Description: Sets the current zoom level of satellite view.
-    *                Make sure to stay within the boundaries defined
-    *                by min and max zoom, otherwise it'll cause issues
-    *   Inputs     : Float zoom level
-    *   Outputs    : New satellite zoom level
-    *   Return Type: Void
-    ------------------------------------------------------------------
-    --]]
-
+    --- Sets the current zoom level of satellite view.
+    --- 
+    --- Make sure to stay within the boundaries defined by min and max zoom, otherwise it'll cause issues.
     --- @param zoom float
-    --- @return void
-    local function SetSatZoom(zoom)
+    --- @return nil void
+    function ExtraUtils.SetSatZoom(zoom)
         exu.SetSatZoom(zoom)
     end
 
-    --[[
-    ---------------------------------------------------------
-    *   Name       : GetRadarState
-    *   Description: Gets the radar state of the local player
-    *   Inputs     : None
-    *   Outputs    : 1 = radar, 0 = minimap
-    *   Return Type: Number
-    ---------------------------------------------------------
-    --]]
-
-    --- @return integer
-    local function GetRadarState()
+    --- Gets the radar state of the local player.
+    --- 
+    --- 1 = radar, 0 = minimap
+    --- @return integer state
+    function ExtraUtils.GetRadarState()
         return exu.GetRadarState()
     end
 
-    --[[
-    ---------------------------------------------------------
-    *   Name       : SetRadarState
-    *   Description: Sets the radar state of the local player
-    *   Inputs     : Desired radar state
-    *   Outputs    : New radar state
-    *   Return Type: Void
-    ---------------------------------------------------------
-    --]]
-
+    --- Sets the radar state of the local player.
     --- @param state integer
-    --- @return void
-    local function SetRadarState(state)
+    --- @return nil void
+    function ExtraUtils.SetRadarState(state)
         exu.SetRadarState(state)
     end
 
-    --[[
-    ----------------------------------------------------------------------------------
-    *   Name       : GetZoomFactor
-    *   Description: Gets the zoom factor of the given camera, both cameras are tied
-    *              : together except for when you are in third person or freecam, then
-    *              : only the global cam will be active.
-    *   Inputs     : String 'F' (first person) or 'G' (global)
-    *   Outputs    : Current zoom factor
-    *   Return Type: Float
-    ----------------------------------------------------------------------------------
-    --]]
-
-    --- @param camera string
+    --- Gets the zoom factor of the given camera.
+    --- 
+    --- Both cameras are tied together except for when you are in third person or freecam, then only the global cam will be active.
+    --- @param camera string `'F'` (first person) or `'G'` (global)
     --- @return float | nil
-    local function GetZoomFactor(camera)
+    function ExtraUtils.GetZoomFactor(camera)
         if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
             error("Extra Utilities Error: Invalid camera")
             return
@@ -457,21 +287,13 @@ do
         return exu.GetZoomFactor(string.upper(camera))
     end
 
-    --[[
-    -----------------------------------------------------------------------------
-    *   Name       : SetZoomFactor
-    *   Description: Sets the zoom factor of the given camera. Note this will
-    *              : override the min/max until the player tries to zoom with -+
-    *   Inputs     : Float zoom factor, String 'F' (first person) or 'G' (global)
-    *   Outputs    : New zoom factor
-    *   Return Type: Void
-    -----------------------------------------------------------------------------
-    --]]
-
+    --- Sets the zoom factor of the given camera.
+    --- 
+    --- Note this will override the min/max until the player tries to zoom with -+.
     --- @param factor float
-    --- @param camera string
-    --- @return void
-    local function SetZoomFactor(factor, camera)
+    --- @param camera string `'F'` (first person) or `'G'` (global)
+    --- @return nil void
+    function ExtraUtils.SetZoomFactor(factor, camera)
         if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
             error("Extra Utilities Error: Invalid camera")
             return
@@ -479,307 +301,137 @@ do
         exu.SetZoomFactor(factor, string.upper(camera))
     end
 
-    --[[
-    -----------------------------------------------------------------------------
-    *   Name       : GetMinZoomFactor
-    *   Description: Gets the minimum zoom factor for all cameras
-    *   Inputs     : None
-    *   Outputs    : Current minimum zoom factor
-    *   Return Type: Float
-    -----------------------------------------------------------------------------
-    --]]
-
-    --- @return float
-    local function GetMinZoomFactor()
+    --- Gets the minimum zoom factor for all cameras.
+    --- @return float factor
+    function ExtraUtils.GetMinZoomFactor()
         return exu.GetMinZoomFactor()
     end
 
-    --[[
-    -----------------------------------------------------------------------------
-    *   Name       : SetMinZoomFactor
-    *   Description: Sets the minimum zoom factor for all cameras
-    *   Inputs     : Float desired minimum zoom factor
-    *   Outputs    : New minimum zoom factor
-    *   Return Type: Void
-    -----------------------------------------------------------------------------
-    --]]
-
+    --- Sets the minimum zoom factor for all cameras.
     --- @param factor float
-    --- @return void
-    local function SetMinZoomFactor(factor)
+    --- @return nil void
+    function ExtraUtils.SetMinZoomFactor(factor)
         exu.SetMinZoomFactor(factor)
     end
 
-        --[[
-    -----------------------------------------------------------------------------
-    *   Name       : GetMaxZoomFactor
-    *   Description: Gets the maximum zoom factor for all cameras
-    *   Inputs     : None
-    *   Outputs    : Current maximum zoom factor
-    *   Return Type: Float
-    -----------------------------------------------------------------------------
-    --]]
-
-    --- @return float
-    local function GetMaxZoomFactor()
+    --- Gets the maximum zoom factor for all cameras.
+    --- @return float factor
+    function ExtraUtils.GetMaxZoomFactor()
         return exu.GetMaxZoomFactor()
     end
 
-    --[[
-    -----------------------------------------------------------------------------
-    *   Name       : SetMaxZoomFactor
-    *   Description: Sets the maximum zoom factor for all cameras
-    *   Inputs     : Float desired maximum zoom factor
-    *   Outputs    : New maximum zoom factor
-    *   Return Type: Void
-    -----------------------------------------------------------------------------
-    --]]
-
+    --- Sets the maximum zoom factor for all cameras.
     --- @param factor float
-    --- @return void
-    local function SetMaxZoomFactor(factor)
+    --- @return nil void
+    function ExtraUtils.SetMaxZoomFactor(factor)
         exu.SetMaxZoomFactor(factor)
     end
 
-    --[[
-    ------------------------------------------------------------------------------------------
-    *   Name       : GetGameKey
-    *   Description: Gets whether or not a key is held, a full list of keys can be found here:
-    *              : https://github.com/VTrider/ExtraUtilities/wiki/GetGameKey()-Keycodes
-    *   Inputs     : String key (stock GameKey calling conventions, single 
-    *                capital letter)
-    *   Outputs    : True = is held, False = is not held
-    *   Return Type: Bool
-    ------------------------------------------------------------------------------------------
-    --]]
-
-    --- @param key string
+    --- Gets whether or not a key is held.
+    --- 
+    --- A full list of keys can be found [here](https://github.com/VTrider/ExtraUtilities/wiki/GetGameKey()-Keycodes).
+    --- @param key string Stock `GameKey` calling conventions, single capital letter.
     --- @return boolean
-    local function GetGameKey(key)
+    function ExtraUtils.GetGameKey(key)
         return exu.GetGameKey(key)
     end
 
-    --[[
-    ---------------------------------------------------------
-    *   Name       : GetSteam64
-    *   Description: Gets the Steam 64 ID of the local player
-    *   Inputs     : None
-    *   Outputs    : Steam64 ID
-    *   Return Type: String
-    ---------------------------------------------------------
-    --]]
-
+    --- Gets the Steam 64 ID of the local player.
+    --- 
     --- @return string
-    local function GetSteam64()
+    function ExtraUtils.GetSteam64()
         return exu.GetSteam64()
     end
 
-    --[[
-    -----------------------------------------------------------------
-    *   Name       : GetWeaponMask
-    *   Description: This was a huge pain in the ass to implement ._.
-    *                Gets the weapon mask for the local user, uses
-    *                a 0 based index (first weapon slot returns 0)
-    *   Inputs     : None
-    *   Outputs    : Current weapon mask
-    *   Return Type: Number
-    -----------------------------------------------------------------
-    --]]
-
+    --- Gets the weapon mask for the local user.
+    --- 
+    --- Uses a 0-based index (first weapon slot returns 0).
     --- @return integer
-    local function GetWeaponMask()
+    function ExtraUtils.GetWeaponMask()
         return exu.GetWeaponMask()
     end
 
-    --[[
-    ----------------------------------------
-    *   Name       : GetLives
-    *   Description: Gets your current lives
-    *   Inputs     : None
-    *   Outputs    : Lives
-    *   Return Type: Number
-    ----------------------------------------
-    --]]
-
+    --- Gets your current lives.
+    --- 
     --- @return integer
-    local function GetLives()
+    function ExtraUtils.GetLives()
         return exu.GetLives()
     end
 
-    --[[
-    -----------------------------------------------------------
-    *   Name       : SetLives
-    *   Description: Sets your current lives
-    *   Inputs     : Number new lives - Note: the display value
-    *                doesn't update until you lose a life
-    *   Outputs    : New lives
-    *   Return Type: Void
-    -----------------------------------------------------------
-    --]]
-
+    --- Sets your current lives.
+    --- 
+    --- Note: the display value doesn't update until you lose a life.
     --- @param lives integer
-    --- @return void
-    local function SetLives(lives)
+    --- @return nil void
+    function ExtraUtils.SetLives(lives)
         exu.SetLives(lives)
     end
 
-   --[[
-    =======================================================
-    *   IMPORTANT NOTICE REGARDING THE NEXT FUNCTIONS!
-    *   These functions have accessibility implications
-    *   due to modifying things like difficulty and mouse
-    *   settings, please use them responsibly
-    =======================================================
-    --]]
-
-    --[[
-    -----------------------------------------------------------
-    *   Name       : GetDifficulty
-    *   Description: Gets the local player's difficulty setting
-    *   Inputs     : None
-    *   Outputs    : Current difficulty setting
-    *   Return Type: String
-    -----------------------------------------------------------
-    --]]
-
-    --- @return string
-    local function GetDifficulty()
+    --- Gets the local player's difficulty setting.
+    --- @return string difficulty
+    function ExtraUtils.GetDifficulty()
         return exu.GetDifficulty()
     end
 
-    --[[
-    ---------------------------------------------------------------------------
-    *   Name       : SetDifficulty
-    *   Description: Sets the local player's difficulty setting note that it
-    *              : won't change what it says in the menu, but it will in fact
-    *              : change in-game, note it also won't work in multiplayer
-    *              : where the difficulty is locked to very hard
-    *   Inputs     : String difficulty as it appears in game, ie. "Very Easy",
-    *              : "Medium", "Very Hard", etc.
-    *   Outputs    : New difficulty setting
-    *   Return Type: Void
-    ---------------------------------------------------------------------------
-    --]]
-
-    --- @param newDifficulty string
-    --- @return void
-    local function SetDifficulty(newDifficulty)
+    --- Sets the local player's difficulty setting.
+    --- 
+    --- Note that it won't change what it says in the menu, but it will in fact change in-game. It also won't work in multiplayer where the difficulty is locked to very hard.
+    --- @param newDifficulty string Difficulty as it appears in-game, e.g., `"Very Easy"`, `"Medium"`, `"Very Hard"`, etc.
+    --- @return nil void
+    function ExtraUtils.SetDifficulty(newDifficulty)
         exu.SetDifficulty(newDifficulty)
     end
 
-    --[[
-    -------------------------------------------------------------------
-    *   Name       : GetAutoLevel
-    *   Description: Gets the local player's automatic leveling setting
-    *   Inputs     : None
-    *   Outputs    : Current automatic leveling setting on or off
-    *   Return Type: Bool
-    -------------------------------------------------------------------
-    --]]
 
-    --- @return boolean
-    local function GetAutoLevel()
+    --- Gets the local player's automatic leveling setting
+    --- @return boolean setting
+    function ExtraUtils.GetAutoLevel()
         return exu.GetAutoLevel()
     end
 
-    --[[
-    -------------------------------------------------------------------
-    *   Name       : SetAutoLevel
-    *   Description: Sets the local player's automatic leveling setting
-    *   Inputs     : Bool on or off
-    *   Outputs    : New automatic leveling setting
-    *   Return Type: Void
-    -------------------------------------------------------------------
-    --]]
-
+    --- Sets the local player's automatic leveling setting
     --- @param newAL boolean
-    --- @return void
-    local function SetAutoLevel(newAL)
+    --- @return nil void
+    function ExtraUtils.SetAutoLevel(newAL)
         exu.SetAutoLevel(CastBool(newAL))
     end
 
-    --[[
-    ----------------------------------------------------------------------
-    *   Name       : GetTLI
-    *   Description: Gets the local player's target lead indicator setting
-    *   Inputs     : None
-    *   Outputs    : Current target lead indicator setting on or off
-    *   Return Type: Bool
-    ----------------------------------------------------------------------
-    --]]
-
-    --- @return boolean
-    local function GetTLI()
+    --- Gets the local player's target lead indicator setting
+    --- @return boolean setting
+    function ExtraUtils.GetTLI()
         return exu.GetTLI()
     end
 
-    --[[
-    ----------------------------------------------------------------------
-    *   Name       : SetTLI
-    *   Description: Sets the local player's target lead indicator setting
-    *   Inputs     : Bool on or off
-    *   Outputs    : New target lead indicator setting on or off
-    *   Return Type: Void
-    ----------------------------------------------------------------------
-    --]]
-
+    --- Sets the local player's target lead indicator setting
     --- @param newTLI boolean
-    --- @return boolean
-    local function SetTLI(newTLI)
+    --- @return nil void
+    function ExtraUtils.SetTLI(newTLI)
         exu.SetTLI(CastBool(newTLI))
     end
 
-    --[[
-    ----------------------------------------------------------------------
-    *   Name       : GetReverseMouse
-    *   Description: Gets the local player's reverse mouse setting
-    *   Inputs     : None
-    *   Outputs    : Current reverse mouse setting setting on or off
-    *   Return Type: Bool
-    ----------------------------------------------------------------------
-    --]]
-
-    --- @return boolean
-    local function GetReverseMouse()
+    --- Gets the local player's reverse mouse setting
+    --- @return boolean setting
+    function ExtraUtils.GetReverseMouse()
         return exu.GetReverseMouse()
     end
 
-    --[[
-    ----------------------------------------------------------------------
-    *   Name       : SetReverseMouse
-    *   Description: Sets the local player's reverse mouse setting
-    *   Inputs     : Bool on or off
-    *   Outputs    : New reverse mouse setting on or off
-    *   Return Type: Void
-    ----------------------------------------------------------------------
-    --]]
-
+    --- Sets the local player's reverse mouse setting
     --- @param newSetting boolean
-    --- @return void
-    local function SetReverseMouse(newSetting)
+    --- @return nil void
+    function ExtraUtils.SetReverseMouse(newSetting)
         exu.SetReverseMouse(CastBool(newSetting))
     end
 
-    --[[
-    --------------------------------------------------------------------------
-    *   Name       : Ordnance Velocity Inheritance
-    *   Description: Enables velocity inheritance on the local player's
-    *                ordnance. You can control the ratio of velocity inherited
-    *                by providing a float argument from 0-1. The default value
-    *                is 1 (full inheritance).
-    *                WARNING: you MUST call Enable BEFORE calling Update,
-    *                and you must call UpdateOrdnance in the update loop to
-    *                apply the patch.
-    *   Inputs     : Optional float ratio, optional inheritance type "FULL" or
-    *              : "FRONT"
-    *   Outputs    : Velocity inheritance patch
-    *   Return Type: Void
-    --------------------------------------------------------------------------
-    --]]
-
+    --- Enables velocity inheritance on the local player's ordnance
+    --- You can control the ratio of velocity inherited by providing a float argument from 0-1.
+    --- 
+    --- The default value is 1 (full inheritance). 
+    --- 
+    --- WARNING: you MUST call Enable BEFORE calling Update,
+    --- and you must call UpdateOrdnance in the update loop to apply the patch.
     --- @param ratio? float
-    --- @return void
-    local function EnableOrdnanceTweak(ratio)
+    --- @return nil void
+    function ExtraUtils.EnableOrdnanceTweak(ratio)
         if IsNetGame == true and debug == false then
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
             return
@@ -797,9 +449,10 @@ do
         exu.EnableOrdnanceTweak(velocityScalingFactor)
     end
 
-    --- @param what? string
-    --- @return void
-    local function UpdateOrdnance(what)
+    --- Updates the local player's ordnance velocity inheritance
+    --- @param what? string "FULL" for full inheritance, "FRONT" for front only inheritance
+    --- @return nil void
+    function ExtraUtils.UpdateOrdnance(what)
         if IsNetGame == true and debug == false then
             error("Extra Utilities Error: this function is incompatible with multiplayer. Turn on debug mode to override.")
             return
@@ -822,53 +475,29 @@ do
         exu.UpdateOrdnance(playerVelocity.x, playerVelocity.y, playerVelocity.z, playerPosition.x, playerPosition.y, playerPosition.z)
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : EnableShotConvergence
-    *   Description: Activates shot convergence for hovercraft
-    *   Inputs     : None
-    *   Outputs    : Shot convergence 
-    *   Return Type: Void
-    -------------------------------------------------------------------------------
-    --]]
-
-    --- @return void
-    local function EnableShotConvergence()
+    --- Activates shot convergence for hovercraft
+    --- @return nil void
+    function ExtraUtils.EnableShotConvergence()
         exu.EnableShotConvergence()
     end
 
-    --[[
-    ---------------------------------------------------------------------------------
-    *   Name       : SetSelectNone
-    *   Description: Sets the behavior of selections when performing certain actions,
-    *              : for example if it is set to false, giving a move order will not
-    *              : deselect units, and the tab key will not work (you'll be locked
-    *              : into your selection), true makes it behave normally
-    *   Inputs     : Bool true or false
-    *   Outputs    : New selection behavior
-    *   Return Type: Void
-    ---------------------------------------------------------------------------------
-    --]]
-
+    --- Sets the behavior of selections when performing certain actions.
+    --- For example, if set to false, giving a move order will not deselect units, and the tab key will not work (you'll be locked into your selection); true makes it behave normally.
     --- @param setting boolean
-    --- @return  void
-    local function SetSelectNone(setting)
+    --- @return nil void
+    function ExtraUtils.SetSelectNone(setting)
         exu.SetSelectNone(CastBool(setting))
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : SetAsUser
-    *   Description: Internal function call to set the local user to a given handle
-    *   Inputs     : Game object handle
-    *   Outputs    : Local user assumes control of the given vehicle
-    *   Return Type: Void
-    -------------------------------------------------------------------------------
-    --]]
-
+    --- Sets the local user to a given handle.
+    --- 
+    --- (Assume control of the ship)
+    --- 
+    --- Limitations: Will kill the ai inside the ship you control, producers will also break
+    --- if you control them
     --- @param handle handle
-    --- @return void
-    local function SetAsUser(handle)
+    --- @return nil void
+    function ExtraUtils.SetAsUser(handle)
         if not IsValid(handle) then -- needs to exist, otherwise access violation
             return
         end
@@ -878,19 +507,10 @@ do
         exu.SetAsUser(handle)
     end
 
-    --[[
-    ----------------------------------------------------------------
-    *   Name       : SelectOne
-    *   Description: Selects one unit, overrides previous selections
-    *   Inputs     : Game object handle
-    *   Outputs    : Unit is selected
-    *   Return Type: Void
-    ----------------------------------------------------------------
-    --]]
-
-    ---@param handle handle
-    ---@return void
-    local function SelectOne(handle)
+    --- Selects one unit, overriding previous selections.
+    --- @param handle handle
+    --- @return nil void
+    function ExtraUtils.SelectOne(handle)
         if not IsValid(handle) then
             return
         end
@@ -904,36 +524,18 @@ do
         exu.SelectOne(handle)
     end
 
-    --[[
-    ----------------------------------------------------------------
-    *   Name       : SelectOne
-    *   Description: Deselects all units, equivalent to pressing tab
-    *   Inputs     : None
-    *   Outputs    : Deselects all units
-    *   Return Type: Void
-    ----------------------------------------------------------------
-    --]]
-
-    --- @return void
-    local function SelectNone()
+    --- Deselects all units, equivalent to pressing tab.
+    --- @return nil void
+    function ExtraUtils.SelectNone()
         exu.SelectNone()
     end
 
-    --[[
-    ----------------------------------------------------------------
-    *   Name       : SelectAdd
-    *   Description: Adds a unit to the current selection, selecting
-    *              : across categories is possible but may break
-    *              : certain behavior eg. hunt, get repair, defend
-    *   Inputs     : Game object handle
-    *   Outputs    : Adds the given unit to the selection
-    *   Return Type: Void
-    ----------------------------------------------------------------
-    --]]
-
+    --- Adds a unit to the current selection. 
+    --- 
+    --- Selecting across categories is possible but may break certain behaviors such as hunt, get repair, defend.
     --- @param handle handle
-    --- @return void
-    local function SelectAdd(handle)
+    --- @return nil void
+    function ExtraUtils.SelectAdd(handle)
         if not IsValid(handle) then
             return
         end
@@ -946,77 +548,42 @@ do
         exu.SelectAdd(handle)
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : GetWorkingDirectory
-    *   Description: Returns the current directory of the battlezone executable
-    *              : (should be the default game folder)
-    *   Inputs     : None
-    *   Outputs    : Game directory
-    *   Return Type: String
-    -------------------------------------------------------------------------------
-    --]]
-
-    --- @return string 
-    local function GetWorkingDirectory()
+    --- Returns the absolute directory of the Battlezone executable (should be the default game folder).
+    --- @return string directory
+    function ExtraUtils.GetWorkingDirectory()
         return exu.GetWorkingDirectory()
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : MakeDirectory
-    *   Description: Creates an empty folder at the given location - NOTE: use
-    *              : backslashes for path names
-    *   Inputs     : String path
-    *   Outputs    : New folder
-    *   Return Type: Void
-    -------------------------------------------------------------------------------
-    --]]
-
+    --- Creates an empty folder at the given location. 
+    --- 
+    --- NOTE: Use backslashes for path names.
     --- @param name string
-    --- @return void
-    local function MakeDirectory(name)
+    --- @return nil void
+    function ExtraUtils.MakeDirectory(name)
         exu.MakeDirectory(name)
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : FileRead
-    *   Description: Reads the contents of the given file into a single formatted
-    *              : string
-    *   Inputs     : String path to file
-    *   Outputs    : Contents of given file
-    *   Return Type: String
-    -------------------------------------------------------------------------------
-    --]]
-
+    --- Reads the contents of the given file into a single formatted string.
     --- @param fileName string
-    --- @return string
-    local function FileRead(fileName)
+    --- @return string contents
+    function ExtraUtils.FileRead(fileName)
         return exu.FileRead(fileName)
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : FileWrite
-    *   Description: Writes the input string into the given file - NOTE: overwrites
-    *              : ALL contents of the file, so save it before if you need to
-    *   Inputs     : String path to file, string content
-    *   Outputs    : Writes the given string to the file
-    *   Return Type: Void
-    -------------------------------------------------------------------------------
-    --]]
-
+    --- Writes the input string into the given file. 
+    --- 
+    --- NOTE: Overwrites ALL contents of the file, so save it before if you need to.
     --- @param fileName string
     --- @param content string
-    --- @return void
-    local function FileWrite(fileName, content)
+    --- @return nil void
+    function ExtraUtils.FileWrite(fileName, content)
         exu.FileWrite(fileName, content)
     end
 
     --[[
     -------------------------------------------------------------------------------
     *   Name       : User Logging Class
+    *              :
     *   Description: Allows users to create a custom log object to easily write
     *              : debug, warning, or error information to a file that is
     *              : timestamped, but without the bloat of stock bz print.
@@ -1049,7 +616,7 @@ do
     --- The default `level` if none is given is `3`, or `INFO`
     --- @param content any
     --- @param level? integer
-    --- @return void
+    --- @return nil void
     function UserLog:Out(content, level)
        exu.LogOut(self.pointer, tostring(content), level)
     end
@@ -1062,7 +629,7 @@ do
 
     --- This method sets the `level` of the log to the given value
     --- @param level integer
-    --- @return void
+    --- @return nil void
     function UserLog:SetLevel(level)
         exu.SetLogLevel(self.pointer, level)
     end
@@ -1075,7 +642,7 @@ do
 
     --- This method sets the current `path` of the log
     --- @param path string
-    --- @return void
+    --- @return nil void
     function UserLog:SetPath(path)
         exu.SetLogPath(self.pointer, path)
     end
@@ -1088,179 +655,75 @@ do
     --- @param path string
     --- @param level? integer
     --- @return UserLog
-    local function CreateLog(path, level)
+    function ExtraUtils.CreateLog(path, level)
         return RegisterLogObject(exu.CreateLog(path, level))
     end
 
-
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : SetDiffuseColor
-    *   Description: Changes the diffuse color of the headlight on the given ship
-    *              : LIMITATIONS: only tested on ships, unknown if other game
-    *              : objects with lights will work, and the script must observe
-    *              : the object being created to register the handle with the light,
-    *              : pre-placed objects on the map will not work
-    *              : DEFAULT value = { 1.0, 1.0, 1.0 }
-    *   Inputs     : Userdata handle, float color r, g, b
-    *   Outputs    : Changes the diffuse color of the light
-    *   Return Type: Bool - true if successful, false otherwise
-    -------------------------------------------------------------------------------
-    --]]
-
-    --- @param _handle handle
-    --- @param _red float
-    --- @param _green float
-    --- @param _blue float
+    --- Changes the diffuse color of the headlight on the given ship.
+    --- 
+    --- LIMITATIONS: Only tested on ships, unknown if other game objects with lights will work. The script must observe the object being created to register the handle with the light;
+    --- pre-placed objects on the map will not work.
+    --- @param handle handle
+    --- @param red float default 1.0
+    --- @param green float default 1.0
+    --- @param blue float default 1.0
     --- @return boolean
-    local function SetDiffuseColor(_handle, _red, _green, _blue)
-        local red = _red or 1.0
-        local green = _green or 1.0
-        local blue = _blue or 1.0
-        local label = GetLabel(_handle)
-        return exu.SetDiffuseColor(label, red, green, blue)
+    function ExtraUtils.SetDiffuseColor(handle, red, green, blue)
+        local _red = red or 1.0
+        local _green = green or 1.0
+        local _blue = blue or 1.0
+        local label = GetLabel(handle)
+        return exu.SetDiffuseColor(label, _red, _green, _blue)
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : SetSpecularColor
-    *   Description: Changes the diffuse color of the headlight on the given ship
-    *              : LIMITATIONS: only tested on ships, unknown if other game
-    *              : objects with lights will work, and the script must observe
-    *              : the object being created to register the handle with the light,
-    *              : pre-placed objects on the map will not work
-    *              : DEFAULT value = { 1.0, 1.0, 1.0 }
-    *   Inputs     : Userdata handle, float color r, g, b
-    *   Outputs    : Changes the specular color of the light
-    *   Return Type: Bool - true if successful, false otherwise
-    -------------------------------------------------------------------------------
-    --]]
-
-    --- @param _handle handle
-    --- @param _red float
-    --- @param _green float
-    --- @param _blue float
+    --- Changes the specular color of the headlight on the given ship.
+    --- 
+    --- LIMITATIONS: Only tested on ships, unknown if other game objects with lights will work. The script must observe the object being created to register the handle with the light;
+    --- pre-placed objects on the map will not work.
+    --- @param handle handle
+    --- @param red float default 1.0
+    --- @param green float default 1.0
+    --- @param blue float default 1.0
     --- @return boolean
-    local function SetSpecularColor(_handle, _red, _green, _blue)
-        local red = _red or 1.0
-        local green = _green or 1.0
-        local blue = _blue or 1.0
-        local label = GetLabel(_handle)
-        return exu.SetSpecularColor(label, red, green, blue)
+    function ExtraUtils.SetSpecularColor(handle, red, green, blue)
+        local _red = red or 1.0
+        local _green = green or 1.0
+        local _blue = blue or 1.0
+        local label = GetLabel(handle)
+        return exu.SetSpecularColor(label, _red, _green, _blue)
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : SetColor
-    *   Description: Macro to use both light color functions at the same time
-    *   Inputs     : Userdata handle, float color r, g, b
-    *   Outputs    : Changes the color of the light
-    *   Return Type: Void
-    -------------------------------------------------------------------------------
-    --]]
-
-    --- @param _handle handle
-    --- @param _red float
-    --- @param _green float
-    --- @param _blue float
-    --- @return boolean
-    local function SetColor(_handle, _red, _green, _blue)
-        SetDiffuseColor(_handle, _red, _green, _blue)
-        SetSpecularColor(_handle, _red, _green, _blue)
+    --- Macro to use both light color functions at the same time.
+    --- @param handle handle
+    --- @param red float
+    --- @param green float
+    --- @param blue float
+    --- @return nil void
+    function ExtraUtils.SetColor(handle, red, green, blue)
+        SetDiffuseColor(handle, red, green, blue)
+        SetSpecularColor(handle, red, green, blue)
     end
 
-    --[[
-    -------------------------------------------------------------------------------
-    *   Name       : SetSpotlightRange
-    *   Description: Copied from ogre docs: "Sets the range of a spotlight, i.e.
-    *              : the angle of the inner and outer cones and the rate of falloff 
-    *              : between them."
-    *   Inputs     : Userdata handle, float inner angle (bright inner cone) in
-    *              : radians, float outer angle (outer cone) in radians, float
-    *              : falloff (rate of falloff between cones), 1.0 is linear, 
-    *              : <1.0 is slower falloff, >1.0 is faster falloff 
-    *   Outputs    : Changes the range of the light
-    *   Return Type: Bool - true if successful, false otherwise
-    -------------------------------------------------------------------------------
-    --]]
-
-    --- @param _handle handle
-    --- @param _innerAngle float
-    --- @param _outerAngle float
-    --- @param _falloff float
+    --- Sets the range of a spotlight, i.e., the angle of the inner and outer cones and the rate of falloff between them.
+    --- 
+    --- Angles in `radians`
+    --- @param handle handle
+    --- @param innerAngle float default = 0.1745
+    --- @param outerAngle float default = 0.35
+    --- @param falloff float default 1.0 is linear, <1 or >1 is exponential falloff
     --- @return boolean
-    local function SetSpotlightRange(_handle, _innerAngle, _outerAngle, _falloff)
-        local falloff = _falloff or 1.0 -- default value
-        local outerAngle = _outerAngle or 0.35 -- default value
-        local innerAngle = _innerAngle or 0.1745 -- default value
-        local label = GetLabel(_handle)
-        return exu.SetSpotlightRange(label, innerAngle, outerAngle, falloff)
+    function ExtraUtils.SetSpotlightRange(handle, innerAngle, outerAngle, falloff)
+        local _falloff = falloff or 1.0
+        local _outerAngle = outerAngle or 0.35
+        local _innerAngle = innerAngle or 0.1745
+        local label = GetLabel(handle)
+        return exu.SetSpotlightRange(label, _innerAngle, _outerAngle, _falloff)
     end
 
-    -- Metadata
-    extraUtils.version             = version
-    extraUtils.crc32               = crc32
-    extraUtils.Start               = Start
 
-    -- Exported Functions
-    extraUtils.SetAccessMode         = SetAccessMode
-    extraUtils.GetObj                = GetObj
-    extraUtils.GetGravity            = GetGravity
-    extraUtils.SetGravity            = SetGravity
-    extraUtils.GetSmartCursorRange   = GetSmartCursorRange
-    extraUtils.SetSmartCursorRange   = SetSmartCursorRange
-    extraUtils.GetReticleAngle       = GetReticleAngle
-    extraUtils.GetReticlePos         = GetReticlePos
-    extraUtils.GetSatState           = GetSatState
-    extraUtils.GetSatCursorPos       = GetSatCursorPos
-    extraUtils.GetSatCamPos          = GetSatCamPos
-    extraUtils.GetSatClickPos        = GetSatClickPos
-    extraUtils.GetSatPanSpeed        = GetSatPanSpeed
-    extraUtils.SetSatPanSpeed        = SetSatPanSpeed
-    extraUtils.GetMinSatZoom         = GetMinSatZoom
-    extraUtils.SetMinSatZoom         = SetMinSatZoom
-    extraUtils.GetMaxSatZoom         = GetMaxSatZoom
-    extraUtils.SetMaxSatZoom         = SetMaxSatZoom
-    extraUtils.GetSatZoom            = GetSatZoom
-    extraUtils.SetSatZoom            = SetSatZoom
-    extraUtils.GetRadarState         = GetRadarState
-    extraUtils.SetRadarState         = SetRadarState
-    extraUtils.GetZoomFactor         = GetZoomFactor
-    extraUtils.SetZoomFactor         = SetZoomFactor
-    extraUtils.GetMinZoomFactor      = GetMinZoomFactor
-    extraUtils.SetMinZoomFactor      = SetMinZoomFactor
-    extraUtils.GetMaxZoomFactor      = GetMaxZoomFactor
-    extraUtils.SetMaxZoomFactor      = SetMaxZoomFactor
-    extraUtils.GetGameKey            = GetGameKey
-    extraUtils.GetSteam64            = GetSteam64
-    extraUtils.GetWeaponMask         = GetWeaponMask
-    extraUtils.GetLives              = GetLives
-    extraUtils.SetLives              = SetLives
-    extraUtils.GetDifficulty         = GetDifficulty
-    extraUtils.SetDifficulty         = SetDifficulty
-    extraUtils.GetAutoLevel          = GetAutoLevel
-    extraUtils.SetAutoLevel          = SetAutoLevel
-    extraUtils.GetTLI                = GetTLI
-    extraUtils.SetTLI                = SetTLI
-    extraUtils.GetReverseMouse       = GetReverseMouse
-    extraUtils.SetReverseMouse       = SetReverseMouse
-    extraUtils.EnableOrdnanceTweak   = EnableOrdnanceTweak
-    extraUtils.UpdateOrdnance        = UpdateOrdnance
-    extraUtils.EnableShotConvergence = EnableShotConvergence
-    extraUtils.SetSelectNone         = SetSelectNone
-    extraUtils.SetAsUser             = SetAsUser
-    extraUtils.SelectOne             = SelectOne
-    extraUtils.SelectNone            = SelectNone
-    extraUtils.SelectAdd             = SelectAdd
-    extraUtils.GetWorkingDirectory   = GetWorkingDirectory
-    extraUtils.MakeDirectory         = MakeDirectory
-    extraUtils.FileRead              = FileRead
-    extraUtils.FileWrite             = FileWrite
-    extraUtils.CreateLog             = CreateLog
-    extraUtils.SetDiffuseColor       = SetDiffuseColor
-    extraUtils.SetSpecularColor      = SetSpecularColor
-    extraUtils.SetColor              = SetColor
-    extraUtils.SetSpotlightRange     = SetSpotlightRange
+    function ExtraUtils.PlaySound(filePath)
+        return exu.PlaySound(filePath)
+    end
 
 end
-return extraUtils
+return ExtraUtils

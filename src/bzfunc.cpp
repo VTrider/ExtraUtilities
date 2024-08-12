@@ -92,6 +92,11 @@ namespace Reticle
 	{
 		Memory::Write(Reticle::range, range, true);
 	}
+
+	void* GetReticleObject()
+	{
+		return Memory::Read<void*>(Reticle::waila);
+	}
 }
 
 namespace Satellite

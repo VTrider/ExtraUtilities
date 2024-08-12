@@ -160,6 +160,13 @@ static int lua_SetSmartCursorRange(lua_State* L)
 	}
 }
 
+static int lua_GetReticleObject(lua_State* L)
+{
+	// this casts the data back into a handle the can use
+	lua_pushlightuserdata(L, Reticle::GetReticleObject());
+	return 1;
+}
+
 #pragma endregion RETICLE
 
 #pragma region SATELLITE
@@ -978,6 +985,7 @@ extern "C"
 			{ "GetReticlePos",		 lua_GetReticlePos       },
 			{ "GetSmartCursorRange", lua_GetSmartCursorRange },
 			{ "SetSmartCursorRange", lua_SetSmartCursorRange },
+			{ "GetReticleObject",    lua_GetReticleObject    },
 			{ "GetSatState",         lua_GetSatState         },
 			{ "GetSatCursorPos",     lua_GetSatCursorPos     },
 			{ "GetSatCamPos",        lua_GetSatCamPos        },

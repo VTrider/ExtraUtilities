@@ -30,22 +30,36 @@
 class Audio
 {
 private:
+	struct Request
+	{
+		ALuint source;
+		std::string filePath;
+	};
+
 	static inline std::unordered_map<std::string, ALuint> buffers;
-	static inline std::vector<ALuint> sources;
-	static inline std::queue<ALuint> requestQueue;
+	static inline std::vector<ALuint> activeSources;
+	static inline std::queue<Request> requestQueue;
 	static inline std::mutex requestLock;
 
+	static inline std::vector<ALuint>sourcePool;
+	static inline std::queue<ALuint>availableSources;
+
+	
+	static ALuint GetSource();
+
+
 	static ALuint MakeBuffer(const std::string& filePath);
-	static ALuint MakeSource();
 
-	static void SendSoundRequest(ALuint source);
+	static void SendSoundRequest(Request request);
 
+	
 	
 
 public:
+	static void InitSourcePool();
+	static void FreeSources();
+	static void CheckError();
 	static void ProcessSoundRequests();
-	static void CleanSources();
-
 	static ALuint PlaySoundEffect(const std::string& filePath);
 
 };

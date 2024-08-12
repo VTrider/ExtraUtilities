@@ -20,6 +20,8 @@
 
 #pragma warning(disable : 6387) // suppress warning on create thread, yes I know it's dangerous lol
 
+#define WIN32_LEAN_AND_MEAN
+
 #include "asm.h"
 #include "Audio.h"
 #include "bzfunc.h"
@@ -105,6 +107,7 @@ std::unique_ptr<Log> SystemLog;
 static void AudioThread()
 {
     SoundDevice device = SoundDevice();
+    Audio::InitSourcePool();
 
     while (true)
     {
@@ -114,8 +117,7 @@ static void AudioThread()
         }
 
         Audio::ProcessSoundRequests();
-        Audio::CleanSources();
-
+        Audio::FreeSources();
 
 
 
@@ -127,9 +129,29 @@ static void AudioThread()
 static DWORD WINAPI InitialThread(HMODULE hModule) 
 {
     SystemLog = std::make_unique<Log>(Log());
+
+    int level = SystemLog->GetLevel();
+    std::string levelString;
+    switch (level)
+    {
+    case 0:
+        levelString = "OFF";
+        break;
+    case 1:
+        levelString = "ERROR";
+        break;
+    case 2:
+        levelString = "WARNING";
+        break;
+    case 3:
+        levelString = "INFO";
+        break;
+    }
     SystemLog->Out(std::format("Extra Utilities started successfully! Version: {}", Exu::version));
-    SystemLog->Out(std::format("Logging level is: {}", SystemLog->GetLevel()));
+    SystemLog->Out(std::format("Logging level is: {}", levelString));
+
     Memory::Init();
+
     FileSystem();
     CodeInjection();
 
