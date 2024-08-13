@@ -26,6 +26,9 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma warning(push)
+#pragma warning(disable: 4100)
+
 #include <windows.h>
 #include "buffer.h"
 
@@ -310,3 +313,5 @@ BOOL IsExecutableAddress(LPVOID pAddress)
 
     return (mi.State == MEM_COMMIT && (mi.Protect & PAGE_EXECUTE_FLAGS));
 }
+
+#pragma warning(pop)

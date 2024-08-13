@@ -88,9 +88,9 @@ namespace Reticle
 		return Memory::Read<float>(Reticle::range);
 	}
 
-	void SetSmartCursorRange(float range)
+	void SetSmartCursorRange(float newRange)
 	{
-		Memory::Write(Reticle::range, range, true);
+		Memory::Write(Reticle::range, newRange, true);
 	}
 
 	void* GetReticleObject()
@@ -98,13 +98,13 @@ namespace Reticle
 		return Memory::Read<void*>(Reticle::waila);
 	}
 }
-
+//
 namespace Satellite
 {
 	char GetSatState()
 	{
-		char state = Memory::Read<char>(Satellite::state);
-		return state ? 0 : 1; // need to get the inverse for satellite state
+		char satelliteState = Memory::Read<char>(Satellite::state);
+		return satelliteState ? 0 : 1; // need to get the inverse for satellite state
 	}
 
 	VECTOR_3D GetSatCursorPos()
@@ -137,9 +137,9 @@ namespace Satellite
 		return Memory::Read<float>(Satellite::minZoom);
 	}
 
-	void SetMinSatZoom(float zoom)
+	void SetMinSatZoom(float newZoom)
 	{
-		Memory::Write(Satellite::minZoom, zoom, true);
+		Memory::Write(Satellite::minZoom, newZoom, true);
 	}
 
 	float GetMaxSatZoom()
@@ -147,9 +147,9 @@ namespace Satellite
 		return Memory::Read<float>(Satellite::maxZoom);
 	}
 
-	void SetMaxSatZoom(float zoom)
+	void SetMaxSatZoom(float newZoom)
 	{
-		Memory::Write(Satellite::maxZoom, zoom, true);
+		Memory::Write(Satellite::maxZoom, newZoom, true);
 	}
 
 	float GetSatZoom()
@@ -157,9 +157,9 @@ namespace Satellite
 		return Memory::Read<float>(Satellite::zoom);
 	}
 
-	void SetSatZoom(float zoom)
+	void SetSatZoom(float newZoom)
 	{
-		Memory::Write(Satellite::zoom, zoom);
+		Memory::Write(Satellite::zoom, newZoom);
 	}
 }
 
@@ -170,9 +170,9 @@ namespace Radar
 		return Memory::Read<char>(Radar::state);
 	}
 
-	void SetRadarState(int state)
+	void SetRadarState(int newState)
 	{
-		Memory::Write(Radar::state, state);
+		Memory::Write(Radar::state, newState);
 	}
 }
 
@@ -305,24 +305,24 @@ namespace Misc
 
 	const char* GetDifficulty()
 	{
-		char difficulty = Memory::Read<char>(Misc::difficulty);
-		if (difficulty == 0)
+		char currentDifficulty = Memory::Read<char>(Misc::difficulty);
+		if (currentDifficulty == 0)
 		{
 			return "Very Easy";
 		}
-		else if (difficulty == 1)
+		else if (currentDifficulty == 1)
 		{
 			return "Easy";
 		}
-		else if (difficulty == 2)
+		else if (currentDifficulty == 2)
 		{
 			return "Medium";
 		}
-		else if (difficulty == 3)
+		else if (currentDifficulty == 3)
 		{
 			return "Hard";
 		}
-		else if (difficulty == 4)
+		else if (currentDifficulty == 4)
 		{
 			return "Very Hard";
 		}

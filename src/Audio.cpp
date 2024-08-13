@@ -42,7 +42,7 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 		return 0;
 	}
 
-	std::vector<short> samples(fileInfo.frames * fileInfo.channels);
+	std::vector<short> samples(static_cast<size_t>(fileInfo.frames) * static_cast<size_t>(fileInfo.channels));
 	sf_read_short(sndFile, samples.data(), samples.size());
 	sf_close(sndFile);
 
@@ -153,8 +153,8 @@ void Audio::ProcessSoundRequests()
 ALuint Audio::PlaySoundEffect(const std::string& filePath)
 {
 	ALuint source = GetSource();
-	if (source == -1) { return -1; }
 	Request soundRequest = { source, filePath };
 	SendSoundRequest(soundRequest);
 	return source;
 }
+//

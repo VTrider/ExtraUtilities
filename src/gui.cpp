@@ -17,9 +17,9 @@
 */
 
 #include "gui.h"
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx9.h"
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx9.h>
 #include <stdexcept>
 #include "Offsets.h"
 
@@ -171,10 +171,10 @@ void gui::Setup()
 	DestroyWindowClass();
 }
 
-void gui::SetupMenu(LPDIRECT3DDEVICE9 device) noexcept
+void gui::SetupMenu(LPDIRECT3DDEVICE9 d3dDevice) noexcept
 {
 	auto params = D3DDEVICE_CREATION_PARAMETERS{};
-	device->GetCreationParameters(&params);
+	d3dDevice->GetCreationParameters(&params);
 
 	window = params.hFocusWindow;
 
@@ -186,7 +186,7 @@ void gui::SetupMenu(LPDIRECT3DDEVICE9 device) noexcept
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplWin32_Init(window);
-	ImGui_ImplDX9_Init(device);
+	ImGui_ImplDX9_Init(d3dDevice);
 
 	setup = true;
 }

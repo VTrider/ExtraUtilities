@@ -85,7 +85,7 @@ static int lua_GetGravity(lua_State* L)
 	return 1;
 }
 
-int	lua_SetGravity(lua_State* L)
+static int lua_SetGravity(lua_State* L)
 {
 	float x = static_cast<float>(luaL_checknumber(L, 1));
 	float y = static_cast<float>(luaL_checknumber(L, 2));
@@ -566,7 +566,7 @@ static int lua_UpdateOrdnance(lua_State* L)
 	return 0;
 }
 
-static int lua_EnableShotConvergence(lua_State* L)
+static int lua_EnableShotConvergence(lua_State*)
 {
 	EnableShotConvergence();
 	return 0;
@@ -601,7 +601,7 @@ static int lua_SelectOne(lua_State* L)
 	return 0;
 }
 
-static int lua_SelectNone(lua_State* L)
+static int lua_SelectNone(lua_State*)
 {
 	FuncPtrs::SelectNone(p_ControlPanel);
 	return 0;

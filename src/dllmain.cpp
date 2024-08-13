@@ -36,7 +36,7 @@
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx9.h"
 #include <Windows.h>
-
+//
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -68,39 +68,39 @@ static void CodeInjection()
     Hook::CreateHook(Hooks::selectNone, SelectNoneHook, 6);
 }
 
-static void GUI()
-{
-    try
-    {
-        gui::Setup();
-        hooks::Setup();
-    }
-    catch (const std::exception& error)
-    {
-        MessageBeep(MB_ICONERROR);
-        MessageBox(
-            0,
-            error.what(),
-            "exu error",
-            MB_OK | MB_ICONEXCLAMATION
-        );
-
-        goto UNLOAD;
-    }
-
-    while (true)
-    {
-        if (Memory::CheckExitCondition(5, "Exit condition detected, exiting GUI thread"))
-        {
-            break;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-    }
-
-UNLOAD:
-    hooks::Destroy();
-    gui::Destroy();
-}
+//static void GUI()
+//{
+//    try
+//    {
+//        gui::Setup();
+//        hooks::Setup();
+//    }
+//    catch (const std::exception& error)
+//    {
+//        MessageBeep(MB_ICONERROR);
+//        MessageBox(
+//            0,
+//            error.what(),
+//            "exu error",
+//            MB_OK | MB_ICONEXCLAMATION
+//        );
+//
+//        goto UNLOAD;
+//    }
+//
+//    while (true)
+//    {
+//        if (Memory::CheckExitCondition(5, "Exit condition detected, exiting GUI thread"))
+//        {
+//            break;
+//        }
+//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+//    }
+//
+//UNLOAD:
+//    hooks::Destroy();
+//    gui::Destroy();
+//}
 
 std::unique_ptr<Log> SystemLog;
 
@@ -125,7 +125,7 @@ static void AudioThread()
 }
 
 // it's okay to detach these threads cause they will stop automatically
-static DWORD WINAPI InitialThread(HMODULE hModule) 
+static DWORD WINAPI InitialThread(HMODULE) 
 {
     SystemLog = std::make_unique<Log>(Log());
 
@@ -166,7 +166,7 @@ HANDLE tempHandle;
 
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
-    LPVOID lpReserved
+    LPVOID
 )
 {
     switch (ul_reason_for_call)

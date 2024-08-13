@@ -26,6 +26,9 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma warning(push)
+#pragma warning(disable: 4244)
+
 #include <windows.h>
 
 #if defined(_MSC_VER) && !defined(MINHOOK_DISABLE_INTRINSICS)
@@ -318,3 +321,5 @@ BOOL CreateTrampolineFunction(PTRAMPOLINE ct)
 
     return TRUE;
 }
+
+#pragma warning(pop)

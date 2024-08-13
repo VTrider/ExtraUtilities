@@ -26,11 +26,18 @@
  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma warning(push)
+#pragma warning(disable: 4244)
+#pragma warning(push)
+#pragma warning(disable: 4310)
+#pragma warning(push)
+#pragma warning(disable: 26454)
+
 #include <windows.h>
 #include <tlhelp32.h>
 #include <limits.h>
 
-#include "MinHook.h"
+#include <MinHook.h>
 #include "buffer.h"
 #include "trampoline.h"
 
@@ -921,3 +928,7 @@ const char *WINAPI MH_StatusToString(MH_STATUS status)
 
     return "(unknown)";
 }
+
+#pragma warning(pop)
+#pragma warning(pop)
+#pragma warning(pop)

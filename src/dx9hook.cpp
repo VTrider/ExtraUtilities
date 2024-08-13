@@ -19,10 +19,10 @@
 #include "dx9hook.h"
 #include <stdexcept>
 #include <intrin.h>
-#include "MinHook.h"
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx9.h"
+#include <MinHook.h>
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx9.h>
 
 void hooks::Setup()
 {

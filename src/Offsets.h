@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "bzr.h"
+#include <bzr.h>
 #include "bzfunc.h"
 
 #include <Windows.h>
