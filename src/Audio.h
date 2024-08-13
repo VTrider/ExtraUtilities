@@ -40,13 +40,8 @@ private:
 	static inline std::vector<ALuint> activeSources;
 	static inline std::queue<Request> requestQueue;
 	static inline std::mutex requestLock;
-
-	static inline std::vector<ALuint>sourcePool;
-	static inline std::queue<ALuint>availableSources;
-
 	
 	static ALuint GetSource();
-
 
 	static ALuint MakeBuffer(const std::string& filePath);
 
@@ -56,9 +51,8 @@ private:
 	
 
 public:
-	static void InitSourcePool();
-	static void FreeSources();
-	static void CheckError();
+	static void CleanSources();
+	static void CheckError(const std::string& where);
 	static void ProcessSoundRequests();
 	static ALuint PlaySoundEffect(const std::string& filePath);
 

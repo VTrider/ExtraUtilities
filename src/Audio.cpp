@@ -24,13 +24,9 @@
 
 ALuint Audio::GetSource()
 {
-	if (availableSources.empty()) // this really shouldn't happen
-	{
-		return -1;
-	}
-
-	ALuint source = availableSources.front();
-	availableSources.pop();
+	ALuint source;
+	alGenSources(1, &source);
+	activeSources.emplace_back(source);
 	return source;
 }
 
@@ -51,7 +47,6 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 	sf_close(sndFile);
 
 	alGenBuffers(1, &bufferID);
-	CheckError();
 
 	ALenum format;
 
@@ -66,7 +61,6 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 	}
 
 	alBufferData(bufferID, format, samples.data(), samples.size() * sizeof(short), fileInfo.samplerate);
-	CheckError();
 
 	buffers.emplace(filePath, bufferID);
 	return bufferID;
@@ -79,48 +73,27 @@ void Audio::SendSoundRequest(Request request)
 	requestLock.unlock();
 }
 
-void Audio::InitSourcePool()
-{
-	for (int i = 0; i < 256; i++) // this is a workaround for alGenSources(256) not working for some reason
-	{
-		ALuint source;
-		alGenSources(1, &source);
-		CheckError();
-		sourcePool.push_back(source);
-	}
-	for (ALuint source : sourcePool)
-	{
-		availableSources.push(source);
-	}
-}
-
-void Audio::FreeSources()
+void Audio::CleanSources()
 {
 	requestLock.lock();
 	ALint state;
-	for (auto it = activeSources.begin(); it != activeSources.end();)
-	{	
-		alGetSourcei(*it, AL_SOURCE_STATE, &state);
-		CheckError();
-
-		if (state != AL_PLAYING && state != AL_PAUSED)
+	for (size_t i = 0; i < activeSources.size(); i++)
+	{
+		alGetSourcei(activeSources[i], AL_SOURCE_STATE, &state);
+		if (state == AL_STOPPED)
 		{
-			availableSources.push(*it);
-			it = activeSources.erase(it);
-			SystemLog->Out(std::format("Freed source {}", *it));
-		}
-		else
-		{
-			++it; // move to the next source
+			alDeleteSources(1, &activeSources[i]);
+			activeSources.erase(activeSources.begin() + i);
 		}
 	}
 	requestLock.unlock();
 }
 
-void Audio::CheckError()
+void Audio::CheckError(const std::string& where)
 {
 	ALenum error = alGetError();
 	if (error != AL_NO_ERROR) {
+		SystemLog->Out(std::format("Extra Utilities Error in: {}", where));
 		switch (error) {
 		case AL_INVALID_NAME:
 			SystemLog->Out("OpenAL Error: Invalid Name", 1);
@@ -175,7 +148,6 @@ void Audio::ProcessSoundRequests()
 
 	alSourcei(sourceToPlay, AL_BUFFER, buffer);
 	alSourcePlay(sourceToPlay);
-	CheckError();
 }
 
 ALuint Audio::PlaySoundEffect(const std::string& filePath)

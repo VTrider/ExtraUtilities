@@ -40,7 +40,8 @@
     <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>Static</UseOfMfc>
     <PreferredToolArchitecture>x86</PreferredToolArchitecture>
-    <VCToolsVersion>14.40.33807</VCToolsVersion>
+    <VCToolsVersion>
+    </VCToolsVersion>
     <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -132,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d9.lib;lua5.1.lib;legacy_stdio_definitions.lib;user32.lib;OpenAL32.lib;urlmon.lib.;ole32.lib;Shell32.lib;winmm.lib;mpg123.lib;shlwapi.lib;exu_imgui.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;Lua 5.1.5.lib;legacy_stdio_definitions.lib;user32.lib;OpenAL32.lib;urlmon.lib.;ole32.lib;Shell32.lib;winmm.lib;mpg123.lib;shlwapi.lib;exu_imgui.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
       <LargeAddressAware>true</LargeAddressAware>

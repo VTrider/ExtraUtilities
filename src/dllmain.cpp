@@ -107,7 +107,6 @@ std::unique_ptr<Log> SystemLog;
 static void AudioThread()
 {
     SoundDevice device = SoundDevice();
-    Audio::InitSourcePool();
 
     while (true)
     {
@@ -117,7 +116,7 @@ static void AudioThread()
         }
 
         Audio::ProcessSoundRequests();
-        Audio::FreeSources();
+        Audio::CleanSources();
 
 
 

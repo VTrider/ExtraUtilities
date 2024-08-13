@@ -960,7 +960,6 @@ static int lua_PlaySound(lua_State* L)
 {
 	std::string soundPath = luaL_checkstring(L, 1);
 	ALuint source = Audio::PlaySoundEffect(soundPath);
-	SystemLog->Out(std::to_string(source));
 	lua_pushnumber(L, source);
 	return 1;
 }
