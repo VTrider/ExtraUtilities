@@ -38,8 +38,7 @@
 // Todo: 
 // - Dynamic Sunlight
 // - More TRN parameters, fog, time, and music maybe?
-// - More sat parameters, wasDown, gameobject under cursor, gameobject it's centered on - you
-// - Who am I looking at?
+// - More sat parameters, wasDown
 
 // For reticle cone angle degrees/3.75 = value needed
 
@@ -98,7 +97,7 @@ namespace Reticle
 		return Memory::Read<void*>(Reticle::waila);
 	}
 }
-//
+
 namespace Satellite
 {
 	char GetSatState()

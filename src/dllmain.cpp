@@ -31,21 +31,17 @@
 #include "Log.h"
 #include "Memory.h"
 #include "Offsets.h"
+#include "SoundDevice.h"
 
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx9.h"
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx9.h>
 #include <Windows.h>
-//
+
 #include <chrono>
 #include <iostream>
 #include <thread>
 #include <vector>
-
-// Todo: free cursor frame game while gui is active
-// fix open AL holding on to a handle or something
-
-#include "SoundDevice.h"
 
 /*---------
 * Threads *
@@ -54,7 +50,6 @@
 static void FileSystem()
 {
     CreateEXUDirectory();
-    std::cout << "EXU Directory Created" << '\n';
 }
 
 static void CodeInjection()
@@ -162,15 +157,13 @@ static DWORD WINAPI InitialThread(HMODULE)
     return 0;
 }
 
-HANDLE tempHandle;
-
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
     LPVOID
 )
 {
     switch (ul_reason_for_call)
-    { // make sure to break to avoid erroneous calls
+    {
     case DLL_PROCESS_ATTACH:
         CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)InitialThread, hModule, 0, nullptr));
         break;

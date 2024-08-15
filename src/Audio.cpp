@@ -157,4 +157,3 @@ ALuint Audio::PlaySoundEffect(const std::string& filePath)
 	SendSoundRequest(soundRequest);
 	return source;
 }
-//
