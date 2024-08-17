@@ -63,39 +63,39 @@ static void CodeInjection()
     Hook::CreateHook(Hooks::selectNone, SelectNoneHook, 6);
 }
 
-//static void GUI()
-//{
-//    try
-//    {
-//        gui::Setup();
-//        hooks::Setup();
-//    }
-//    catch (const std::exception& error)
-//    {
-//        MessageBeep(MB_ICONERROR);
-//        MessageBox(
-//            0,
-//            error.what(),
-//            "exu error",
-//            MB_OK | MB_ICONEXCLAMATION
-//        );
-//
-//        goto UNLOAD;
-//    }
-//
-//    while (true)
-//    {
-//        if (Memory::CheckExitCondition(5, "Exit condition detected, exiting GUI thread"))
-//        {
-//            break;
-//        }
-//        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-//    }
-//
-//UNLOAD:
-//    hooks::Destroy();
-//    gui::Destroy();
-//}
+static void GUI()
+{
+    try
+    {
+        gui::Setup();
+        hooks::Setup();
+    }
+    catch (const std::exception& error)
+    {
+        MessageBeep(MB_ICONERROR);
+        MessageBox(
+            0,
+            error.what(),
+            "exu error",
+            MB_OK | MB_ICONEXCLAMATION
+        );
+
+        goto UNLOAD;
+    }
+
+    while (true)
+    {
+        if (Memory::CheckExitCondition(5, "Exit condition detected, exiting GUI thread"))
+        {
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    }
+
+UNLOAD:
+    hooks::Destroy();
+    gui::Destroy();
+}
 
 std::unique_ptr<Log> SystemLog;
 
@@ -152,8 +152,8 @@ static DWORD WINAPI InitialThread(HMODULE)
     std::thread audioThread(AudioThread);
     audioThread.detach();
 
-    // std::thread GUIThread(GUI);
-    // GUIThread.detach();
+     std::thread GUIThread(GUI);
+     GUIThread.detach();
     return 0;
 }
 

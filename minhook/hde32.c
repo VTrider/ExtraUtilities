@@ -5,6 +5,9 @@
  *
  */
 
+#pragma warning(push)
+#pragma warning(disable: 4701)
+
 #if defined(_M_IX86) || defined(__i386__)
 
 #include <string.h>
@@ -322,3 +325,5 @@ unsigned int hde32_disasm(const void *code, hde32s *hs)
 }
 
 #endif // defined(_M_IX86) || defined(__i386__)
+
+#pragma warning(pop)

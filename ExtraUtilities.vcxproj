@@ -58,8 +58,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
   <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -121,7 +120,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\lib;$(ProjectDir)\imgui;$(ProjectDir)\include;$(ProjectDir)\src;$(ProjectDir)\lua\lua-5.1\src;$(ProjectDir)\lua\lua-5.1\etc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\minhook;$(ProjectDir)\lib;$(ProjectDir)\imgui;$(ProjectDir)\include;$(ProjectDir)\src;$(ProjectDir)\lua\lua-5.1\src;$(ProjectDir)\lua\lua-5.1\etc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -138,7 +137,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d9.lib;Lua 5.1.5.lib;legacy_stdio_definitions.lib;user32.lib;OpenAL32.lib;urlmon.lib.;ole32.lib;Shell32.lib;winmm.lib;mpg123.lib;shlwapi.lib;exu_imgui.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;lua5.1.lib;legacy_stdio_definitions.lib;user32.lib;OpenAL32.lib;urlmon.lib.;ole32.lib;Shell32.lib;winmm.lib;mpg123.lib;shlwapi.lib;exu_imgui.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
       <LargeAddressAware>true</LargeAddressAware>
@@ -226,6 +225,5 @@
     <ClInclude Include="src\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

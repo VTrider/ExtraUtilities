@@ -188,6 +188,9 @@ void gui::SetupMenu(LPDIRECT3DDEVICE9 d3dDevice) noexcept
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(d3dDevice);
 
+	ImGuiIO& io = ImGui::GetIO();
+	bzoneFont = io.Fonts->AddFontFromFileTTF("D:\\Steam Library\\steamapps\\common\\Battlezone 98 Redux\\addon\\dmplus\\BZONE.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+
 	setup = true;
 }
 

@@ -18,12 +18,17 @@
 
 #pragma once
 
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx9.h>
 #include <d3d9.h>
 
 namespace gui
 {
 	// show menu?
-	inline bool open = false;
+	inline bool open = true;
+
+	inline ImFont* bzoneFont = nullptr;
 
 	// is menu set up?
 	inline bool setup = false;
