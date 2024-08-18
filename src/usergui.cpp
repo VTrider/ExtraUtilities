@@ -286,6 +286,14 @@ LRESULT CALLBACK WindowProcess(
 		welcomeClosed = true;
 	}
 
+	if (showWelcome or demoOpen)
+	{
+		if (message == WM_SETFOCUS)
+		{
+			while (ShowCursor(TRUE) <= 0);
+		}
+	}
+
 	if (ImGui_ImplWin32_WndProcHandler(window, message, wideParam, longParam))
 		return true;
 
