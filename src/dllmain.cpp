@@ -65,6 +65,7 @@ static void CodeInjection()
 
 static void GUI()
 {
+    SystemLog->Out("Started GUI thread", 3);
     try
     {
         gui::Setup();
@@ -101,6 +102,7 @@ std::unique_ptr<Log> SystemLog;
 
 static void AudioThread()
 {
+    SystemLog->Out("Started audio thread", 3);
     SoundDevice device = SoundDevice();
 
     while (true)

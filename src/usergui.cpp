@@ -139,7 +139,6 @@ void SetupImGuiStyle()
 }
 
 bool showWelcome = true;
-
 void WelcomeMenu()
 {
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Always, ImVec2(0.5, 0.5));

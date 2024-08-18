@@ -28,7 +28,7 @@ namespace gui
 	// show menu?
 	inline bool open = true;
 
-	inline ImFont* bzoneFont = nullptr;
+	inline ImFont* bzoneFont;
 
 	// is menu set up?
 	inline bool setup = false;

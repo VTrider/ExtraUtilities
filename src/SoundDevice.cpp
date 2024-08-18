@@ -6,8 +6,6 @@
 
 SoundDevice::SoundDevice()
 {
-	SystemLog->Out("Started audio thread", 3);
-
 	p_ALCDevice = alcOpenDevice(nullptr); // default device
 	p_ALCContext = alcCreateContext(p_ALCDevice, nullptr);
 	alcMakeContextCurrent(p_ALCContext);

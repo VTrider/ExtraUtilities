@@ -22,6 +22,9 @@
 #include <imgui_impl_dx9.h>
 #include <stdexcept>
 #include "Offsets.h"
+#include "Log.h"
+#include <cmath>
+#include <Windows.h>
 
 // window process
 LRESULT CALLBACK WindowProcess(
@@ -189,7 +192,13 @@ void gui::SetupMenu(LPDIRECT3DDEVICE9 d3dDevice) noexcept
 	ImGui_ImplDX9_Init(d3dDevice);
 
 	ImGuiIO& io = ImGui::GetIO();
-	bzoneFont = io.Fonts->AddFontFromFileTTF("D:\\Steam Library\\steamapps\\common\\Battlezone 98 Redux\\addon\\dmplus\\BZONE.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+
+	// this is a hack because imgui doesn't register the window size until
+	// AFTER it's not possible to load fonts lol
+	float screenHeight = static_cast<float>(GetSystemMetrics(SM_CYSCREEN));
+	float scaledFontSize = std::floor(screenHeight / 60.0f);
+	SystemLog->Out(std::format("Vertical resolution is: {} - scaling font size to: {}", screenHeight, scaledFontSize), 3);
+	bzoneFont = io.Fonts->AddFontFromFileTTF("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Battlezone 98 Redux\\addon\\dmplus\\BZONE.ttf", scaledFontSize, NULL, io.Fonts->GetGlyphRangesJapanese());
 
 	setup = true;
 }

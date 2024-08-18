@@ -78,7 +78,8 @@ public:
 		LogInit();
 	}
 
-	void Out(const std::string& content, const int level = 3) const
+	template<typename T>
+	void Out(const T content, const int level = 3) const
 	{
 		if (logLevel < level)
 			return;
