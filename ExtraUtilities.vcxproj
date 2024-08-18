@@ -79,7 +79,7 @@
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <CopyCppRuntimeToOutputDir>false</CopyCppRuntimeToOutputDir>
-    <ExternalIncludePath>C:\Users\colli\source\repos\ExtraUtilities\minhook;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir)\minhook;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>exu</TargetName>
