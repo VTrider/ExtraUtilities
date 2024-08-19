@@ -1051,6 +1051,8 @@ static int lua_GetListenerTransform(lua_State* L)
 	float upY = static_cast<float>(luaL_checknumber(L, 11));
 	float upZ = static_cast<float>(luaL_checknumber(L, 12));
 
+	// negate the Z values because OpenAL uses right handed coordinates
+	// while BZ uses left handed
 	float pos[] = { posX, posY, -posZ };
 	float vel[] = { velX, velY, -velZ };
 	float orientation[] = { frontX, frontY, -frontZ, upX, upY, -upZ };
