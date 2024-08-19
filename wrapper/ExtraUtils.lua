@@ -1,23 +1,29 @@
 --[[
-=======================================================
-*   Extra Utilities
-*   Version 0.7.1
-=======================================================
-*   This module extends scripting functionality
-*   through a custom DLL and adds some useful 
-*   helper functions
-=======================================================
-*   Special thanks to:
-*   - Janne, for letting me use her dll code
-*   - DivisionByZero, for the game directory function
-*   - GrizzlyOne95, for the workshop directory function
-=======================================================
-*   - Script and DLL extension made by VTrider
-=======================================================
+=============================================================
+*   Extra Utilities                                         *
+*   Version 0.8.0                                           *
+=============================================================
+*   This module is a script extender for Battlezone         *
+*   98 Redux 2.2.301. It includes over 60 custom lua        *
+*   functions, restored file i/o, dynamic sound effects     *
+*   and more!                                               *
+=============================================================
+*   Github repo: https://github.com/VTrider/ExtraUtilities  *
+=============================================================
+*   Be sure to join the Battlezone Community Discord:       *
+*   https://discord.gg/battlezonestrategy                   *
+=============================================================
+*   Special thanks to:                                      *
+*   - Janne, for letting me use her dll code                *
+*   - DivisionByZero, for the game directory function       *
+*   - GrizzlyOne95, for the workshop directory function     *
+=============================================================
+*   - Script and DLL extension made by VTrider              *
+=============================================================
 --]]
 
---- To use function/type annotations install the Lua langauge server plugin
---- for vscode by sumneko
+--- To use function and type annotations install the
+--- Lua langauge server plugin for vscode by sumneko
 
 --- Typedefs for annotations
 --- @alias handle lightuserdata
@@ -26,6 +32,8 @@
 --- @alias vector userdata
 --- @alias matrix userdata
 
+-- This is the dll file, never require this in your own scripts,
+-- always require this lua script
 local exu = require("exu")
 
 local ExtraUtils = {}
@@ -34,6 +42,8 @@ do
     -- Metadata --
     --------------
 
+    -- Use the version and/or the crc32 to check for mod version
+    -- mismatches that aren't caught by the game
     ExtraUtils.version = exu.GetVersion()
     ExtraUtils.crc32 = "EB227D80"
     ExtraUtils.debug = false
@@ -52,6 +62,14 @@ do
             return
         end
         return value and 1 or 0
+    end
+
+    --- @param x number
+    --- @param min number
+    --- @param max number
+    --- @return number
+    local function Clamp(x, min, max)
+        return x < min and min or x > max and max or x
     end
 
     -------------
@@ -161,8 +179,10 @@ do
         return exu.GetSatState()
     end
 
-    --- Gets the current position of the cursor in satellite view, if satellite
-    --- is disabled it will return the last known position of the cursor
+    --- Gets the current position of the cursor in satellite view
+    --- 
+    --- If satellite is disabled it will return
+    --- the last known position of the cursor
     --- @return userdata vector
     function ExtraUtils.GetSatCursorPos()
         local cursorPos = exu.GetSatCursorPos()
@@ -333,7 +353,7 @@ do
     --- @param key string Stock `GameKey` calling conventions, single capital letter.
     --- @return boolean
     function ExtraUtils.GetGameKey(key)
-        return exu.GetGameKey(key)
+        return exu.GetGameKey(string.upper(key)) -- jk I'll convert it to uppercase anyways lol
     end
 
     --- Gets the Steam 64 ID of the local player.
@@ -346,14 +366,20 @@ do
     --- Gets the weapon mask for the local user.
     --- 
     --- Uses a 0-based index (first weapon slot returns 0).
-    --- @return integer
+    --- 
+    --- Note this isn't actually the weapon mask, just
+    --- the index of the selected weapon
+    --- 
+    --- This might be updated in the future with a different 
+    --- name or maybe the "real" weapon mask
+    --- @return integer weaponMask
     function ExtraUtils.GetWeaponMask()
         return exu.GetWeaponMask()
     end
 
     --- Gets your current lives.
     --- 
-    --- @return integer
+    --- @return integer lives
     function ExtraUtils.GetLives()
         return exu.GetLives()
     end
@@ -720,9 +746,152 @@ do
         return exu.SetSpotlightRange(label, _innerAngle, _outerAngle, _falloff)
     end
 
+    --[[
+    -------------------------------------------------------------------------------
+    *   Name       : Audio System
+    *              :
+    *   Description: Play dynamic sound effects that let you change their volume, 
+    *              : paused, and looping status. There are no restrictions on
+    *              : file names (goodbye 8 character limit), and there are 256
+    *              : sound channels available. Note that sources are recycled after
+    *              : they stop playing so do not hold on to the handle of an old
+    *              : source or you may accidently change the parameters of a
+    *              : different one. Supports .wav, .mp3, .ogg (vorbis & opus), 
+    *              : .aiff, .flac, and much more, for a full list see: 
+    *              : <https://libsndfile.github.io/libsndfile/formats.html>
+    -------------------------------------------------------------------------------
+    --]]
 
-    function ExtraUtils.PlaySound(filePath)
-        return exu.PlaySound(filePath)
+    --- @class Sound
+    --- @field handle integer DO NOT MODIFY
+    --- @field ActiveSounds table DO NOT MODIFY
+    local Sound = {}
+    Sound.__index = Sound
+
+    Sound.ActiveSounds = {}
+
+    --- Plays the sound file
+    --- 
+    --- Note 3D sounds are required to be mono sound files
+    --- 
+    --- If you attempt to play a stereo file as a 3D sound it
+    --- will play as 2D (globally)
+    --- @param filePath string
+    --- @param position any
+    --- @param volume float
+    --- @param loop boolean
+    --- @return Sound SoundObject
+    function ExtraUtils.PlaySound(filePath, position, volume, loop)
+        --- @class Sound
+        local instance = setmetatable({}, Sound)
+
+        instance.handle = exu.PlaySound(filePath)
+        instance.position = position
+        Sound.ActiveSounds[instance.handle] = position
+
+        if volume ~= nil then
+            instance:SetVolume(volume)
+        end
+        if loop ~= nil then
+            instance:SetLooping(loop)
+        end
+
+        return instance
+    end
+
+    --- Returns the global volume level
+    --- @return float volume 0.0 to 1.0
+    function ExtraUtils.GetMainVolume()
+        return exu.GetMainVolume()
+    end
+
+    --- Sets the global volume level
+    --- @param volume float 0.0 to 1.0
+    --- @return nil void
+    function ExtraUtils.SetMainVolume(volume)
+        exu.SetMainVolume(Clamp(volume, 0.0, 1.0))
+    end
+
+    --- Gets the volume level of the given sound
+    --- @return float volume
+    function Sound:GetVolume()
+        return exu.GetVolume(self.handle)
+    end
+
+    --- Sets the volume level of the given sound
+    --- @param volume float  0.0 to 1.0
+    --- @return nil void
+    function Sound:SetVolume(volume)
+        exu.SetVolume(self.handle, Clamp(volume, 0.0, 1.0))
+    end
+
+    --- Gets the pause status of the sound
+    --- 
+    --- Note that paused sounds are not recycled and
+    --- must be stopped manually in order for the sound
+    --- channel to be freed
+    --- @return boolean pause
+    function Sound:GetPaused()
+        return exu.GetPaused(self.handle)
+    end
+
+    --- Sets the paused status of the sound
+    --- @param paused boolean
+    --- @return nil void
+    function Sound:SetPaused(paused)
+        exu.SetPaused(self.handle, CastBool(paused))
+    end
+
+    --- Stops the sound and frees its handle
+    --- 
+    --- You should set the sound object to nil after
+    --- calling this as good practice
+    --- @return nil void
+    function Sound:Stop()
+        exu.Stop(self.handle)
+    end
+
+    --- Gets the looping status of the sound
+    --- @return boolean
+    function Sound:GetLooping()
+        return exu.GetLooping(self.handle)
+    end
+
+    --- Sets the looping status of the sound
+    --- @param looping boolean
+    --- @return nil void
+    function Sound:SetLooping(looping)
+        exu.SetLooping(self.handle, CastBool(looping))
+    end
+
+    local function SetListenerTransform(transform, velocity)
+        exu.GetListenerTransform(
+            transform.posit_x, transform.posit_y, transform.posit_z,
+            velocity.x, velocity.y, velocity.z,
+            transform.front_x, transform.front_y, transform.front_z,
+            transform.up_x, transform.up_y, transform.up_z)
+    end
+
+    local function SetSourceTransform(source, position, velocity)
+        exu.GetSourceTransform(source,
+            position.x, position.y, position.z,
+            velocity.x, velocity.y, velocity.z)
+    end
+
+    --- In order to use 3D sound it is REQUIRED to call
+    --- this in the update loop of your main script
+    --- @param dt float delta time
+    --- @return nil void
+    function ExtraUtils.Update(dt)
+        local playerHandle = GetPlayerHandle()
+        local playerTransform = GetTransform(playerHandle)
+        local playerVelocity = GetVelocity(playerHandle)
+
+        SetListenerTransform(playerTransform, playerVelocity)
+
+        for handle, position in pairs(Sound.ActiveSounds) do
+            SetSourceTransform(handle, position, SetVector(0, 0, 0))
+        end
     end
 
 end
