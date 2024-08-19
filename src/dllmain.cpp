@@ -154,8 +154,9 @@ static DWORD WINAPI InitialThread(HMODULE)
     std::thread audioThread(AudioThread);
     audioThread.detach();
 
-     std::thread GUIThread(GUI);
-     GUIThread.detach();
+    std::thread GUIThread(GUI);
+    GUIThread.detach();
+
     return 0;
 }
 

@@ -142,7 +142,7 @@ bool showWelcome = true;
 void WelcomeMenu()
 {
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Always, ImVec2(0.5, 0.5));
-	ImGui::Begin("Extra Utilities by VTrider & more", &showWelcome, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Extra Utilities by VTrider & More", &showWelcome, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
 
 	ImGui::Text("Welcome! This map is a showcase of the features in Extra Utilities");
 
@@ -210,6 +210,37 @@ void WelcomeMenu()
 	ImGui::End();
 }
 
+void DemoMenu()
+{
+	ImGui::Begin("Extra Utilities Demo");
+
+	if (ImGui::BeginTabBar("MainTab"))
+	{
+		if (ImGui::BeginTabItem("One"))
+		{
+			ImGui::Text("Testing %f", Reticle::GetReticleAngle());
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Two"))
+		{
+			ImGui::Text("Testing %f", Reticle::GetReticleAngle());
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+	
+
+	
+
+	
+
+	ImGui::End();
+}
+
 bool setupStyle = false;
 bool demoOpen = false;
 
@@ -233,12 +264,9 @@ void gui::UserGui() noexcept
 	
 	if (demoOpen)
 	{
-		ImGui::Begin("Extra Utilities Demo");
-		ImGui::Text("Testing %f", Reticle::GetReticleAngle());
-		ImGui::End();
+		DemoMenu();
 		ImGui::ShowDemoWindow();
 	}
-
 
 	if (bzoneFont)
 	{

@@ -157,3 +157,76 @@ ALuint Audio::PlaySoundEffect(const std::string& filePath)
 	SendSoundRequest(soundRequest);
 	return source;
 }
+
+float Audio::GetMainVolume()
+{
+	float gain;
+	alGetListenerf(AL_GAIN, &gain);
+	return gain;
+}
+
+void Audio::SetMainVolume(float gain)
+{
+	alListenerf(AL_GAIN, gain);
+}
+
+float Audio::GetVolume(ALuint source)
+{
+	float gain;
+	alGetSourcef(source, AL_GAIN, &gain);
+	return gain;
+}
+
+void Audio::SetVolume(ALuint source, float gain)
+{
+	alSourcef(source, AL_GAIN, gain);
+}
+
+bool Audio::GetPaused(ALuint source)
+{
+	ALint state;
+	alGetSourcei(source, AL_SOURCE_STATE, &state);
+	return (state == AL_PAUSED) ? true : false;
+}
+
+void Audio::SetPaused(ALuint source, bool paused)
+{
+	if (paused)
+	{
+		alSourcePause(source);
+	}
+	else
+	{
+		alSourcePlay(source);
+	}
+}
+
+void Audio::Stop(ALuint source)
+{
+	alSourceStop(source);
+}
+
+bool Audio::GetLooping(ALuint source)
+{
+	ALint looping;
+	alGetSourcei(source, AL_LOOPING, &looping);
+	return (looping == AL_TRUE) ? true : false;
+}
+
+void Audio::SetLooping(ALuint source, bool looping)
+{
+	alSourcei(source, AL_LOOPING, looping);
+}
+
+void Audio::SetListenerTransform(ALfloat position[3], ALfloat velocity[3], ALfloat orientation[6])
+{
+	alListenerfv(AL_POSITION, position);
+	alListenerfv(AL_VELOCITY, velocity);
+	alListenerfv(AL_ORIENTATION, orientation);
+}
+
+void Audio::SetSourceTransform(ALuint source, ALfloat position[3], ALfloat velocity[3])
+{
+	alSourcefv(source, AL_POSITION, position);
+	alSourcefv(source, AL_VELOCITY, velocity);
+}

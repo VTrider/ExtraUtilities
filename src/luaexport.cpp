@@ -964,6 +964,123 @@ static int lua_PlaySound(lua_State* L)
 	return 1;
 }
 
+static int lua_GetMainVolume(lua_State* L)
+{
+	float volume = Audio::GetMainVolume();
+	lua_pushnumber(L, volume);
+	return 1;
+}
+
+static int lua_SetMainVolume(lua_State* L)
+{
+	float volume = static_cast<float>(luaL_checknumber(L, 1));
+	Audio::SetMainVolume(volume);
+	return 0;
+}
+
+static int lua_GetVolume(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float volume = Audio::GetVolume(source);
+	lua_pushnumber(L, volume);
+	return 1;
+}
+
+static int lua_SetVolume(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float volume = static_cast<float>(luaL_checknumber(L, 2));
+	Audio::SetVolume(source, volume);
+	return 0;
+}
+
+static int lua_GetPaused(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	bool paused = Audio::GetPaused(source);
+	lua_pushboolean(L, paused);
+	return 1;
+}
+
+static int lua_SetPaused(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	bool paused = luaL_checkinteger(L, 2);
+	Audio::SetPaused(source, paused);
+	return 0;
+}
+
+static int lua_Stop(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	Audio::Stop(source);
+	return 0;
+}
+
+static int lua_GetLooping(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	bool looping = Audio::GetLooping(source);
+	lua_pushboolean(L, looping);
+	return 1;
+}
+
+static int lua_SetLooping(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	bool looping = luaL_checkinteger(L, 2);
+	Audio::SetLooping(source, looping);
+	return 0;
+}
+
+static int lua_GetListenerTransform(lua_State* L)
+{
+	float posX = static_cast<float>(luaL_checknumber(L, 1));
+	float posY = static_cast<float>(luaL_checknumber(L, 2));
+	float posZ = static_cast<float>(luaL_checknumber(L, 3));
+
+	float velX = static_cast<float>(luaL_checknumber(L, 4));
+	float velY = static_cast<float>(luaL_checknumber(L, 5));
+	float velZ = static_cast<float>(luaL_checknumber(L, 6));
+
+	float frontX = static_cast<float>(luaL_checknumber(L, 7));
+	float frontY = static_cast<float>(luaL_checknumber(L, 8));
+	float frontZ = static_cast<float>(luaL_checknumber(L, 9));
+
+	float upX = static_cast<float>(luaL_checknumber(L, 10));
+	float upY = static_cast<float>(luaL_checknumber(L, 11));
+	float upZ = static_cast<float>(luaL_checknumber(L, 12));
+
+	float pos[] = { posX, posY, -posZ };
+	float vel[] = { velX, velY, -velZ };
+	float orientation[] = { frontX, frontY, -frontZ, upX, upY, -upZ };
+
+	Audio::SetListenerTransform(pos, vel, orientation);
+
+	return 0;
+}
+
+static int lua_GetSourceTransform(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+
+	float posX = static_cast<float>(luaL_checknumber(L, 2));
+	float posY = static_cast<float>(luaL_checknumber(L, 3));
+	float posZ = static_cast<float>(luaL_checknumber(L, 4));
+
+	float velX = static_cast<float>(luaL_checknumber(L, 5));
+	float velY = static_cast<float>(luaL_checknumber(L, 6));
+	float velZ = static_cast<float>(luaL_checknumber(L, 7));
+
+	float pos[] = { posX, posY, -posZ };
+	float vel[] = { velX, velY, -velZ };
+
+	Audio::SetSourceTransform(source, pos, vel);
+
+	return 0;
+}
+
+
 #pragma endregion AUDIO_SYSTEM
 
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
@@ -1040,6 +1157,17 @@ extern "C"
 			{ "SetSpecularColor",    lua_SetSpecularColor    },
 			{ "SetSpotlightRange",   lua_SetSpotlightRange   },
 			{ "PlaySound",           lua_PlaySound           },
+			{ "GetMainVolume",       lua_GetMainVolume       },
+			{ "SetMainVolume",       lua_SetMainVolume       },
+			{ "GetVolume",           lua_GetVolume           },
+			{ "SetVolume",           lua_SetVolume           },
+			{ "GetPaused",           lua_GetPaused           },
+			{ "SetPaused",           lua_SetPaused           },
+			{ "Stop",                lua_Stop                },
+			{ "GetLooping",          lua_GetLooping          },
+			{ "SetLooping",          lua_SetLooping          },
+			{ "GetListenerTransform",lua_GetListenerTransform},
+			{ "GetSourceTransform",  lua_GetSourceTransform  },
 			{0,                      0                       }
 		};
 		luaL_register(L, "exu", exu_export);

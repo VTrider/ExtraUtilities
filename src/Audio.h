@@ -47,13 +47,28 @@ private:
 
 	static void SendSoundRequest(Request request);
 
-	
-	
-
 public:
 	static void CleanSources();
 	static void CheckError(const std::string& where);
 	static void ProcessSoundRequests();
+
 	static ALuint PlaySoundEffect(const std::string& filePath);
+
+	static float GetMainVolume();
+	static void SetMainVolume(float gain);
+
+	static float GetVolume(ALuint source);
+	static void SetVolume(ALuint source, float gain);
+
+	static bool GetPaused(ALuint source);
+	static void SetPaused(ALuint source, bool paused);
+
+	static void Stop(ALuint source);
+
+	static bool GetLooping(ALuint source);
+	static void SetLooping(ALuint source, bool looping);
+
+	static void SetListenerTransform(ALfloat position[3], ALfloat velocity[3], ALfloat orientation[6]);
+	static void SetSourceTransform(ALuint source, ALfloat position[3], ALfloat velocity[3]);
 
 };
