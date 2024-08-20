@@ -230,3 +230,39 @@ void Audio::SetSourceTransform(ALuint source, ALfloat position[3], ALfloat veloc
 	alSourcefv(source, AL_POSITION, position);
 	alSourcefv(source, AL_VELOCITY, velocity);
 }
+
+float Audio::GetSourceRefDist(ALuint source)
+{
+	float refDist;
+	alGetSourcef(source, AL_REFERENCE_DISTANCE, &refDist);
+	return refDist;
+}
+
+void Audio::SetSourceRefDist(ALuint source, float distance)
+{
+	alSourcef(source, AL_REFERENCE_DISTANCE, distance);
+}
+
+float Audio::GetSourceRolloff(ALuint source)
+{
+	float rolloffFactor;
+	alGetSourcef(source, AL_ROLLOFF_FACTOR, &rolloffFactor);
+	return rolloffFactor;
+}
+
+void Audio::SetSourceRolloff(ALuint source, float factor)
+{
+	alSourcef(source, AL_ROLLOFF_FACTOR, factor);
+}
+
+float Audio::GetSourceMaxDist(ALuint source)
+{
+	float maxDist;
+	alGetSourcef(source, AL_MAX_DISTANCE, &maxDist);
+	return maxDist;
+}
+
+void Audio::SetSourceMaxDist(ALuint source, float distance)
+{
+	alSourcef(source, AL_MAX_DISTANCE, distance);
+}

@@ -71,4 +71,13 @@ public:
 	static void SetListenerTransform(ALfloat position[3], ALfloat velocity[3], ALfloat orientation[6]);
 	static void SetSourceTransform(ALuint source, ALfloat position[3], ALfloat velocity[3]);
 
+	static float GetSourceRefDist(ALuint source);
+	static void SetSourceRefDist(ALuint source, float distance);
+
+	static float GetSourceRolloff(ALuint source);
+	static void SetSourceRolloff(ALuint source, float factor);
+
+	static float GetSourceMaxDist(ALuint source);
+	static void SetSourceMaxDist(ALuint source, float distance);
+
 };
