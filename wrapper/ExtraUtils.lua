@@ -72,6 +72,22 @@ do
         return x < min and min or x > max and max or x
     end
 
+    --- DBZ Directory Functions:
+
+    -- Function to print field names of an object
+    local function SplitAtSemicolon(str)
+        local results = {}
+        for substr in string.gmatch(str, '([^;]+)') do
+            table.insert(results, substr)
+        end
+        return results
+    end
+
+    local function GetGameDirectory()
+        local path = SplitAtSemicolon(package.cpath)[2]
+        return string.match(path, "(.*)\\%?")
+    end
+
     -------------
     -- Exports --
     -------------
@@ -574,10 +590,32 @@ do
         exu.SelectAdd(handle)
     end
 
-    --- Returns the absolute directory of the Battlezone executable (should be the default game folder).
+    --- Returns the absolute path of the Battlezone executable (should be the default game folder).
     --- @return string directory
     function ExtraUtils.GetWorkingDirectory()
         return exu.GetWorkingDirectory()
+    end
+
+    --- Gets the steam workshop directory, use this to
+    --- relative path to your workshop item folder in order to access
+    --- files of interest
+    --- @return string workshopDir
+    function ExtraUtils.GetSteamWorkshopDirectory()
+        local gameDirectory = GetGameDirectory()
+        local workshopRelativePath = "steamapps/workshop/content/301650"
+
+        -- Remove the common directory from the game directory
+        local commonDirectory = "steamapps\\common\\Battlezone 98 Redux"
+        local commonDirectoryIndex = string.find(gameDirectory, commonDirectory)
+
+        if commonDirectoryIndex then
+            gameDirectory = gameDirectory:sub(1, commonDirectoryIndex - 2)
+        end
+
+        -- Combine paths using path.join
+        local steamWorkshopDirectory = gameDirectory .. "\\" .. workshopRelativePath:gsub("/", "\\")
+
+        return steamWorkshopDirectory
     end
 
     --- Creates an empty folder at the given location. 
@@ -770,24 +808,51 @@ do
 
     Sound.ActiveSounds = {}
 
-    --- Plays the sound file
+    --- Plays the sound file at the given path  
+    --- (Note you need to use absolute path for a sound file in a workshop folder)
     --- 
-    --- Note 3D sounds are required to be mono sound files
+    --- The position can be either a vector position for a static positional emitter,  
+    --- or it can be a handle in which case the emitter will follow the given object  
+    --- throughout its lifetime.
     --- 
+    --- Note 3D sounds are required to be mono sound files.  
     --- If you attempt to play a stereo file as a 3D sound it
     --- will play as 2D (globally)
+    --- 
+    --- `WARNING:` In order to use 3D sounds you MUST call exu.Update()
+    --- in your map script's update loop
     --- @param filePath string
-    --- @param position any
-    --- @param volume float
-    --- @param loop boolean
+    --- @param position? any
+    --- @param volume? float
+    --- @param loop? boolean
     --- @return Sound SoundObject
     function ExtraUtils.PlaySound(filePath, position, volume, loop)
         --- @class Sound
         local instance = setmetatable({}, Sound)
 
         instance.handle = exu.PlaySound(filePath)
-        instance.position = position
-        Sound.ActiveSounds[instance.handle] = position
+
+        -- This will overwrite sounds that have been cleaned up so the 
+        -- table size doesn't get out of control
+        Sound.ActiveSounds[instance.handle] = instance
+
+        if position ~= nil then
+            if type(position) ~= "userdata" then
+                error("Extra Utilities error: position must be either a handle or vector")
+            end
+            -- Disgusting hack, there's no way to differentiate between a handle
+            -- and a vector but if you get position of a vector it will always return (0,0,0),
+            -- so that must mean it's a handle
+            -- if GetPosition(position) == SetVector(0, 0, 0) then
+            --     instance.obj = position
+            -- else
+            --     instance.position = position
+            -- end
+            instance.position = position
+        else
+            -- TODO FIX MONO SOUND GLOBAL PLAY
+            instance.global = true -- flag indicates it's a global 2d sound
+        end
 
         if volume ~= nil then
             instance:SetVolume(volume)
@@ -864,6 +929,82 @@ do
         exu.SetLooping(self.handle, CastBool(looping))
     end
 
+    --- (3D only) Gets the reference distance of the source.
+    --- The distance under which gain is clamped to 1.0 (max)
+    --- 
+    --- The default is 1.0 and results in a small point emitter
+    --- 
+    --- This controls the "size" of the sound emitter
+    --- @return float distance
+    function Sound:GetReferenceDist()
+        return exu.GetSourceRefDist(self.handle)
+    end
+
+    --- (3D only) Gets the reference distance of the source.
+    --- The distance under which gain is clamped to 1.0 (max)
+    --- 
+    --- The default is 1.0 and results in a small point emitter
+    --- 
+    --- This controls the "size" of the sound emitter
+    --- @param distance float
+    --- @return nil void
+    function Sound:SetReferenceDist(distance)
+        exu.SetSourceRefDist(self.handle, distance)
+    end
+
+    --- (3D only) Gets the rolloff factor of the source.
+    --- Controls the attenuation of the source over distance
+    --- 
+    --- The default is `1.0`, lower will result in slower attenuation,
+    --- higher will result in faster attenuation
+    --- 
+    --- Use this combined with reference distance to control the 
+    --- size and scope of a 3D sound emitter
+    --- @return float rolloff
+    function Sound:GetRolloff()
+        return exu.GetSourceRolloff(self.handle)
+    end
+
+    --- (3D only) Sets the rolloff factor of the source.
+    --- Controls the attenuation of the source over distance
+    --- 
+    --- The default is `1.0`, lower will result in slower attenuation,
+    --- higher will result in faster attenuation
+    --- 
+    --- Use this combined with reference distance to control the 
+    --- size and scope of a 3D sound emitter
+    --- @param rolloff float
+    --- @return nil void
+    function Sound:SetRolloff(rolloff)
+        return exu.SetSourceRolloff(self.handle, rolloff)
+    end
+
+    --- (3D only) Gets the max distance of the source.
+    --- Clamps the attenuation of the source to the given distance.
+    --- 
+    --- For example if you want a sound to never fully attenuate,
+    --- set the max distance to a reasonable value
+    --- 
+    --- Default = `MAX_FLOAT` (effectively infinite)
+    --- @return float distance
+    function Sound:GetMaxDist()
+        return exu.GetSourceMaxDist(self.handle)
+    end
+
+    --- (3D only) Gets the max distance of the source.
+    --- Clamps the attenuation of the source to the given distance.
+    --- 
+    --- For example if you want a sound to never fully attenuate,
+    --- set the max distance to a reasonable value
+    --- 
+    --- Default = `MAX_FLOAT` (effectively infinite)
+    --- @param maxDist float
+    --- @return nil void
+    function Sound:SetMaxDist(maxDist)
+        return exu.SetSourceMaxDist(self.handle, maxDist)
+    end
+
+    --- Internal do not use
     local function SetListenerTransform(transform, velocity)
         exu.GetListenerTransform(
             transform.posit_x, transform.posit_y, transform.posit_z,
@@ -872,10 +1013,17 @@ do
             transform.up_x, transform.up_y, transform.up_z)
     end
 
+    --- Internal do not use
     local function SetSourceTransform(source, position, velocity)
         exu.GetSourceTransform(source,
             position.x, position.y, position.z,
             velocity.x, velocity.y, velocity.z)
+    end
+
+    --- Internal do not use
+    local function UpdateSources(handle, sound)
+        if sound.global == true then return end
+        SetSourceTransform(handle, sound.position, SetVector(0, 0, 0))
     end
 
     --- In order to use 3D sound it is REQUIRED to call
@@ -883,14 +1031,20 @@ do
     --- @param dt float delta time
     --- @return nil void
     function ExtraUtils.Update(dt)
+        -- If you're an optimization freak you can plug in your own
+        -- globals if you store them, but this way it's portable and
+        -- should have relatively low overhead since tables are passed
+        -- by reference
         local playerHandle = GetPlayerHandle()
         local playerTransform = GetTransform(playerHandle)
         local playerVelocity = GetVelocity(playerHandle)
 
         SetListenerTransform(playerTransform, playerVelocity)
 
-        for handle, position in pairs(Sound.ActiveSounds) do
-            SetSourceTransform(handle, position, SetVector(0, 0, 0))
+        --- @param handle integer
+        --- @param sound Sound
+        for handle, sound in pairs(Sound.ActiveSounds) do
+            UpdateSources(handle, sound)
         end
     end
 

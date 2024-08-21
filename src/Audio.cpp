@@ -51,9 +51,15 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 	ALenum format;
 
 	if (fileInfo.channels == 1)
+	{
 		format = AL_FORMAT_MONO16;
+		SystemLog->Out("Created mono buffer", 3);
+	}
 	else if (fileInfo.channels == 2)
+	{
 		format = AL_FORMAT_STEREO16;
+		SystemLog->Out("Created stereo buffer", 3);
+	}
 	else
 	{
 		SystemLog->Out("Unsupported channel count", 1);
