@@ -1082,6 +1082,53 @@ static int lua_GetSourceTransform(lua_State* L)
 	return 0;
 }
 
+static int lua_GetSourceRefDist(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float refDist = Audio::GetSourceRefDist(source);
+	lua_pushnumber(L, refDist);
+	return 1;
+}
+
+static int lua_SetSourceRefDist(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float refDist = static_cast<float>(luaL_checknumber(L, 2));
+	Audio::SetSourceRefDist(source, refDist);
+	return 0;
+}
+
+static int lua_GetSourceRolloff(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float rolloff = Audio::GetSourceRolloff(source);
+	lua_pushnumber(L, rolloff);
+	return 1;
+}
+
+static int lua_SetSourceRolloff(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float rolloff = static_cast<float>(luaL_checknumber(L, 2));
+	Audio::SetSourceRolloff(source, rolloff);
+	return 0;
+}
+
+static int lua_GetSourceMaxDist(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float maxDist = Audio::GetSourceMaxDist(source);
+	lua_pushnumber(L, maxDist);
+	return 1;
+}
+
+static int lua_SetSourceMaxDist(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	float maxDist = static_cast<float>(luaL_checknumber(L, 2));
+	Audio::SetSourceMaxDist(source, maxDist);
+	return 0;
+}
 
 #pragma endregion AUDIO_SYSTEM
 
@@ -1170,6 +1217,12 @@ extern "C"
 			{ "SetLooping",          lua_SetLooping          },
 			{ "GetListenerTransform",lua_GetListenerTransform},
 			{ "GetSourceTransform",  lua_GetSourceTransform  },
+			{ "GetSourceRefDist",    lua_GetSourceRefDist    },
+			{ "SetSourceRefDist",    lua_SetSourceRefDist    },
+			{ "GetSourceRolloff",    lua_GetSourceRolloff    },
+			{ "SetSourceRolloff",    lua_SetSourceRolloff    },
+			{ "GetSourceMaxDist",    lua_GetSourceMaxDist    },
+			{ "SetSourceMaxDist",    lua_SetSourceMaxDist    },
 			{0,                      0                       }
 		};
 		luaL_register(L, "exu", exu_export);
