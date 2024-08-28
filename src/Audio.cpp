@@ -62,7 +62,7 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 
 	alBufferData(bufferID, format, samples.data(), samples.size() * sizeof(short), fileInfo.samplerate);
 
-	buffers.emplace(filePath, bufferID);
+	buffers.emplace(filePath, BufferData{ bufferID, format });
 	return bufferID;
 }
 
@@ -71,6 +71,18 @@ void Audio::SendSoundRequest(Request request)
 	requestLock.lock();
 	requestQueue.push(request);
 	requestLock.unlock();
+}
+
+// not the prettiest but it works
+bool Audio::IsMono(ALuint source)
+{
+	for (const auto& [path, bufferData] : buffers)
+	{
+		if (bufferData.id == source)
+		{
+			return (bufferData.format == AL_FORMAT_MONO16) ? true : false;
+		}
+	}
 }
 
 void Audio::CleanSources()
@@ -133,7 +145,7 @@ void Audio::ProcessSoundRequests()
 	auto it = buffers.find(requestQueue.front().filePath);
 	if (it != buffers.end())
 	{
-		buffer = it->second;
+		buffer = it->second.id;
 	}
 	else
 	{

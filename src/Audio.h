@@ -27,6 +27,12 @@
 #include <unordered_map>
 #include <vector>
 
+struct BufferData
+{
+	ALuint id;
+	ALenum format;
+};
+
 class Audio
 {
 private:
@@ -36,7 +42,7 @@ private:
 		std::string filePath;
 	};
 
-	static inline std::unordered_map<std::string, ALuint> buffers;
+	static inline std::unordered_map<std::string, BufferData> buffers;
 	static inline std::vector<ALuint> activeSources;
 	static inline std::queue<Request> requestQueue;
 	static inline std::mutex requestLock;
@@ -48,6 +54,7 @@ private:
 	static void SendSoundRequest(Request request);
 
 public:
+	static bool IsMono(ALuint source);
 	static void CleanSources();
 	static void CheckError(const std::string& where);
 	static void ProcessSoundRequests();
