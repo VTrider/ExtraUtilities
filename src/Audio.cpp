@@ -89,6 +89,7 @@ bool Audio::IsMono(ALuint source)
 			return (bufferData.format == AL_FORMAT_MONO16) ? true : false;
 		}
 	}
+	return false;
 }
 
 void Audio::CleanSources()

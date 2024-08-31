@@ -92,6 +92,10 @@ do
     -- Exports --
     -------------
 
+    --- Note to modders: never call undocumented exu.xxx or local functions
+    --- since those are internal and usually provide an interface with the
+    --- game to the dll
+
     --- Sets the method for accessing the game's memory, valid
     --- options:
     --- 
@@ -808,16 +812,16 @@ do
 
     Sound.ActiveSounds = {}
 
-    --- Plays the sound file at the given path  
-    --- (Note you need to use absolute path for a sound file in a workshop folder)
+    --- Plays the sound file at the given path. (Relative to BZR root by default)  
+    --- (Note that you need to use an absolute path for a sound file in a workshop folder)
     --- 
-    --- The position can be either a vector position for a static positional emitter,  
+    --- The position can be either a vector position for a positional emitter,  
     --- or it can be a handle in which case the emitter will follow the given object  
     --- throughout its lifetime.
     --- 
     --- Note 3D sounds are required to be mono sound files.  
     --- If you attempt to play a stereo file as a 3D sound it
-    --- will play as 2D (globally)
+    --- will play as 2D (globally).
     --- 
     --- `WARNING:` In order to use 3D sounds you MUST call exu.Update()
     --- in your map script's update loop
@@ -831,6 +835,13 @@ do
         local instance = setmetatable({}, Sound)
 
         instance.handle = exu.PlaySound(filePath)
+        instance.path = filePath
+        instance.global = true -- marks a global (2D) sound
+        instance.velocity = SetVector(0, 0, 0)
+
+        -- One time warnings
+        instance.monoWarningShown = false
+        instance.stereoWarningShown = false
 
         -- This will overwrite sounds that have been cleaned up so the 
         -- table size doesn't get out of control
@@ -840,18 +851,16 @@ do
             if type(position) ~= "userdata" then
                 error("Extra Utilities error: position must be either a handle or vector")
             end
-            -- Disgusting hack, there's no way to differentiate between a handle
-            -- and a vector but if you get position of a vector it will always return (0,0,0),
-            -- so that must mean it's a handle
-            -- if GetPosition(position) == SetVector(0, 0, 0) then
-            --     instance.obj = position
-            -- else
-            --     instance.position = position
-            -- end
-            instance.position = position
-        else
-            -- TODO FIX MONO SOUND GLOBAL PLAY
-            instance.global = true -- flag indicates it's a global 2d sound
+
+            instance.global = false
+
+            -- Hack to determine if position is a handle or vector
+            if GetPosition(position) == SetVector(0, 0, 0) then
+                instance.position = position -- position is vector
+                exu.SysLogOut(tostring(position))
+            else
+                instance.obj = position -- position is handle of game object
+            end
         end
 
         if volume ~= nil then
@@ -875,6 +884,14 @@ do
     --- @return nil void
     function ExtraUtils.SetMainVolume(volume)
         exu.SetMainVolume(Clamp(volume, 0.0, 1.0))
+    end
+
+    --- Stops all currently playing sounds
+    --- @return nil void
+    function ExtraUtils.StopAllSounds()
+        for _, sound in pairs(Sound.ActiveSounds) do
+            sound:Stop()
+        end
     end
 
     --- Gets the volume level of the given sound
@@ -1020,10 +1037,60 @@ do
             velocity.x, velocity.y, velocity.z)
     end
 
+    --- (3D only) Sets the position and velocity of the source
+    --- @param position any
+    --- @param velocity any
+    --- @return nil void
+    function Sound:SetTransform(position, velocity)
+        if velocity == nil then
+            velocity = SetVector(0, 0, 0)
+        end
+        if self.position == nil then
+            self.position = SetVector(0, 0, 0)
+        end
+        self.position.x = velocity.x
+        self.position.y = velocity.y
+        self.position.z = velocity.z
+        exu.GetSourceTransform(self.handle,
+        position.x, position.y, position.z,
+        velocity.x, velocity.y, velocity.z)
+    end
+
+    function Sound:IsMono()
+        return exu.SourceIsMono(self.handle)
+    end
+
     --- Internal do not use
-    local function UpdateSources(handle, sound)
-        if sound.global == true then return end
-        SetSourceTransform(handle, sound.position, SetVector(0, 0, 0))
+    --- @param handle integer
+    --- @param sound Sound
+    local function UpdateSource(handle, sound, playerPos)
+        if sound.global == true and sound:IsMono() == false then return end
+
+        if sound:IsMono() == false then
+            if not sound.stereoWarningShown then -- stops log spam
+                exu.SysLogOut(string.format("[WARNING] Unable to play stereo sound %s as 3D, use a mono sound file", sound.path), 2)
+                sound.stereoWarningShown = true
+            end
+        elseif sound.global == true then
+            if not sound.monoWarningShown then
+                exu.SysLogOut(string.format("[WARNING] mono file %s is playing globally, recommend using a stereo file for global sounds", sound.path), 2)
+                sound.monoWarningShown = true
+            end
+            -- need to "fake" global mono sounds
+            -- in OpenAL
+            sound.position = playerPos
+            sound.velocity = SetVector(0, 0, 0)
+        end
+
+        if sound.obj ~= nil then
+            if not IsValid(sound.obj) then
+                sound:Stop()
+            end
+            sound.position = GetPosition(sound.obj)
+            sound.velocity = GetVelocity(sound.obj)
+        end
+
+        SetSourceTransform(handle, sound.position, sound.velocity)
     end
 
     --- In order to use 3D sound it is REQUIRED to call
@@ -1044,7 +1111,7 @@ do
         --- @param handle integer
         --- @param sound Sound
         for handle, sound in pairs(Sound.ActiveSounds) do
-            UpdateSources(handle, sound)
+            UpdateSource(handle, sound, GetPosition(playerHandle))
         end
     end
 

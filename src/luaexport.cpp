@@ -64,6 +64,14 @@ static int lua_GetObj(lua_State* L)
 	return 1;
 }
 
+static int lua_SysLogOut(lua_State* L)
+{
+	const char* content = luaL_checkstring(L, 1);
+	int level = luaL_optint(L, 2, 3);
+	SystemLog->Out(content, level);
+	return 0;
+}
+
 #pragma endregion IMPORTANT_FUNCTIONS
 
 #pragma region ENVIRONMENT
@@ -1130,6 +1138,14 @@ static int lua_SetSourceMaxDist(lua_State* L)
 	return 0;
 }
 
+static int lua_SourceIsMono(lua_State* L)
+{
+	ALuint source = luaL_checkinteger(L, 1);
+	bool mono = Audio::IsMono(source);
+	lua_pushboolean(L, mono);
+	return 1;
+}
+
 #pragma endregion AUDIO_SYSTEM
 
 extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
@@ -1144,6 +1160,7 @@ extern "C"
 			{ "GetVersion",          lua_GetVersion          },
 			{ "SetAccessMode",       lua_SetAccessMode       },
 			{ "GetObj",			 	 lua_GetObj              },
+			{ "SysLogOut",           lua_SysLogOut           },
 			{ "GetGravity",			 lua_GetGravity          },
 			{ "SetGravity",	         lua_SetGravity          },
 			{ "GetReticleAngle",	 lua_GetReticleAngle     },
@@ -1223,6 +1240,7 @@ extern "C"
 			{ "SetSourceRolloff",    lua_SetSourceRolloff    },
 			{ "GetSourceMaxDist",    lua_GetSourceMaxDist    },
 			{ "SetSourceMaxDist",    lua_SetSourceMaxDist    },
+			{ "SourceIsMono",        lua_SourceIsMono        },
 			{0,                      0                       }
 		};
 		luaL_register(L, "exu", exu_export);
