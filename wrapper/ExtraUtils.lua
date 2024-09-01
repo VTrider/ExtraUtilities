@@ -45,7 +45,7 @@ do
     -- Use the version and/or the crc32 to check for mod version
     -- mismatches that aren't caught by the game
     ExtraUtils.version = exu.GetVersion()
-    ExtraUtils.crc32 = "EB227D80"
+    ExtraUtils.crc32 = "9AF5551E"
     ExtraUtils.debug = false
 
     -------------
