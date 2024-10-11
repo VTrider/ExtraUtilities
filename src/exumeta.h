@@ -24,6 +24,6 @@
 
 namespace Exu
 {
-	constexpr std::string version = "0.8.0";
+	constexpr std::string version = "0.8.1";
 }
 

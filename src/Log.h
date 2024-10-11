@@ -33,7 +33,6 @@ class Log
 private:
 	std::filesystem::path logPath;
 	int logLevel; // 0 = off | 1 = Error | 2 = Warning | 3 = Info
-	std::mutex* p_mutex; // probably a bad idea but idk how to work around the mutex move semantics for objects
 
 	void CheckSize() const
 	{
@@ -56,7 +55,6 @@ private:
 
 	void LogInit()
 	{
-		p_mutex = new std::mutex();
 		CheckSize();
 		std::filesystem::create_directories(logPath.parent_path());
 		std::ofstream file(logPath, std::ios::app);
@@ -81,15 +79,9 @@ public:
 		LogInit();
 	}
 
-	~Log()
-	{
-		delete p_mutex;
-	}
-
 	template<typename T>
 	void Out(const T content, const int level = 3) const
 	{
-		std::lock_guard<std::mutex> lock(*p_mutex);
 		if (logLevel < level)
 			return;
 

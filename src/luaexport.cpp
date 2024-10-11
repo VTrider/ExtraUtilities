@@ -30,6 +30,7 @@
 #include "exumeta.h"
 #include "filesystem.h"
 #include "Hook.h"
+#include "Log.h"
 #include "Memory.h"
 #include "Offsets.h"
 
@@ -39,7 +40,7 @@
 #include <chrono>
 #include <thread>
 #include <vector>
-#include "Log.h"
+
 
 #pragma region IMPORTANT_FUNCTIONS
 

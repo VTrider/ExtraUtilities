@@ -24,6 +24,7 @@
 #include "imgui_impl_dx9.h"
 
 #include "bzfunc.h"
+#include "exumeta.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND window, UINT message, WPARAM wideParam, LPARAM longParam);
 
@@ -139,7 +140,7 @@ void SetupImGuiStyle()
 }
 
 bool showWelcome = true;
-void WelcomeMenu()
+static void WelcomeMenu()
 {
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Always, ImVec2(0.5, 0.5));
 	ImGui::Begin("Extra Utilities by VTrider & More", &showWelcome, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
@@ -194,7 +195,7 @@ void WelcomeMenu()
 
 	ImGui::Text(
 		"Special thanks to the players and modders of the\n"
-		"Battlezone Community for their continued support,\n"
+		"Battlezone Community for your continued support,\n"
 		"this wouldn't be possible without your help!");
 
 	ImGui::Separator();
@@ -227,6 +228,29 @@ void DemoMenu()
 		{
 			ImGui::Text("Testing %f", Reticle::GetReticleAngle());
 
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("About"))
+		{
+			ImGui::Text("Extra Utilities v%s by VTrider and more", Exu::version.c_str());
+
+			ImGui::SeparatorText("Contributors");
+
+			ImGui::BulletText("Business Lawyer");
+			ImGui::BulletText("DivisionByZero");
+			ImGui::BulletText("GrizzlyOne95");
+			ImGui::BulletText("Janne");
+
+			ImGui::Separator();
+
+			ImGui::Text("Extra Utilities is licensed under LGPLv3, BZ Mods should\n"
+					    "always be free and open source.");
+
+			ImGui::SeparatorText("Github Repo");
+
+			ImGui::Text("https://github.com/VTrider/ExtraUtilities");
+			
 			ImGui::EndTabItem();
 		}
 

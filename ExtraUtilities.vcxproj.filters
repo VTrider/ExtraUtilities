@@ -16,29 +16,8 @@
     <Filter Include="Source Files\exu">
       <UniqueIdentifier>{6793a5b2-dfa7-4d21-a5e0-0631ab03da0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\minhook">
-      <UniqueIdentifier>{2951fc2c-9efc-4e8e-910d-218f970a1e56}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\imgui">
-      <UniqueIdentifier>{1b98a9d7-8f2d-4977-9a9a-b7c197c3b569}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\exu">
       <UniqueIdentifier>{a1adbcf0-6f85-4801-a673-19204c5c72fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\minhook">
-      <UniqueIdentifier>{dd1a755d-6502-4dcf-9e94-709b54930400}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\openal">
-      <UniqueIdentifier>{e27e72e2-0805-4da4-9225-0c1a50bf6ce4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\openal">
-      <UniqueIdentifier>{4ab5281a-83ff-4a4d-81c5-250111797476}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\discord">
-      <UniqueIdentifier>{efdf942b-c098-47ba-839c-9d6cbc9897a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\discord">
-      <UniqueIdentifier>{65b61ce6-51aa-4693-9100-210a358be6c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,18 +36,6 @@
     <ClCompile Include="src\luaexport.cpp">
       <Filter>Source Files\exu</Filter>
     </ClCompile>
-    <ClCompile Include="minhook\buffer.c">
-      <Filter>Source Files\minhook</Filter>
-    </ClCompile>
-    <ClCompile Include="minhook\hde32.c">
-      <Filter>Source Files\minhook</Filter>
-    </ClCompile>
-    <ClCompile Include="minhook\hook.c">
-      <Filter>Source Files\minhook</Filter>
-    </ClCompile>
-    <ClCompile Include="minhook\trampoline.c">
-      <Filter>Source Files\minhook</Filter>
-    </ClCompile>
     <ClCompile Include="src\dx9hook.cpp">
       <Filter>Source Files\exu</Filter>
     </ClCompile>
@@ -86,51 +53,6 @@
     </ClCompile>
     <ClCompile Include="src\SoundDevice.cpp">
       <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DiscordRPC.cpp">
-      <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\achievement_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\activity_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\application_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\core.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\image_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\lobby_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\network_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\overlay_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\relationship_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\storage_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\store_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\types.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\user_manager.cpp">
-      <Filter>Source Files\discord</Filter>
-    </ClCompile>
-    <ClCompile Include="discord\voice_manager.cpp">
-      <Filter>Source Files\discord</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,18 +73,6 @@
     </ClInclude>
     <ClInclude Include="src\filesystem.h">
       <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="minhook\buffer.h">
-      <Filter>Header Files\minhook</Filter>
-    </ClInclude>
-    <ClInclude Include="minhook\hde32.h">
-      <Filter>Header Files\minhook</Filter>
-    </ClInclude>
-    <ClInclude Include="minhook\MinHook.h">
-      <Filter>Header Files\minhook</Filter>
-    </ClInclude>
-    <ClInclude Include="minhook\trampoline.h">
-      <Filter>Header Files\minhook</Filter>
     </ClInclude>
     <ClInclude Include="src\Log.h">
       <Filter>Header Files\exu</Filter>
@@ -187,60 +97,6 @@
     </ClInclude>
     <ClInclude Include="src\SoundDevice.h">
       <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DiscordRPC.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\achievement_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\activity_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\application_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\core.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\discord.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\event.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\ffi.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\image_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\lobby_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\network_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\overlay_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\relationship_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\storage_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\store_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\types.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\user_manager.h">
-      <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord\voice_manager.h">
-      <Filter>Header Files\discord</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
