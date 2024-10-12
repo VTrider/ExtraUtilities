@@ -20,10 +20,13 @@
 
 #pragma once
 
+#include <sol/sol.hpp>
+
 #include <string>
 
 namespace Exu
 {
 	constexpr std::string version = "0.8.1";
+	extern std::unique_ptr<sol::state_view> lua;
 }
 

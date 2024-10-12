@@ -35,25 +35,176 @@
 #include "Offsets.h"
 
 #include "lua.hpp"
+#include <sol/sol.hpp>
 #include <Windows.h>
 
 #include <chrono>
+#include <memory>
 #include <thread>
 #include <vector>
 
-
 #pragma region IMPORTANT_FUNCTIONS
 
-static int lua_GetVersion(lua_State* L)
-{
-	lua_pushstring(L, Exu::version.c_str());
-	return 1;
-}
+std::unique_ptr<sol::state_view> lua;
 
-static int lua_SetAccessMode(lua_State* L)
+static int exu_Init(lua_State* L)
 {
-	int mode = luaL_checkinteger(L, 1);
-	Memory::SetAccessMode(mode);
+	lua = std::make_unique<sol::state_view>(L);
+
+	auto exu_api = (*lua)["exu_api"].get_or_create<sol::table>();
+
+	// Metadata
+
+	exu_api.set_function("GetVersion", []() { return Exu::version.c_str(); });
+
+	// Important Misc
+
+	exu_api.set_function("SetAccessMode", &Memory::SetAccessMode);
+	exu_api.set_function("SysLogOut", [](const char* content, int level)
+		{
+			SystemLog->Out(content, level);
+		});
+
+	// Environment
+
+	exu_api.set_function("GetGravity", []()
+		{
+			auto SetVector = lua->get<sol::function>("SetVector");
+			VECTOR_3D gravity = Environment::GetGravity();
+			return SetVector(gravity.x, gravity.y, gravity.z);
+		});
+	exu_api.set_function("SetGravity", &Environment::SetGravity);
+
+	// Reticle
+
+	exu_api.set_function("GetReticleAngle", &Reticle::GetReticleAngle);
+	exu_api.set_function("GetReticlePos", []()
+		{
+			auto SetVector = lua->get<sol::function>("SetVector");
+			VECTOR_3D reticlePos = Reticle::GetReticlePos();
+			return SetVector(reticlePos.x, reticlePos.y, reticlePos.z);
+		});
+	exu_api.set_function("GetSmartCursorRange", &Reticle::GetSmartCursorRange);
+	exu_api.set_function("SetSmartCursorRange", &Reticle::SetSmartCursorRange);
+	exu_api.set_function("GetReticleObject", &Reticle::GetReticleObject);
+
+	// Satellite
+
+	exu_api.set_function("GetSatState", &Satellite::GetSatState);
+	exu_api.set_function("GetSatCursorPos", []()
+		{
+			auto SetVector = lua->get<sol::function>("SetVector");
+			VECTOR_3D cursorPos = Satellite::GetSatCursorPos();
+			return SetVector(cursorPos.x, cursorPos.y, cursorPos.z);
+		});
+	exu_api.set_function("GetSatCamPos", []()
+		{
+			auto SetVector = lua->get<sol::function>("SetVector");
+			VECTOR_3D camPos = Satellite::GetSatCamPos();
+			return SetVector(camPos.x, camPos.y, camPos.z);
+		});
+	exu_api.set_function("GetSatClickPos", []()
+		{
+			auto SetVector = lua->get<sol::function>("SetVector");
+			VECTOR_3D clickPos = Satellite::GetSatClickPos();
+			return SetVector(clickPos.x, clickPos.y, clickPos.z);
+		});
+	exu_api.set_function("GetSatPanSpeed", &Satellite::GetSatPanSpeed);
+	exu_api.set_function("SetSatPanSpeed", &Satellite::SetSatPanSpeed);
+	exu_api.set_function("GetMinSatZoom", &Satellite::GetMinSatZoom);
+	exu_api.set_function("SetMinSatZoom", &Satellite::SetMinSatZoom);
+	exu_api.set_function("GetMaxSatZoom", &Satellite::GetMaxSatZoom);
+	exu_api.set_function("SetMaxSatZoom", &Satellite::SetMaxSatZoom);
+	exu_api.set_function("GetSatZoom", &Satellite::GetSatZoom);
+	exu_api.set_function("SetSatZoom", &Satellite::SetSatZoom);
+
+	// Radar
+
+	exu_api.set_function("GetRadarState", &Radar::GetRadarState);
+	exu_api.set_function("SetRadarState", &Radar::SetRadarState);
+
+	// Camera
+
+	exu_api.set_function("GetZoomFactor", &Camera::GetZoomFactor);
+	exu_api.set_function("SetZoomFactor", &Camera::SetZoomFactor);
+	exu_api.set_function("GetMinZoomFactor", &Camera::GetMinZoomFactor);
+	exu_api.set_function("SetMinZoomFactor", &Camera::SetMinZoomFactor);
+	exu_api.set_function("GetMaxZoomFactor", &Camera::GetMaxZoomFactor);
+	exu_api.set_function("SetMaxZoomFactor", &Camera::SetMaxZoomFactor);
+
+	// IO
+
+	exu_api.set_function("GetGameKey", [](std::string key) 
+		{
+			int vKey = IO::GetKeyCode(key);
+			return IO::GetGameKey(vKey);
+		});
+
+	// Misc
+
+	exu_api.set_function("GetSteam64", &Misc::GetSteam64);
+	exu_api.set_function("GetWeaponMask", &Misc::GetWeaponMask);
+	exu_api.set_function("GetLives", &Misc::GetLives);
+	exu_api.set_function("SetLives", &Misc::SetLives);
+	exu_api.set_function("GetDifficulty", &Misc::GetDifficulty);
+	exu_api.set_function("SetDifficulty", &Misc::SetDifficulty);
+
+	// Play Options
+
+	exu_api.set_function("GetAutoLevel", []() 
+		{
+			int playOption = Memory::Read<int>(Misc::playOption);
+			bool autoLevel = playOption >> 4 & 1;
+			return autoLevel;
+		});
+	exu_api.set_function("SetAutoLevel", [](bool newAL)
+		{
+			int playOption = Memory::Read<int>(Misc::playOption);
+
+			int mask = 1 << 4; // value is at the 5th bit 00010000
+			playOption &= ~mask; // zero out the bit
+
+			if (newAL == 1) { playOption |= mask; } // set it to 1 if true
+
+			Memory::Write(Misc::playOption, playOption);
+		});
+	exu_api.set_function("GetTLI", []()
+		{
+			int playOption = Memory::Read<int>(Misc::playOption);
+			bool TLI = playOption >> 5 & 1;
+			return TLI;
+		});
+	exu_api.set_function("SetTLI", [](bool newTLI)
+		{
+			int playOption = Memory::Read<int>(Misc::playOption);
+
+			int mask = 1 << 5; // value is at the 5th bit 00010000
+			playOption &= ~mask; // zero out the bit
+
+			if (newTLI == 1) { playOption |= mask; } // set it to 1 if true
+
+			Memory::Write(Misc::playOption, playOption);
+		});
+	exu_api.set_function("GetReverseMouse", []()
+		{
+			int playOption = Memory::Read<int>(Misc::playOption);
+			bool reverseMouse = playOption >> 6 & 1;
+			return reverseMouse;
+		});
+	exu_api.set_function("SetReverseMouse", [](bool newMouse)
+		{
+			int playOption = Memory::Read<int>(Misc::playOption);
+
+			int mask = 1 << 6; // value is at the 7th bit
+			playOption &= ~mask;
+
+			// important note: this is inverted because the devs are insane and have
+			// reversed mouse as the "default" in the code LOL
+			if (newMouse == 0) { playOption |= mask; }
+
+			Memory::Write(Misc::playOption, playOption);
+		});
+
 	return 0;
 }
 
@@ -65,494 +216,8 @@ static int lua_GetObj(lua_State* L)
 	return 1;
 }
 
-static int lua_SysLogOut(lua_State* L)
-{
-	const char* content = luaL_checkstring(L, 1);
-	int level = luaL_optint(L, 2, 3);
-	SystemLog->Out(content, level);
-	return 0;
-}
-
 #pragma endregion IMPORTANT_FUNCTIONS
 
-#pragma region ENVIRONMENT
-
-static int lua_GetGravity(lua_State* L)
-{
-	VECTOR_3D gravity = Environment::GetGravity();
-	lua_createtable(L, 0, 3);
-
-	lua_pushnumber(L, gravity.x);
-	lua_setfield(L, -2, "x");
-
-	lua_pushnumber(L, gravity.y);
-	lua_setfield(L, -2, "y");
-
-	lua_pushnumber(L, gravity.z);
-	lua_setfield(L, -2, "z");
-
-	return 1;
-}
-
-static int lua_SetGravity(lua_State* L)
-{
-	float x = static_cast<float>(luaL_checknumber(L, 1));
-	float y = static_cast<float>(luaL_checknumber(L, 2));
-	float z = static_cast<float>(luaL_checknumber(L, 3));
-	Environment::SetGravity(x, y, z);
-	return 0;
-}
-
-#pragma endregion ENVIRONMENT
-
-#pragma region RETICLE
-
-static int lua_GetReticleAngle(lua_State* L)
-{
-	lua_pushnumber(L, Reticle::GetReticleAngle());
-	return 1;
-}
-
-static int lua_GetReticlePos(lua_State* L) 
-{
-	try
-	{
-		VECTOR_3D reticlePos = Reticle::GetReticlePos();
-		lua_createtable(L, 0, 3);
-
-		lua_pushnumber(L, reticlePos.x);
-		lua_setfield(L, -2, "x");
-
-		lua_pushnumber(L, reticlePos.y);
-		lua_setfield(L, -2, "y");
-
-		lua_pushnumber(L, reticlePos.z);
-		lua_setfield(L, -2, "z");
-
-		return 1;
-	}
-	catch (const std::exception& e)
-	{
-		SystemLog->Out("[EXU ERROR]: " + std::string(e.what()));
-		return 0;
-	}
-	catch (...)
-	{
-		SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-		return 0;
-	}
-}
-
-static int lua_GetSmartCursorRange(lua_State* L)
-{
-	lua_pushnumber(L, Reticle::GetSmartCursorRange());
-	return 1;
-}
-
-static int lua_SetSmartCursorRange(lua_State* L)
-{
-	try
-	{
-		float range = static_cast<float>(luaL_checknumber(L, 1));
-		Reticle::SetSmartCursorRange(range);
-		return 0;
-	}
-	catch (const std::exception& e)
-	{
-		SystemLog->Out("[EXU ERROR]: " + std::string(e.what()));
-		return 0;
-	}
-	catch (...)
-	{
-		SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-		return 0;
-	}
-}
-
-static int lua_GetReticleObject(lua_State* L)
-{
-	// this casts the data back into a handle the can use
-	lua_pushlightuserdata(L, Reticle::GetReticleObject());
-	return 1;
-}
-
-#pragma endregion RETICLE
-
-#pragma region SATELLITE
-
-static int lua_GetSatState(lua_State* L)
-{
-	try
-	{
-		lua_pushnumber(L, Satellite::GetSatState());
-		return 1;
-	}
-	catch (const std::exception& e)
-	{
-		SystemLog->Out("[EXU ERROR]: " + std::string(e.what()));
-		return 0;
-	}
-	catch (...)
-	{
-		SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-		return 0;
-	}
-}
-
-static int lua_GetSatCursorPos(lua_State* L)
-{
-	try
-	{
-		VECTOR_3D cursorPos = Satellite::GetSatCursorPos();
-		lua_createtable(L, 0, 3);
-
-		lua_pushnumber(L, cursorPos.x);
-		lua_setfield(L, -2, "x");
-
-		lua_pushnumber(L, cursorPos.y);
-		lua_setfield(L, -2, "y");
-
-		lua_pushnumber(L, cursorPos.z);
-		lua_setfield(L, -2, "z");
-
-		return 1;
-	}
-	catch (const std::exception& e)
-	{
-		SystemLog->Out("[EXU ERROR]: " + std::string(e.what()));
-		return 0;
-	}
-	catch (...)
-	{
-		SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-		return 0;
-	}
-}
-
-static int lua_GetSatCamPos(lua_State* L)
-{
-	VECTOR_3D camPos = Satellite::GetSatCamPos();
-	lua_createtable(L, 0, 3);
-
-	lua_pushnumber(L, camPos.x);
-	lua_setfield(L, -2, "x");
-
-	lua_pushnumber(L, camPos.y);
-	lua_setfield(L, -2, "y");
-
-	lua_pushnumber(L, camPos.z);
-	lua_setfield(L, -2, "z");
-
-	return 1;
-}
-
-static int lua_GetSatClickPos(lua_State* L)
-{
-	VECTOR_3D clickPos = Satellite::GetSatClickPos();
-	lua_createtable(L, 0, 3);
-
-	lua_pushnumber(L, clickPos.x);
-	lua_setfield(L, -2, "x");
-
-	lua_pushnumber(L, clickPos.y);
-	lua_setfield(L, -2, "y");
-
-	lua_pushnumber(L, clickPos.z);
-	lua_setfield(L, -2, "z");
-
-	return 1;
-}
-
-static int lua_GetSatPanSpeed(lua_State* L)
-{
-	lua_pushnumber(L, Satellite::GetSatPanSpeed());
-	return 1;
-}
-
-static int lua_SetSatPanSpeed(lua_State* L)
-{
-	try
-	{
-		float speed = static_cast<float>(luaL_checknumber(L, 1));
-		Satellite::SetSatPanSpeed(speed);
-		return 0;
-	}
-	catch (const std::exception& e)
-	{
-		SystemLog->Out("[EXU ERROR]: " + std::string(e.what()));
-		return 0;
-	}
-	catch (...)
-	{
-		SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-		return 0;
-	}
-}
-
-static int lua_GetMinSatZoom(lua_State* L)
-{
-	lua_pushnumber(L, Satellite::GetMinSatZoom());
-	return 1;
-}
-
-static int lua_SetMinSatZoom(lua_State* L)
-{
-	float zoom = static_cast<float>(luaL_checknumber(L, 1));
-	Satellite::SetMinSatZoom(zoom);
-	return 0;
-}
-
-static int lua_GetMaxSatZoom(lua_State* L)
-{
-	lua_pushnumber(L, Satellite::GetMaxSatZoom());
-	return 1;
-}
-
-static int lua_SetMaxSatZoom(lua_State* L)
-{
-	float zoom = static_cast<float>(luaL_checknumber(L, 1));
-	Satellite::SetMaxSatZoom(zoom);
-	return 0;
-}
-
-static int lua_GetSatZoom(lua_State* L)
-{
-	lua_pushnumber(L, Satellite::GetSatZoom());
-	return 1;
-}
-
-static int lua_SetSatZoom(lua_State* L)
-{
-	try
-	{
-		float zoom = static_cast<float>(luaL_checknumber(L, 1));
-		Satellite::SetSatZoom(zoom);
-		return 0;
-	}
-	catch (const std::exception& e)
-	{
-		SystemLog->Out("[EXU ERROR]: " + std::string(e.what()));
-		return 0;
-	}
-	catch (...)
-	{
-		SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-		return 0;
-	}
-}
-
-#pragma endregion SATELLITE
-
-#pragma region RADAR
-
-/*-----------------
-* Radar Functions *
-------------------*/
-
-static int lua_GetRadarState(lua_State* L) 
-{
-	lua_pushnumber(L, Radar::GetRadarState());
-	return 1;
-}
-
-static int lua_SetRadarState(lua_State* L) 
-{
-	int state = luaL_checkinteger(L, 1);
-	Radar::SetRadarState(state);
-	return 0;
-}
-
-#pragma endregion RADAR
-
-#pragma region CAMERA
-
-static int lua_GetZoomFactor(lua_State* L)
-{
-	std::string camera = luaL_checkstring(L, 1);
-	lua_pushnumber(L, Camera::GetZoomFactor(camera));
-	return 1;
-}
-
-static int lua_SetZoomFactor(lua_State* L)
-{
-	float factor = static_cast<float>(luaL_checknumber(L, 1));
-	std::string camera = luaL_checkstring(L, 2);
-	Camera::SetZoomFactor(factor, camera);
-	return 0;
-}
-
-static int lua_GetMinZoomFactor(lua_State* L)
-{
-	lua_pushnumber(L, Camera::GetMinZoomFactor());
-	return 1;
-}
-
-static int lua_SetMinZoomFactor(lua_State* L)
-{
-	float factor = static_cast<float>(luaL_checknumber(L, 1));
-	Camera::SetMinZoomFactor(factor);
-	return 0;
-}
-
-static int lua_GetMaxZoomFactor(lua_State* L)
-{
-	lua_pushnumber(L, Camera::GetMaxZoomFactor());
-	return 1;
-}
-
-static int lua_SetMaxZoomFactor(lua_State* L)
-{
-	float factor = static_cast<float>(luaL_checknumber(L, 1));
-	Camera::SetMaxZoomFactor(factor);
-	return 0;
-}
-
-#pragma endregion CAMERA
-
-#pragma region IO
-
-static int lua_GetGameKey(lua_State* L)
-{
-	std::string key = luaL_checkstring(L, 1);
-	int vKey = (IO::GetKeyCode(key));
-	lua_pushboolean(L, IO::GetGameKey(vKey));
-	return 1;
-}
-
-#pragma endregion IO
-
-#pragma region MISC
-
-static int lua_GetSteam64(lua_State* L) 
-{
-	try
-	{
-		lua_pushstring(L, Misc::GetSteam64());
-		return 1;
-	}
-	catch (const std::exception& e)
-	{
-		SystemLog->Out("[EXU ERROR]: " + std::string(e.what()));
-		return 0;
-	}
-	catch (...)
-	{
-		SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-		return 0;
-	}
-}
-
-static int lua_GetWeaponMask(lua_State* L)
-{
-	lua_pushnumber(L, Misc::GetWeaponMask());
-	return 1;
-}
-
-static int lua_GetLives(lua_State* L)
-{
-	lua_pushnumber(L, Misc::GetLives());
-	return 1;
-}
-
-static int lua_SetLives(lua_State* L)
-{
-	int newLives = luaL_checkinteger(L, 1);
-	Misc::SetLives(newLives);
-	return 1;
-}
-
-static int lua_GetDifficulty(lua_State* L)
-{
-	lua_pushstring(L, Misc::GetDifficulty());
-	return 1;
-}
-
-static int lua_SetDifficulty(lua_State* L)
-{
-	std::string newDifficulty = luaL_checkstring(L, 1);
-	if (Misc::SetDifficulty(newDifficulty) == 1 )
-	{
-		luaL_error(L, "Bad format: enter difficulty as it appears in game - check documentation");
-	}
-	return 0;
-}
-
-#pragma endregion MISC
-
-#pragma region PLAYER_OPTIONS
-
-static int lua_GetAutoLevel(lua_State* L)
-{
-	int playOption = Memory::Read<int>(Misc::playOption);
-	bool autoLevel = playOption >> 4 & 1;
-	lua_pushboolean(L, autoLevel);
-	return 1;
-}
-
-static int lua_SetAutoLevel(lua_State* L)
-{
-	int newAL = luaL_checkinteger(L, 1); // this is actually a bool
-	int playOption = Memory::Read<int>(Misc::playOption);
-
-	int mask = 1 << 4; // value is at the 5th bit 00010000
-	playOption &= ~mask; // zero out the bit
-
-	if (newAL == 1) { playOption |= mask; } // set it to 1 if true
-
-	Memory::Write(Misc::playOption, playOption);
-
-	return 0;
-}
-
-static int lua_GetTLI(lua_State* L)
-{
-	int playOption = Memory::Read<int>(Misc::playOption);
-	bool TLI = playOption >> 5 & 1;
-	lua_pushboolean(L, TLI);
-	return 1;
-}
-
-static int lua_SetTLI(lua_State* L)
-{
-	int newTLI = luaL_checkinteger(L, 1);
-	int playOption = Memory::Read<int>(Misc::playOption);
-
-	int mask = 1 << 5; // value is at the 6th bit 00100000
-	playOption &= ~mask;
-
-	if (newTLI == 1) { playOption |= mask; }
-
-	Memory::Write(Misc::playOption, playOption);
-
-	return 0;
-}
-
-static int lua_GetReverseMouse(lua_State* L)
-{
-	int playOption = Memory::Read<int>(Misc::playOption);
-	bool reverseMouse = playOption >> 6 & 1;
-	lua_pushboolean(L, !reverseMouse); // inversed, see note below
-	return 1;
-}
-
-static int lua_SetReverseMouse(lua_State* L)
-{
-	int newMouse = luaL_checkinteger(L, 1);
-	int playOption = Memory::Read<int>(Misc::playOption);
-
-	int mask = 1 << 6; // value is at the 7th bit
-	playOption &= ~mask;
-
-	// important note: this is inverted because the devs are insane and have
-	// reversed mouse as the "default" in the code LOL
-	if (newMouse == 0) { playOption |= mask; }
-
-	Memory::Write(Misc::playOption, playOption);
-
-	return 0;
-}
-
-#pragma endregion PLAYER_OPTIONS
 
 #pragma region PATCHES
 
@@ -1158,54 +823,12 @@ extern "C"
 
 		const luaL_Reg exu_export[] = {
 			// EXU Functions:
-			{ "GetVersion",          lua_GetVersion          },
-			{ "SetAccessMode",       lua_SetAccessMode       },
+			{ "Init",                exu_Init                },
 			{ "GetObj",			 	 lua_GetObj              },
-			{ "SysLogOut",           lua_SysLogOut           },
-			{ "GetGravity",			 lua_GetGravity          },
-			{ "SetGravity",	         lua_SetGravity          },
-			{ "GetReticleAngle",	 lua_GetReticleAngle     },
-			{ "GetReticlePos",		 lua_GetReticlePos       },
-			{ "GetSmartCursorRange", lua_GetSmartCursorRange },
-			{ "SetSmartCursorRange", lua_SetSmartCursorRange },
-			{ "GetReticleObject",    lua_GetReticleObject    },
-			{ "GetSatState",         lua_GetSatState         },
-			{ "GetSatCursorPos",     lua_GetSatCursorPos     },
-			{ "GetSatCamPos",        lua_GetSatCamPos        },
-			{ "GetSatClickPos",      lua_GetSatClickPos      },
-			{ "GetSatPanSpeed",      lua_GetSatPanSpeed      },
-			{ "SetSatPanSpeed",      lua_SetSatPanSpeed      },
-			{ "GetMinSatZoom",       lua_GetMinSatZoom       },
-			{ "SetMinSatZoom",       lua_SetMinSatZoom       },
-			{ "GetMaxSatZoom",       lua_GetMaxSatZoom       },
-			{ "SetMaxSatZoom",       lua_SetMaxSatZoom       },
-			{ "GetSatZoom",          lua_GetSatZoom          },
-			{ "SetSatZoom",          lua_SetSatZoom          },
-			{ "GetRadarState",	     lua_GetRadarState       },
-			{ "SetRadarState",		 lua_SetRadarState       },
-			{ "GetZoomFactor",       lua_GetZoomFactor       },
-			{ "SetZoomFactor",       lua_SetZoomFactor       },
-			{ "GetMinZoomFactor",    lua_GetMinZoomFactor    },
-			{ "SetMinZoomFactor",    lua_SetMinZoomFactor    },
-			{ "GetMaxZoomFactor",    lua_GetMaxZoomFactor    },
-			{ "SetMaxZoomFactor",    lua_SetMaxZoomFactor    },
-			{ "GetGameKey",          lua_GetGameKey          },
-			{ "GetSteam64",          lua_GetSteam64          },
-			{ "GetWeaponMask",       lua_GetWeaponMask       },
-			{ "GetLives",            lua_GetLives            },
-			{ "SetLives",            lua_SetLives            },
 			{ "EnableOrdnanceTweak", lua_EnableOrdnanceTweak },
 			{ "UpdateOrdnance",      lua_UpdateOrdnance      },
 			{ "EnableShotConvergence", lua_EnableShotConvergence },
 			{ "SetSelectNone",       lua_SetSelectNone       },
-			{ "GetDifficulty",       lua_GetDifficulty       },
-			{ "SetDifficulty",       lua_SetDifficulty       },
-			{ "GetAutoLevel",        lua_GetAutoLevel        },
-			{ "SetAutoLevel",        lua_SetAutoLevel        },
-			{ "GetTLI",              lua_GetTLI              },
-			{ "SetTLI",              lua_SetTLI              },
-			{ "GetReverseMouse",     lua_GetReverseMouse     },
-			{ "SetReverseMouse",     lua_SetReverseMouse     },
 			{ "SetAsUser",           lua_SetAsUser           },
 			{ "SelectOne",           lua_SelectOne           },
 			{ "SelectNone",          lua_SelectNone          },

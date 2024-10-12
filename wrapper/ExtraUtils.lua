@@ -35,6 +35,7 @@
 -- This is the dll file, never require this in your own scripts,
 -- always require this lua script
 local exu = require("exu")
+exu.Init()
 
 local ExtraUtils = {}
 do
@@ -44,7 +45,7 @@ do
 
     -- Use the version and/or the crc32 to check for mod version
     -- mismatches that aren't caught by the game
-    ExtraUtils.version = exu.GetVersion()
+    ExtraUtils.version = exu_api.GetVersion()
     ExtraUtils.crc32 = "87FE86E3"
     ExtraUtils.debug = false
 
@@ -92,227 +93,57 @@ do
     -- Exports --
     -------------
 
-    --- Note to modders: never call undocumented exu.xxx or local functions
+    --- Note to modders: never call undocumented exu_api.xxx or local functions
     --- since those are internal and usually provide an interface with the
     --- game to the dll
 
-    --- Sets the method for accessing the game's memory, valid
-    --- options:
-    --- 
-    --- 0: (direct access - blazing fast but potentially unstable)
-    --- 
-    --- 1: (windows api - much slower but potentially more stable)
-    --- 
-    --- Default is 0 (direct access)
-    --- @param mode integer 0 or 1
-    --- @return nil void
+    -- Important Misc
+
     function ExtraUtils.SetAccessMode(mode)
         if mode ~= 0 and mode ~= 1 then
             error("Extra Utilities Error: input must be either 0 or 1")
             return
         end
-        exu.SetAccessMode(mode)
+        exu_api.SetAccessMode(mode)
     end
 
-    --- Gets the GameObject* for the given handle, useful for debugging
-    --- reverse engineered stuff
-    --- @param handle handle
-    --- @return pointer GameObject*
     function ExtraUtils.GetObj(handle)
         return exu.GetObj(handle)
     end
 
-    --- Gets the current value of the gravity velocity vector
-    --- @return userdata vector
-    function ExtraUtils.GetGravity()
-        local gravityVector = exu.GetGravity()
-        local formattedVector = SetVector(gravityVector.x, gravityVector.y, gravityVector.z)
-        return formattedVector
-    end
+    -- Environment
 
-    --- Sets the current gravity velocity vector
-    --- 
-    --- This affects all units owned by the local player
-    --- @param x float
-    --- @param y float
-    --- @param z float
-    --- @return nil void
-    function ExtraUtils.SetGravity(x, y, z)
-        exu.SetGravity(x, y, z)
-    end
+    ExtraUtils.GetGravity = exu_api.GetGravity
+    ExtraUtils.SetGravity = exu_api.SetGravity
 
-    --- Gets the current range of the smart cursor (default 200m)
-    --- @return float range
-    function ExtraUtils.GetSmartCursorRange()
-        return exu.GetSmartCursorRange()
-    end
+    -- Reticle
 
-    --- Sets the current range of the smart cursor
-    --- @param range float
-    --- @return nil void
-    function ExtraUtils.SetSmartCursorRange(range)
-        exu.SetSmartCursorRange(range)
-    end
+    ExtraUtils.GetSmartCursorRange = exu_api.GetSmartCursorRange
+    ExtraUtils.SetSmartCursorRange = exu_api.SetSmartCursorRange
+    ExtraUtils.GetReticleAngle = exu_api.GetReticleAngle
+    ExtraUtils.GetReticlePos = exu_api.GetReticlePos
+    ExtraUtils.GetReticleObject = exu_api.GetReticleObject
 
-    --- Gets the reticle angle of the local player ranging from -1.0 to 1.0
-    --- 
-    --- Aligned with the world not local rotation
-    --- @return float angle
-    function ExtraUtils.GetReticleAngle()
-        return exu.GetReticleAngle()
-    end
+    -- Satellite
 
-    --- Gets the location on terrain of the player's reticle
-    --- 
-    --- Must be within smart reticle range, otherwise it will return the last known value
-    --- 
-    --- Additionally, while looking at an object or into the sky it will return the last known value
-    --- @return userdata vector 
-    function ExtraUtils.GetReticlePos()
-        local reticlePos = exu.GetReticlePos() -- The vector components arrive in a table from the DLL
-        local formattedPos = SetVector(reticlePos.x, reticlePos.y, reticlePos.z) -- Make the table into a BZ-usable vector
-        return formattedPos
-    end
+    ExtraUtils.GetSatState = exu_api.GetSatState
+    ExtraUtils.GetSatCursorPos = exu_api.GetSatCursorPos
+    ExtraUtils.GetSatCamPos = exu_api.GetSatCamPos
+    ExtraUtils.GetSatClickPos = exu_api.GetSatClickPos
+    ExtraUtils.GetSatPanSpeed = exu_api.GetSatPanSpeed
+    ExtraUtils.SetSatPanSpeed = exu_api.SetSatPanSpeed
+    ExtraUtils.GetMinSatZoom = exu_api.GetMinSatZoom
+    ExtraUtils.SetMinSatZoom = exu_api.SetMinSatZoom
+    ExtraUtils.GetMaxSatZoom = exu_api.GetMaxSatZoom
+    ExtraUtils.SetMaxSatZoom = exu_api.SetMaxSatZoom
+    ExtraUtils.GetSatZoom = exu_api.GetSatZoom
+    ExtraUtils.SetSatZoom = exu_api.SetSatZoom
 
-    --- Gets the handle of the object under the local user's reticle, as well as the satellite cursor
-    --- 
-    --- (The object that appears next to "SPACE No Action (object)" in the command interface)
-    --- 
-    --- The object must be within smart reticle range in order to be detected
-    --- @return handle | nil handle
-    function ExtraUtils.GetReticleObject()
-        local handle = exu.GetReticleObject()
-        if handle == 0 then
-            return nil
-        else
-            return handle
-        end
-    end
+    -- Radar
 
-    --- Gets the satellite state of the local player
-    --- 
-    --- `1` = enabled
-    --- 
-    --- `0` = disabled
-    --- @return boolean state
-    function ExtraUtils.GetSatState()
-        return exu.GetSatState()
-    end
+    ExtraUtils.GetRadarState = exu_api.GetRadarState
+    ExtraUtils.SetRadarState = exu_api.SetRadarState
 
-    --- Gets the current position of the cursor in satellite view
-    --- 
-    --- If satellite is disabled it will return
-    --- the last known position of the cursor
-    --- @return userdata vector
-    function ExtraUtils.GetSatCursorPos()
-        local cursorPos = exu.GetSatCursorPos()
-        local formattedPos = SetVector(cursorPos.x, cursorPos.y, cursorPos.z)
-        return formattedPos
-    end
-
-    --- Gets the current position of the player's camera in satellite view
-    --- 
-    --- The Y coordinate becomes static when you pan the camera, otherwise it follows
-    --- the player's Y coordinate
-    --- @return userdata vector
-    function ExtraUtils.GetSatCamPos()
-        local camPos = exu.GetSatCamPos()
-        local formattedPos = SetVector(camPos.x, camPos.y, camPos.z)
-        return formattedPos
-    end
-
-    --- Gets the last position the player clicked in satellite view
-    --- 
-    --- Persists after satellite is closed so be sure to handle this case
-    --- @return userdata vector
-    function ExtraUtils.GetSatClickPos()
-        local clickPos = exu.GetSatClickPos()
-        local formattedPos = SetVector(clickPos.x, clickPos.y, clickPos.z)
-        return formattedPos
-    end
-
-    --- Gets the current pan speed of satellite view
-    --- 
-    --- Default = `1250`
-    --- @return float speed
-    function ExtraUtils.GetSatPanSpeed()
-        return exu.GetSatPanSpeed()
-    end
-
-    --- Sets the current pan speed of satellite view
-    --- 
-    --- Default = `1250`
-    --- @param speed float
-    --- @return nil void
-    function ExtraUtils.SetSatPanSpeed(speed)
-        exu.SetSatPanSpeed(speed)
-    end
-
-    --- Gets the minimum zoom level of satellite view.
-    --- 
-    --- Default = `2`
-    --- @return float
-    function ExtraUtils.GetMinSatZoom()
-        return exu.GetMinSatZoom()
-    end
-
-    --- Sets the minimum zoom level of satellite view.
-    --- 
-    --- Default = `2`
-    --- @param zoom float
-    --- @return nil void
-    function ExtraUtils.SetMinSatZoom(zoom)
-        exu.SetMinSatZoom(zoom)
-    end
-
-    --- Gets the maximum zoom level of satellite view.
-    --- 
-    --- Default = `8`
-    --- @return float
-    function ExtraUtils.GetMaxSatZoom()
-        return exu.GetMaxSatZoom()
-    end
-
-    --- Sets the maximum zoom level of satellite view.
-    --- 
-    --- Default = `8`
-    --- @param zoom float
-    --- @return nil void
-    function ExtraUtils.SetMaxSatZoom(zoom)
-        exu.SetMaxSatZoom(zoom)
-    end
-
-    --- Gets the current zoom level of satellite view.
-    --- 
-    --- Default = `4`
-    --- @return float
-    function ExtraUtils.GetSatZoom()
-        return exu.GetSatZoom()
-    end
-
-    --- Sets the current zoom level of satellite view.
-    --- 
-    --- Make sure to stay within the boundaries defined by min and max zoom, otherwise it'll cause issues.
-    --- @param zoom float
-    --- @return nil void
-    function ExtraUtils.SetSatZoom(zoom)
-        exu.SetSatZoom(zoom)
-    end
-
-    --- Gets the radar state of the local player.
-    --- 
-    --- 1 = radar, 0 = minimap
-    --- @return integer state
-    function ExtraUtils.GetRadarState()
-        return exu.GetRadarState()
-    end
-
-    --- Sets the radar state of the local player.
-    --- @param state integer
-    --- @return nil void
-    function ExtraUtils.SetRadarState(state)
-        exu.SetRadarState(state)
-    end
 
     --- Gets the zoom factor of the given camera.
     --- 
@@ -857,7 +688,7 @@ do
             -- Hack to determine if position is a handle or vector
             if GetPosition(position) == SetVector(0, 0, 0) then
                 instance.position = position -- position is vector
-                exu.SysLogOut(tostring(position))
+                exu_api.SysLogOut(tostring(position))
             else
                 instance.obj = position -- position is handle of game object
             end
@@ -1068,12 +899,12 @@ do
 
         if sound:IsMono() == false then
             if not sound.stereoWarningShown then -- stops log spam
-                exu.SysLogOut(string.format("[WARNING] Unable to play stereo sound %s as 3D, use a mono sound file", sound.path), 2)
+                exu_api.SysLogOut(string.format("[WARNING] Unable to play stereo sound %s as 3D, use a mono sound file", sound.path), 2)
                 sound.stereoWarningShown = true
             end
         elseif sound.global == true then
             if not sound.monoWarningShown then
-                exu.SysLogOut(string.format("[WARNING] mono file %s is playing globally, recommend using a stereo file for global sounds", sound.path), 2)
+                exu_api.SysLogOut(string.format("[WARNING] mono file %s is playing globally, recommend using a stereo file for global sounds", sound.path), 2)
                 sound.monoWarningShown = true
             end
             -- need to "fake" global mono sounds

@@ -127,7 +127,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
-      <ExternalTemplatesDiagnostics>true</ExternalTemplatesDiagnostics>
+      <ExternalTemplatesDiagnostics>false</ExternalTemplatesDiagnostics>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
