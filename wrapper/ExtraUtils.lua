@@ -1,7 +1,7 @@
 --[[
 =============================================================
 *   Extra Utilities                                         *
-*   Version 0.8.1                                           *
+*   Version 0.8.2                                           *
 =============================================================
 *   This module is a script extender for Battlezone         *
 *   98 Redux 2.2.301. It includes over 60 custom lua        *
@@ -46,7 +46,7 @@ do
     -- Use the version and/or the crc32 to check for mod version
     -- mismatches that aren't caught by the game
     ExtraUtils.version = exu_api.GetVersion()
-    ExtraUtils.crc32 = "87FE86E3"
+    ExtraUtils.crc32 = "734C9275"
     ExtraUtils.debug = false
 
     -------------
@@ -144,160 +144,35 @@ do
     ExtraUtils.GetRadarState = exu_api.GetRadarState
     ExtraUtils.SetRadarState = exu_api.SetRadarState
 
+    -- Camera
 
-    --- Gets the zoom factor of the given camera.
-    --- 
-    --- Both cameras are tied together except for when you are in third person or freecam, then only the global cam will be active.
-    --- @param camera string `'F'` (first person) or `'G'` (global)
-    --- @return float | nil
-    function ExtraUtils.GetZoomFactor(camera)
-        if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
-            error("Extra Utilities Error: Invalid camera")
-            return
-        end
-        return exu.GetZoomFactor(string.upper(camera))
-    end
+    ExtraUtils.GetZoomFactor = exu_api.GetZoomFactor
+    ExtraUtils.SetZoomFactor = exu_api.SetZoomFactor
+    ExtraUtils.GetMinZoomFactor = exu_api.GetMinZoomFactor
+    ExtraUtils.SetMinZoomFactor = exu_api.SetMinZoomFactor
+    ExtraUtils.GetMaxZoomFactor = exu_api.GetMaxZoomFactor
+    ExtraUtils.SetMaxZoomFactor = exu_api.SetMaxZoomFactor
 
-    --- Sets the zoom factor of the given camera.
-    --- 
-    --- Note this will override the min/max until the player tries to zoom with -+.
-    --- @param factor float
-    --- @param camera string `'F'` (first person) or `'G'` (global)
-    --- @return nil void
-    function ExtraUtils.SetZoomFactor(factor, camera)
-        if string.upper(camera) ~= 'F' and string.upper(camera) ~= 'G' then
-            error("Extra Utilities Error: Invalid camera")
-            return
-        end
-        exu.SetZoomFactor(factor, string.upper(camera))
-    end
+    -- IO
 
-    --- Gets the minimum zoom factor for all cameras.
-    --- @return float factor
-    function ExtraUtils.GetMinZoomFactor()
-        return exu.GetMinZoomFactor()
-    end
+    ExtraUtils.GetGameKey = exu_api.GetGameKey
 
-    --- Sets the minimum zoom factor for all cameras.
-    --- @param factor float
-    --- @return nil void
-    function ExtraUtils.SetMinZoomFactor(factor)
-        exu.SetMinZoomFactor(factor)
-    end
+    -- Misc
 
-    --- Gets the maximum zoom factor for all cameras.
-    --- @return float factor
-    function ExtraUtils.GetMaxZoomFactor()
-        return exu.GetMaxZoomFactor()
-    end
+    ExtraUtils.GetSteam64 = exu_api.GetSteam64
+    ExtraUtils.GetWeaponMask = exu_api.GetWeaponMask
+    ExtraUtils.GetLives = exu_api.GetLives
+    ExtraUtils.SetLives = exu_api.SetLives
+    ExtraUtils.GetDifficulty = exu_api.GetDifficulty
+    ExtraUtils.SetDifficulty = exu_api.SetDifficulty
+    ExtraUtils.GetAutoLevel = exu_api.GetAutoLevel
+    ExtraUtils.SetAutoLevel = exu_api.SetAutoLevel
+    ExtraUtils.GetTLI = exu_api.GetTLI
+    ExtraUtils.SetTLI = exu_api.SetTLI
+    ExtraUtils.GetReverseMouse = exu_api.GetReverseMouse
+    ExtraUtils.SetReverseMouse = exu_api.SetReverseMouse
 
-    --- Sets the maximum zoom factor for all cameras.
-    --- @param factor float
-    --- @return nil void
-    function ExtraUtils.SetMaxZoomFactor(factor)
-        exu.SetMaxZoomFactor(factor)
-    end
-
-    --- Gets whether or not a key is held.
-    --- 
-    --- A full list of keys can be found [here](https://github.com/VTrider/ExtraUtilities/wiki/GetGameKey()-Keycodes).
-    --- @param key string Stock `GameKey` calling conventions, single capital letter.
-    --- @return boolean
-    function ExtraUtils.GetGameKey(key)
-        return exu.GetGameKey(string.upper(key)) -- jk I'll convert it to uppercase anyways lol
-    end
-
-    --- Gets the Steam 64 ID of the local player.
-    --- 
-    --- @return string
-    function ExtraUtils.GetSteam64()
-        return exu.GetSteam64()
-    end
-
-    --- Gets the weapon mask for the local user.
-    --- 
-    --- Uses a 0-based index (first weapon slot returns 0).
-    --- 
-    --- Note this isn't actually the weapon mask, just
-    --- the index of the selected weapon
-    --- 
-    --- This might be updated in the future with a different 
-    --- name or maybe the "real" weapon mask
-    --- @return integer weaponMask
-    function ExtraUtils.GetWeaponMask()
-        return exu.GetWeaponMask()
-    end
-
-    --- Gets your current lives.
-    --- 
-    --- @return integer lives
-    function ExtraUtils.GetLives()
-        return exu.GetLives()
-    end
-
-    --- Sets your current lives.
-    --- 
-    --- Note: the display value doesn't update until you lose a life.
-    --- @param lives integer
-    --- @return nil void
-    function ExtraUtils.SetLives(lives)
-        exu.SetLives(lives)
-    end
-
-    --- Gets the local player's difficulty setting.
-    --- @return string difficulty
-    function ExtraUtils.GetDifficulty()
-        return exu.GetDifficulty()
-    end
-
-    --- Sets the local player's difficulty setting.
-    --- 
-    --- Note that it won't change what it says in the menu, but it will in fact change in-game. It also won't work in multiplayer where the difficulty is locked to very hard.
-    --- @param newDifficulty string Difficulty as it appears in-game, e.g., `"Very Easy"`, `"Medium"`, `"Very Hard"`, etc.
-    --- @return nil void
-    function ExtraUtils.SetDifficulty(newDifficulty)
-        exu.SetDifficulty(newDifficulty)
-    end
-
-
-    --- Gets the local player's automatic leveling setting
-    --- @return boolean setting
-    function ExtraUtils.GetAutoLevel()
-        return exu.GetAutoLevel()
-    end
-
-    --- Sets the local player's automatic leveling setting
-    --- @param newAL boolean
-    --- @return nil void
-    function ExtraUtils.SetAutoLevel(newAL)
-        exu.SetAutoLevel(CastBool(newAL))
-    end
-
-    --- Gets the local player's target lead indicator setting
-    --- @return boolean setting
-    function ExtraUtils.GetTLI()
-        return exu.GetTLI()
-    end
-
-    --- Sets the local player's target lead indicator setting
-    --- @param newTLI boolean
-    --- @return nil void
-    function ExtraUtils.SetTLI(newTLI)
-        exu.SetTLI(CastBool(newTLI))
-    end
-
-    --- Gets the local player's reverse mouse setting
-    --- @return boolean setting
-    function ExtraUtils.GetReverseMouse()
-        return exu.GetReverseMouse()
-    end
-
-    --- Sets the local player's reverse mouse setting
-    --- @param newSetting boolean
-    --- @return nil void
-    function ExtraUtils.SetReverseMouse(newSetting)
-        exu.SetReverseMouse(CastBool(newSetting))
-    end
+    -- Patches
 
     --- Enables velocity inheritance on the local player's ordnance
     --- You can control the ratio of velocity inherited by providing a float argument from 0-1.
@@ -425,11 +300,9 @@ do
         exu.SelectAdd(handle)
     end
 
-    --- Returns the absolute path of the Battlezone executable (should be the default game folder).
-    --- @return string directory
-    function ExtraUtils.GetWorkingDirectory()
-        return exu.GetWorkingDirectory()
-    end
+    -- Filesystem
+
+    ExtraUtils.GetWorkingDirectory = exu_api.GetWorkingDirectory
 
     --- Gets the steam workshop directory, use this to
     --- relative path to your workshop item folder in order to access
@@ -453,31 +326,9 @@ do
         return steamWorkshopDirectory
     end
 
-    --- Creates an empty folder at the given location. 
-    --- 
-    --- NOTE: Use backslashes for path names.
-    --- @param name string
-    --- @return nil void
-    function ExtraUtils.MakeDirectory(name)
-        exu.MakeDirectory(name)
-    end
-
-    --- Reads the contents of the given file into a single formatted string.
-    --- @param fileName string
-    --- @return string contents
-    function ExtraUtils.FileRead(fileName)
-        return exu.FileRead(fileName)
-    end
-
-    --- Writes the input string into the given file. 
-    --- 
-    --- NOTE: Overwrites ALL contents of the file, so save it before if you need to.
-    --- @param fileName string
-    --- @param content string
-    --- @return nil void
-    function ExtraUtils.FileWrite(fileName, content)
-        exu.FileWrite(fileName, content)
-    end
+    ExtraUtils.MakeDirectory = exu_api.MakeDirectory
+    ExtraUtils.FileRead = exu_api.FileRead
+    ExtraUtils.FileWrite = exu_api.FileWrite
 
     --[[
     -------------------------------------------------------------------------------
