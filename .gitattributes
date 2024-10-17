@@ -63,4 +63,5 @@
 #*.RTF   diff=astextplain
 
 src/bzr.h linguist-vendored
+include/** linguist-vendored
 
