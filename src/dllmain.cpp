@@ -120,6 +120,8 @@ static void AudioThread()
     }
 }
 
+// test
+
 // it's okay to detach these threads cause they will stop automatically
 static DWORD WINAPI InitialThread(HMODULE) 
 {
