@@ -100,10 +100,10 @@ namespace Reticle
 
 namespace Satellite
 {
-	char GetSatState()
+	bool GetSatState()
 	{
-		char satelliteState = Memory::Read<char>(Satellite::state);
-		return satelliteState ? 0 : 1; // need to get the inverse for satellite state
+		bool satelliteState = Memory::Read<bool>(Satellite::state);
+		return satelliteState ? false : true; // need to get the inverse for satellite state
 	}
 
 	VECTOR_3D GetSatCursorPos()

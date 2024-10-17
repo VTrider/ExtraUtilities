@@ -49,7 +49,7 @@ namespace Reticle
 
 namespace Satellite
 {
-	char GetSatState();
+	bool GetSatState();
 	VECTOR_3D GetSatCursorPos();
 	VECTOR_3D GetSatCamPos();
 	VECTOR_3D GetSatClickPos();
