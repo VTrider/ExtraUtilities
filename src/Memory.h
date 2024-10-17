@@ -114,12 +114,12 @@ public:
 		}
 	}
 
-	static DWORD GetPointerAddress(DWORD ptr, std::vector<DWORD>& offsets)  // traverses multilevel pointers
+	static std::uintptr_t GetPointerAddress(std::uint32_t ptr, std::vector<std::uint32_t> offsets)  // traverses multilevel pointers
 	{
-		DWORD address = ptr;
-		for (DWORD i = 0; i < offsets.size(); ++i)
+		std::uint32_t address = ptr;
+		for (std::size_t i = 0; i < offsets.size(); ++i)
 		{
-			address = *(DWORD*)address;
+			address = *(std::uint32_t*)address;
 			address += offsets[i];
 		}
 		return address;

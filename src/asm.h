@@ -25,7 +25,6 @@ void OrdnanceVelocityHook();
 void OrdnancePositionHook();
 void ShotConvergenceHook();
 void LightPtrHook();
-void PlayOptionHook();
 void SelectNoneHook();
 
 // callable functions

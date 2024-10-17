@@ -287,27 +287,6 @@ void __declspec(naked) LightPtrHook()
 	}
 }
 
-std::uintptr_t Misc::playOption;
-
-std::uint32_t jmpBackPlayOption = static_cast<std::uint32_t>(Hooks::playOption) + 9;
-
-void __declspec(naked) PlayOptionHook()
-{
-	__asm
-	{
-		push eax
-
-		lea eax, [ecx+0x30]
-		mov [Misc::playOption], eax
-
-		pop eax
-
-		mov edx, [ecx+0x30]
-		and edx, 0x00000200 // lol syntax highlighting for 'and' here
-		jmp [jmpBackPlayOption]
-	}
-}
-
 bool disableSelectNone = false;
 std::uint32_t jmpBackSelectNone = static_cast<std::uint32_t>(Hooks::selectNone) + 6;
 std::uint32_t selectNoneRet = 0x004A6DC5;

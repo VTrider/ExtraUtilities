@@ -26,7 +26,7 @@
 
 namespace Exu
 {
-	constexpr std::string version = "0.8.1";
+	constexpr std::string version = "0.8.2";
 	extern std::unique_ptr<sol::state_view> lua;
 }
 

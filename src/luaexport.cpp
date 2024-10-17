@@ -47,6 +47,8 @@
 
 std::unique_ptr<sol::state_view> lua;
 
+#define SOL_ALL_SAFETIES_ON
+
 static int exu_Init(lua_State* L)
 {
 	lua = std::make_unique<sol::state_view>(L);
@@ -205,6 +207,17 @@ static int exu_Init(lua_State* L)
 			Memory::Write(Misc::playOption, playOption);
 		});
 
+	// Patches
+
+	// Function Hooks
+
+	// Filesystem
+
+	exu_api.set_function("GetWorkingDirectory", &GetWorkingDirectory);
+	exu_api.set_function("MakeDirectory", &MakeDirectory);
+	exu_api.set_function("FileRead", &FileRead);
+	exu_api.set_function("FileWrite", &FileWrite);
+	
 	return 0;
 }
 
@@ -290,39 +303,6 @@ static int lua_SelectAdd(lua_State* L)
 }
 
 #pragma endregion FUNCTION_HOOKS
-
-#pragma region FILESYSTEM
-
-static int lua_GetWorkingDirectory(lua_State* L)
-{
-	lua_pushstring(L, GetWorkingDirectory().c_str());
-	SystemLog->Out(GetWorkingDirectory());
-	return 1;
-}
-
-static int lua_MakeDirectory(lua_State* L)
-{
-	const char* directory = luaL_checkstring(L, 1);
-	MakeDirectory(directory);
-	return 0;
-}
-
-static int lua_FileRead(lua_State* L)
-{
-	const char* fileName = luaL_checkstring(L, 1);
-	lua_pushstring(L, FileRead(fileName));
-	return 1;
-}
-
-static int lua_FileWrite(lua_State* L)
-{
-	const char* fileName = luaL_checkstring(L, 1);
-	const char* content = luaL_checkstring(L, 2);
-	FileWrite(fileName, content);
-	return 0;
-}
-
-#pragma endregion FILESYSTEM
 
 #pragma region USER_LOGGING
 
@@ -833,10 +813,6 @@ extern "C"
 			{ "SelectOne",           lua_SelectOne           },
 			{ "SelectNone",          lua_SelectNone          },
 			{ "SelectAdd",           lua_SelectAdd           },
-			{ "GetWorkingDirectory", lua_GetWorkingDirectory },
-			{ "MakeDirectory",       lua_MakeDirectory       },
-			{ "FileRead",            lua_FileRead            },
-			{ "FileWrite",           lua_FileWrite           },
 			{ "LogOut",              lua_LogOut              },
 			{ "GetLogLevel",         lua_GetLogLevel         },
 			{ "SetLogLevel",         lua_SetLogLevel         },

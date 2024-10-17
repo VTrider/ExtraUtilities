@@ -36,3 +36,5 @@ void Memory::DefineOgreFunctions()
 	setSpecularColour = GetOgreFunction("?setSpecularColour@Light@Ogre@@QAEXMMM@Z");
 	setSpotlightRange = GetOgreFunction("?setSpotlightRange@Light@Ogre@@QAEXABVRadian@2@0M@Z");
 }
+
+std::uintptr_t Misc::playOption = Memory::GetPointerAddress(0x0094672C, { 0x30 });

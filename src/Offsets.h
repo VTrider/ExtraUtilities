@@ -24,6 +24,7 @@
 #include <Windows.h>
 
 #include <iostream>
+#include <vector>
 
 // BZR 2.2.301
 
