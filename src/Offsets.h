@@ -47,7 +47,7 @@ namespace Hooks // memory addresses of functions of interest
 	constexpr std::uintptr_t getLightPtr      = 0x0067FB13;
 	constexpr std::uintptr_t playOption       = 0x005C18B7;
 	constexpr std::uintptr_t selectNone       = 0x004A6D50;
-	constexpr std::uintptr_t bulletHitCB      = 0x00480782;
+	constexpr std::uintptr_t bulletHitCB      = 0x00480774;
 }
 
 namespace Environment

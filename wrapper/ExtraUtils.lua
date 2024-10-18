@@ -1,7 +1,7 @@
 --[[
 =============================================================
 *   Extra Utilities                                         *
-*   Version 0.8.3                                           *
+*   Version 0.8.4                                           *
 =============================================================
 *   This module is a script extender for Battlezone         *
 *   98 Redux 2.2.301. It includes over 60 custom lua        *
@@ -46,7 +46,7 @@ do
     -- Use the version and/or the crc32 to check for mod version
     -- mismatches that aren't caught by the game
     ExtraUtils.version = exu_api.GetVersion()
-    ExtraUtils.crc32 = "BC8464C6"
+    ExtraUtils.crc32 = "E866527C"
     ExtraUtils.debug = false
 
     -------------
@@ -107,9 +107,7 @@ do
         exu_api.SetAccessMode(mode)
     end
 
-    function ExtraUtils.GetObj(handle)
-        return exu.GetObj(handle)
-    end
+    ExtraUtils.GetObj = exu_api.GetObj
 
     -- Environment
 

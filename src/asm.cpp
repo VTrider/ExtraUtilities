@@ -314,7 +314,7 @@ void SetSelectNone(bool setting)
 	disableSelectNone = setting;
 }
 
-static void __cdecl lua_BulletHit(int* obj, VECTOR_3D_DOUBLE* position)
+static void __cdecl lua_BulletHit(const char* odf, int* obj, VECTOR_3D_DOUBLE* position)
 {
 	auto exu_callback = lua->get<sol::table>("exu_callback");
 	auto BulletHit = exu_callback.get<sol::function>("BulletHit");
@@ -333,12 +333,12 @@ static void __cdecl lua_BulletHit(int* obj, VECTOR_3D_DOUBLE* position)
 		handle = reinterpret_cast<void*>(FuncPtrs::GetHandle(*obj));
 	}
 
-	BulletHit(handle, positionVector);
+	BulletHit(odf, handle, positionVector);
 }
 
-std::uint32_t jmpBackBulletHit = static_cast<std::uint32_t>(Hooks::bulletHitCB) + 6;
+std::uint32_t jmpBackBulletHit = static_cast<std::uint32_t>(Hooks::bulletHitCB) + 7;
 
-std::uint32_t randoCall = 0x0081F920;
+// eax+0c for odf, ebp+08 for gameobject*, ecx+48 for pos
 
 void __declspec(naked) BulletHitCallback()
 {
@@ -347,18 +347,27 @@ void __declspec(naked) BulletHitCallback()
 		pushad
 		pushfd
 
-		lea eax, [ebp+0x28] // vec3 double position
+		lea ebx, [eax] // preserve eax
+
+		lea eax, [ecx+0x48] // vec3 double position
 		push eax
+
 		lea eax, [ebp+0x08] // gameobject* of hit object if it exists
 		push eax
+
+		mov eax, [ebx+0x0C] // ordnance*
+		lea ebx, [eax+0x20] // odf char*
+		push ebx
+
 		call lua_BulletHit
-		add esp, 0x08
+		add esp, 0x0C
 
 		popfd
 		popad
 
-		push eax
-		call [randoCall]
+		add ecx, 0x38
+		push ecx
+		mov edx, [ebp+0x0C]
 
 		jmp [jmpBackBulletHit]
 	}
