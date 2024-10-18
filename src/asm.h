@@ -26,6 +26,7 @@ void OrdnancePositionHook();
 void ShotConvergenceHook();
 void LightPtrHook();
 void SelectNoneHook();
+void BulletHitCallback();
 
 // callable functions
 

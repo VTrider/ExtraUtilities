@@ -62,6 +62,16 @@ static int exu_Init(lua_State* L)
 	// Important Misc
 
 	exu_api.set_function("SetAccessMode", &Memory::SetAccessMode);
+	exu_api.set_function("GetObj", [](void* handle)
+		{
+			auto obj = GetObj(reinterpret_cast<unsigned int>(handle));
+			return reinterpret_cast<void*>(obj);
+		});
+	exu_api.set_function("GetHandle", [](void* handle)
+		{
+			auto obj = FuncPtrs::GetHandle(reinterpret_cast<int>(handle));
+			return reinterpret_cast<void*>(obj);
+		});
 	exu_api.set_function("SysLogOut", [](const char* content, int level)
 		{
 			SystemLog->Out(content, level);
@@ -218,15 +228,12 @@ static int exu_Init(lua_State* L)
 	exu_api.set_function("FileRead", &FileRead);
 	exu_api.set_function("FileWrite", &FileWrite);
 	
-	return 0;
-}
+	// Callbacks
 
-static int lua_GetObj(lua_State* L)
-{
-	void* handle = (void*)lua_touserdata(L, 1);
-	GameObject* gameObject = GetObj((unsigned int)handle);
-	lua_pushlightuserdata(L, gameObject);
-	return 1;
+	auto exu_callback = (*lua)["exu_callback"].get_or_create<sol::table>();
+	exu_callback.set_function("BulletHit", []() {});
+
+	return 0;
 }
 
 #pragma endregion IMPORTANT_FUNCTIONS
@@ -804,7 +811,6 @@ extern "C"
 		const luaL_Reg exu_export[] = {
 			// EXU Functions:
 			{ "Init",                exu_Init                },
-			{ "GetObj",			 	 lua_GetObj              },
 			{ "EnableOrdnanceTweak", lua_EnableOrdnanceTweak },
 			{ "UpdateOrdnance",      lua_UpdateOrdnance      },
 			{ "EnableShotConvergence", lua_EnableShotConvergence },

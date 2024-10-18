@@ -19,7 +19,7 @@
 #pragma once
 
 #include <bzr.h>
-#include "Utils.h"
+#include "structs.h"
 
 #include <Windows.h>
 
@@ -65,7 +65,7 @@ namespace Satellite
 
 namespace Radar
 {
-	char GetRadarState();
+	int GetRadarState();
 	void SetRadarState(int state);
 }
 

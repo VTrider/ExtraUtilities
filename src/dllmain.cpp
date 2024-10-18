@@ -54,12 +54,13 @@ static void FileSystem()
 
 static void CodeInjection()
 {
-    Hook::CreateHook(Hooks::weaponMask, WeaponMaskHook, 9);
-    Hook::CreateHook(Hooks::ordnanceVelocity, OrdnanceVelocityHook, 5);
-    Hook::CreateHook(Hooks::ordnancePosition, OrdnancePositionHook, 7);
-    Hook::CreateHook(Hooks::shotConvergence, ShotConvergenceHook, 9);
-    Hook::CreateHook(Hooks::getLightPtr, LightPtrHook, 6);
-    Hook::CreateHook(Hooks::selectNone, SelectNoneHook, 6);
+    Hook::CreateHook(Hooks::weaponMask, &WeaponMaskHook, 9);
+    Hook::CreateHook(Hooks::ordnanceVelocity, &OrdnanceVelocityHook, 5);
+    Hook::CreateHook(Hooks::ordnancePosition, &OrdnancePositionHook, 7);
+    Hook::CreateHook(Hooks::shotConvergence, &ShotConvergenceHook, 9);
+    Hook::CreateHook(Hooks::getLightPtr, &LightPtrHook, 6);
+    Hook::CreateHook(Hooks::selectNone, &SelectNoneHook, 6);
+    Hook::CreateHook(Hooks::bulletHitCB, &BulletHitCallback, 5);
 }
 
 //static void GUI()

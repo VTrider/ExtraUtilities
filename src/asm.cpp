@@ -20,8 +20,13 @@
 
 #include "asm.h"
 
+#include "exumeta.h"
 #include "Hook.h"
+#include "Log.h"
 #include "Offsets.h"
+#include "structs.h"
+
+#include <sol/sol.hpp>
 
 #include <memory>
 #include <stdio.h>
@@ -44,13 +49,6 @@ void  __declspec(naked) WeaponMaskHook()
         jmp[jmpBackWeaponMask] // jumps back to the original code to resume normal execution
     }
 }
-
-struct VECTOR_3D_DOUBLE
-{
-	double x;
-	double y;
-	double z;
-};
 
 bool ordnanceTweakApplied = false;
 
@@ -314,4 +312,54 @@ void __declspec(naked) SelectNoneHook()
 void SetSelectNone(bool setting)
 {
 	disableSelectNone = setting;
+}
+
+static void __cdecl lua_BulletHit(int* obj, VECTOR_3D_DOUBLE* position)
+{
+	auto exu_callback = lua->get<sol::table>("exu_callback");
+	auto BulletHit = exu_callback.get<sol::function>("BulletHit");
+	auto SetVector = lua->get<sol::function>("SetVector");
+
+	auto positionVector = SetVector(static_cast<float>(position->x), static_cast<float>(position->y), static_cast<float>(position->z));
+
+	void* handle;
+
+	if (*obj == 0)
+	{
+		handle = nullptr;
+	}
+	else
+	{
+		handle = reinterpret_cast<void*>(FuncPtrs::GetHandle(*obj));
+	}
+
+	BulletHit(handle, positionVector);
+}
+
+std::uint32_t jmpBackBulletHit = static_cast<std::uint32_t>(Hooks::bulletHitCB) + 6;
+
+std::uint32_t randoCall = 0x0081F920;
+
+void __declspec(naked) BulletHitCallback()
+{
+	__asm
+	{
+		pushad
+		pushfd
+
+		lea eax, [ebp+0x28] // vec3 double position
+		push eax
+		lea eax, [ebp+0x08] // gameobject* of hit object if it exists
+		push eax
+		call lua_BulletHit
+		add esp, 0x08
+
+		popfd
+		popad
+
+		push eax
+		call [randoCall]
+
+		jmp [jmpBackBulletHit]
+	}
 }

@@ -20,6 +20,8 @@
 
 #include <bzr.h>
 
+// This file is for newly found structs for BZR, to supplement janne's bzr.h file
+
 struct Frustum
 {
 	VECTOR_3D near_top_left;
@@ -30,4 +32,11 @@ struct Frustum
 	VECTOR_3D far_top_right;
 	VECTOR_3D far_bottom_right;
 	VECTOR_3D far_bottom_left;
+};
+
+struct VECTOR_3D_DOUBLE
+{
+	double x;
+	double y;
+	double z;
 };

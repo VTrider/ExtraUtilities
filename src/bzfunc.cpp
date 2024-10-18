@@ -24,7 +24,7 @@
 #include "Log.h"
 #include "Memory.h"
 #include "Offsets.h"
-#include "Utils.h"
+#include "structs.h"
 
 #include "lua.hpp"
 #include <Windows.h>
@@ -164,9 +164,9 @@ namespace Satellite
 
 namespace Radar
 {
-	char GetRadarState()
+	int GetRadarState()
 	{
-		return Memory::Read<char>(Radar::state);
+		return Memory::Read<int>(Radar::state);
 	}
 
 	void SetRadarState(int newState)

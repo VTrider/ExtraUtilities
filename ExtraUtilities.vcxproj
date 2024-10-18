@@ -214,7 +214,7 @@
     <ClInclude Include="src\Memory.h" />
     <ClInclude Include="src\Offsets.h" />
     <ClInclude Include="src\SoundDevice.h" />
-    <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\structs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

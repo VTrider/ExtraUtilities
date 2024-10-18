@@ -47,6 +47,7 @@ namespace Hooks // memory addresses of functions of interest
 	constexpr std::uintptr_t getLightPtr      = 0x0067FB13;
 	constexpr std::uintptr_t playOption       = 0x005C18B7;
 	constexpr std::uintptr_t selectNone       = 0x004A6D50;
+	constexpr std::uintptr_t bulletHitCB      = 0x00480782;
 }
 
 namespace Environment
@@ -64,7 +65,7 @@ namespace Reticle
 
 namespace Satellite
 {
-	constexpr std::uintptr_t state     = 0x008E8F9C; // char - old value bugged in MP 0x00917AF8
+	constexpr std::uintptr_t state     = 0x008E8F9C; // bool - old value bugged in MP 0x00917AF8
 	constexpr std::uintptr_t cursorPos = 0x009C9194; // vec3
 	constexpr std::uintptr_t camPos    = 0x009C91B4; // vec3
 	constexpr std::uintptr_t clickPos  = 0x009C9188; // vec3
@@ -111,6 +112,9 @@ namespace FuncPtrs
 
 	using _SelectAdd = void(__thiscall*)(ControlPanel*, GameObject*);
 	inline _SelectAdd SelectAdd = reinterpret_cast<_SelectAdd>(0x004a6c70);
+
+	using _GetHandle = uint(__thiscall*)(int);
+	inline _GetHandle GetHandle = reinterpret_cast<_GetHandle>(0x00462380);
 }
 
 // Ogre - these need to be extern since they're defined at runtime, and they
