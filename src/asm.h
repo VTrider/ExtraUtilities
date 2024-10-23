@@ -27,6 +27,7 @@ void ShotConvergenceHook();
 void LightPtrHook();
 void SelectNoneHook();
 void BulletHitCallback();
+void FogHook();
 
 // callable functions
 

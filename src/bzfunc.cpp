@@ -68,6 +68,32 @@ namespace Environment
 		value.z = z;
 		Memory::Write(Environment::gravity, value, true);
 	}
+
+	Fog GetFog()
+	{
+		return Memory::Read<Fog>(Environment::fog);
+	}
+
+	void SetFog(float r, float g, float b, float start, float ending)
+	{
+		Fog newFog{};
+		newFog.r = r;
+		newFog.g = g;
+		newFog.b = b;
+		newFog.start = start;
+		newFog.ending = ending;
+		Memory::Write(Environment::fog, newFog);
+	}
+
+	OgreColor GetSunAmbient()
+	{
+		return Memory::Read<OgreColor>(Environment::sunAmbient);
+	}
+
+	void SetSunAmbient(float r, float g, float b)
+	{
+		Memory::Write(Environment::sunAmbient, OgreColor{ r, g, b });
+	}
 }
 
 namespace Reticle

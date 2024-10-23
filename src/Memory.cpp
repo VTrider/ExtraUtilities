@@ -29,12 +29,14 @@
 std::uintptr_t setDiffuseColour{};
 std::uintptr_t setSpecularColour{};
 std::uintptr_t setSpotlightRange{};
+std::uintptr_t fogHook;
 
 void Memory::DefineOgreFunctions()
 {
 	setDiffuseColour = GetOgreFunction("?setDiffuseColour@Light@Ogre@@QAEXMMM@Z");
 	setSpecularColour = GetOgreFunction("?setSpecularColour@Light@Ogre@@QAEXMMM@Z");
 	setSpotlightRange = GetOgreFunction("?setSpotlightRange@Light@Ogre@@QAEXABVRadian@2@0M@Z");
+	fogHook = reinterpret_cast<DWORD>(Memory::ogreMain) + 0x3B5601;
 }
 
 std::uintptr_t Misc::playOption = Memory::GetPointerAddress(0x0094672C, { 0x30 });

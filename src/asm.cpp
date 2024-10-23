@@ -28,6 +28,7 @@
 
 #include <sol/sol.hpp>
 
+#include <cstdint>
 #include <memory>
 #include <stdio.h>
 #include <string.h>
@@ -370,5 +371,37 @@ void __declspec(naked) BulletHitCallback()
 		mov edx, [ebp+0x0C]
 
 		jmp [jmpBackBulletHit]
+	}
+}
+
+std::uintptr_t Environment::fog;
+std::uintptr_t Environment::sunAmbient;
+
+std::uint32_t jmpBackFogHook = static_cast<std::uint32_t>(fogHook) + 9;
+
+void __declspec(naked) FogHook()
+{
+	__asm
+	{
+		push eax
+
+		lea eax, [ebx+0x128]
+		mov [Environment::fog], eax
+
+		lea eax, [ebx+0x28]
+		mov [Environment::sunAmbient], eax
+
+		// game code
+		mov ecx, [ebx+0x38]
+		lea edx, [ebp-0x00000138]
+
+		// this needs to be defined at runtime so we do it here
+		mov eax, [fogHook]
+		add eax, 0x09
+		mov [jmpBackFogHook], eax
+
+		pop eax
+
+		jmp [jmpBackFogHook]
 	}
 }

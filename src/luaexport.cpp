@@ -41,13 +41,12 @@
 #include <chrono>
 #include <memory>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #pragma region IMPORTANT_FUNCTIONS
 
 std::unique_ptr<sol::state_view> lua;
-
-#define SOL_ALL_SAFETIES_ON
 
 static int exu_Init(lua_State* L)
 {
@@ -86,6 +85,18 @@ static int exu_Init(lua_State* L)
 			return SetVector(gravity.x, gravity.y, gravity.z);
 		});
 	exu_api.set_function("SetGravity", &Environment::SetGravity);
+	exu_api.set_function("GetFog", []()
+		{
+			Fog fog = Environment::GetFog();
+			return std::unordered_map<std::string, float>{{ "r", fog.r }, { "g", fog.g }, { "b", fog.b }, { "start", fog.start }, { "ending", fog.ending }};
+		});
+	exu_api.set_function("SetFog", &Environment::SetFog);
+	exu_api.set_function("GetSunAmbient", []()
+		{
+			OgreColor color = Environment::GetSunAmbient();
+			return std::unordered_map<std::string, float>{{ "r", color.r }, { "g", color.g }, { "b", color.b }};
+		});
+	exu_api.set_function("SetSunAmbient", &Environment::SetSunAmbient);
 
 	// Reticle
 

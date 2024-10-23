@@ -61,6 +61,7 @@ static void CodeInjection()
     Hook::CreateHook(Hooks::getLightPtr, &LightPtrHook, 6);
     Hook::CreateHook(Hooks::selectNone, &SelectNoneHook, 6);
     Hook::CreateHook(Hooks::bulletHitCB, &BulletHitCallback, 5);
+    Hook::CreateHook(fogHook, &FogHook, 9);
 }
 
 //static void GUI()

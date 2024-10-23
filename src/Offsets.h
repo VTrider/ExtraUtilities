@@ -53,6 +53,9 @@ namespace Hooks // memory addresses of functions of interest
 namespace Environment
 {
 	constexpr std::uintptr_t gravity = 0x00871A80; // vec3
+	extern std::uintptr_t fog;
+	extern std::uintptr_t sunAmbient;
+	constexpr std::uintptr_t terrain_masterlight = 0x00920CA0; // function that sets the sunlight 0x0067DF70
 }
 
 namespace Reticle
@@ -124,3 +127,4 @@ namespace FuncPtrs
 extern std::uintptr_t setDiffuseColour;
 extern std::uintptr_t setSpecularColour;
 extern std::uintptr_t setSpotlightRange;
+extern std::uintptr_t fogHook;

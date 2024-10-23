@@ -41,8 +41,6 @@ private:
 	static inline HANDLE pHandle{};
 	static inline DWORD moduleBase{}; 
 
-	static inline HMODULE ogreMain{};
-
 	static inline DWORD dummyOldProtection{}; // required arg for VirtualProtect
 
 	static inline int checkInterval{};
@@ -60,6 +58,8 @@ private:
 	}
 
 public:
+
+	static inline HMODULE ogreMain{};
 
 	static void Init()
 	{

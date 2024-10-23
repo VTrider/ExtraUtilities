@@ -20,6 +20,8 @@
 
 #include <bzr.h>
 
+#include <cstdint>
+
 // This file is for newly found structs for BZR, to supplement janne's bzr.h file
 
 struct Frustum
@@ -39,4 +41,21 @@ struct VECTOR_3D_DOUBLE
 	double x;
 	double y;
 	double z;
+};
+
+struct OgreColor
+{
+	float r;
+	float g;
+	float b;
+};
+
+struct Fog
+{
+	float r;
+	float g;
+	float b;
+	std::uint8_t padding[4];
+	float start;
+	float ending;
 };

@@ -36,6 +36,10 @@ namespace Environment
 {
 	VECTOR_3D GetGravity();
 	void SetGravity(float x, float y, float z);
+	Fog GetFog();
+	void SetFog(float r, float g, float b, float start, float ending);
+	OgreColor GetSunAmbient();
+	void SetSunAmbient(float r, float g, float b);
 }
 
 namespace Reticle
