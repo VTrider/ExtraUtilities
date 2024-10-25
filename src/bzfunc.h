@@ -98,4 +98,8 @@ namespace Misc
 	void SetLives(int newLives);
 	const char* GetDifficulty();
 	int SetDifficulty(const std::string& newDifficulty);
+	float GetCoeffMortar();
+	void SetCoeffMortar(float newCoeff);
+	bool GetPlayerWeaponMask(int hardpoint);
+	void SetPlayerWeaponMask(int hardpoint, bool setting);
 }

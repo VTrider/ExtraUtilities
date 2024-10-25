@@ -35,11 +35,6 @@
 #include <unordered_map>
 #include <vector>
 
-// Todo: 
-// - Dynamic Sunlight
-// - More TRN parameters, fog, time, and music maybe?
-// - More sat parameters, wasDown
-
 // For reticle cone angle degrees/3.75 = value needed
 
 /*---------------------
@@ -384,5 +379,33 @@ namespace Misc
 			return 1;
 		}
 		return 0;
+	}
+
+	float GetCoeffMortar()
+	{
+		return Memory::Read<float>(Misc::coeffMortar, true);
+	}
+
+	void SetCoeffMortar(float newCoeff)
+	{
+		Memory::Write(Misc::coeffMortar, newCoeff, true);
+	}
+
+	bool GetPlayerWeaponMask(int hardpoint)
+	{
+		return (Memory::Read<int>(Misc::playerWeapons) >> (hardpoint)) & 1;
+	}
+
+	void SetPlayerWeaponMask(int hardpoint, bool setting)
+	{
+		int weapons = Memory::Read<int>(Misc::playerWeapons);
+		if (setting == true)
+		{
+			Memory::Write(Misc::playerWeapons, weapons |= (1 << (hardpoint)));
+		}
+		else
+		{
+			Memory::Write(Misc::playerWeapons, weapons &= (~(1 << (hardpoint))));
+		}
 	}
 }

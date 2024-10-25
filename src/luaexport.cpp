@@ -157,7 +157,7 @@ static int exu_Init(lua_State* L)
 
 	// IO
 
-	exu_api.set_function("GetGameKey", [](std::string key) 
+	exu_api.set_function("GetGameKey", [](const std::string& key) 
 		{
 			int vKey = IO::GetKeyCode(key);
 			return IO::GetGameKey(vKey);
@@ -227,6 +227,10 @@ static int exu_Init(lua_State* L)
 
 			Memory::Write(Misc::playOption, playOption);
 		});
+	exu_api.set_function("GetCoeffMortar", &Misc::GetCoeffMortar);
+	exu_api.set_function("SetCoeffMortar", &Misc::SetCoeffMortar);
+	exu_api.set_function("GetPlayerWeaponMask", &Misc::GetPlayerWeaponMask);
+	exu_api.set_function("SetPlayerWeaponMask", &Misc::SetPlayerWeaponMask);
 
 	// Patches
 

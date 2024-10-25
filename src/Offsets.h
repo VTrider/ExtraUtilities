@@ -48,6 +48,7 @@ namespace Hooks // memory addresses of functions of interest
 	constexpr std::uintptr_t playOption       = 0x005C18B7;
 	constexpr std::uintptr_t selectNone       = 0x004A6D50;
 	constexpr std::uintptr_t bulletHitCB      = 0x00480774;
+	constexpr std::uintptr_t playerWeapons    = 0x00417F9A;
 }
 
 namespace Environment
@@ -100,6 +101,8 @@ namespace Misc
 	constexpr std::uintptr_t lives      = 0x008E8D04; // int
 	constexpr std::uintptr_t difficulty = 0x25CFA1C; // char
 	extern std::uintptr_t playOption;
+	constexpr std::uintptr_t coeffMortar = 0x008A2858; // float
+	extern std::uintptr_t playerWeapons;
 }
 
 namespace FuncPtrs

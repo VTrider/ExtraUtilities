@@ -405,3 +405,26 @@ void __declspec(naked) FogHook()
 		jmp [jmpBackFogHook]
 	}
 }
+
+std::uintptr_t Misc::playerWeapons;
+
+std::uint32_t jmpBackPlayerWeapons = static_cast<std::uint32_t>(Hooks::playerWeapons) + 5;
+
+void __declspec(naked) PlayerWeaponsHook()
+{
+	__asm
+	{
+		push ebx
+
+		lea ebx, [eax+0x30]
+
+		mov [Misc::playerWeapons], ebx
+
+		pop ebx
+
+		mov eax, [eax+0x30]
+		mov esp, ebp
+
+		jmp [jmpBackPlayerWeapons]
+	}
+}

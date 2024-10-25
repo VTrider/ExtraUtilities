@@ -28,6 +28,7 @@ void LightPtrHook();
 void SelectNoneHook();
 void BulletHitCallback();
 void FogHook();
+void PlayerWeaponsHook();
 
 // callable functions
 

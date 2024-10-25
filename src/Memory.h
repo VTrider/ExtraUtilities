@@ -206,6 +206,8 @@ public:
 
 		Memory::Write(Satellite::maxZoom, 8.0f, true);
 
+		Memory::Write(Misc::coeffMortar, 4.9f, true);
+
 		LockCursor();
 	}
 };
