@@ -1,7 +1,7 @@
 --[[
 =============================================================
 *   Extra Utilities                                         *
-*   Version 0.8.4                                           *
+*   Version 0.9.0                                           *
 =============================================================
 *   This module is a script extender for Battlezone         *
 *   98 Redux 2.2.301. It includes over 60 custom lua        *
@@ -46,7 +46,7 @@ do
     -- Use the version and/or the crc32 to check for mod version
     -- mismatches that aren't caught by the game
     ExtraUtils.version = exu_api.GetVersion()
-    ExtraUtils.crc32 = "E866527C"
+    ExtraUtils.crc32 = "3F0C5010"
     ExtraUtils.debug = false
 
     -------------
@@ -113,6 +113,10 @@ do
 
     ExtraUtils.GetGravity = exu_api.GetGravity
     ExtraUtils.SetGravity = exu_api.SetGravity
+    ExtraUtils.GetFog = exu_api.GetFog
+    ExtraUtils.SetFog = exu_api.SetFog
+    ExtraUtils.GetSunAmbient = exu_api.GetSunAmbient
+    ExtraUtils.SetSunAmbient = exu_api.SetSunAmbient
 
     -- Reticle
 
@@ -121,6 +125,7 @@ do
     ExtraUtils.GetReticleAngle = exu_api.GetReticleAngle
     ExtraUtils.GetReticlePos = exu_api.GetReticlePos
     ExtraUtils.GetReticleObject = exu_api.GetReticleObject
+    ExtraUtils.GetReticleMatrix = exu_api.GetReticleMatrix
 
     -- Satellite
 
@@ -161,6 +166,12 @@ do
     ExtraUtils.GetWeaponMask = exu_api.GetWeaponMask
     ExtraUtils.GetLives = exu_api.GetLives
     ExtraUtils.SetLives = exu_api.SetLives
+    ExtraUtils.GetCoeffMortar = exu_api.GetCoeffMortar
+    ExtraUtils.SetCoeffMortar = exu_api.SetCoeffMortar
+    ExtraUtils.GetPlayerWeaponMask = exu_api.GetPlayerWeaponMask
+    ExtraUtils.SetPlayerWeaponMask = exu_api.SetPlayerWeaponMask
+
+    -- Play Options
     ExtraUtils.GetDifficulty = exu_api.GetDifficulty
     ExtraUtils.SetDifficulty = exu_api.SetDifficulty
     ExtraUtils.GetAutoLevel = exu_api.GetAutoLevel
@@ -169,6 +180,7 @@ do
     ExtraUtils.SetTLI = exu_api.SetTLI
     ExtraUtils.GetReverseMouse = exu_api.GetReverseMouse
     ExtraUtils.SetReverseMouse = exu_api.SetReverseMouse
+
 
     -- Patches
 

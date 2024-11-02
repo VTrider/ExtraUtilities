@@ -117,6 +117,11 @@ namespace Reticle
 	{
 		return Memory::Read<void*>(Reticle::waila);
 	}
+
+	MAT_3D GetReticleMatrix()
+	{
+		return Memory::Read<MAT_3D>(Reticle::matrix);
+	}
 }
 
 namespace Satellite

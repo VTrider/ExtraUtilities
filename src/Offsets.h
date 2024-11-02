@@ -65,6 +65,7 @@ namespace Reticle
 	constexpr std::uintptr_t position = 0x025CE79C; // vec3
 	constexpr std::uintptr_t range    = 0x00886B20;
 	constexpr std::uintptr_t waila    = 0x00979F40; // what am I looking at - handle of game object under reticle
+	constexpr std::uintptr_t matrix   = 0x025CE6F8; // mat3
 }
 
 namespace Satellite

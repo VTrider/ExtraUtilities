@@ -110,6 +110,16 @@ static int exu_Init(lua_State* L)
 	exu_api.set_function("GetSmartCursorRange", &Reticle::GetSmartCursorRange);
 	exu_api.set_function("SetSmartCursorRange", &Reticle::SetSmartCursorRange);
 	exu_api.set_function("GetReticleObject", &Reticle::GetReticleObject);
+	exu_api.set_function("GetReticleMatrix", []() 
+		{
+			auto SetMatrix = lua->get<sol::function>("SetMatrix");
+			auto m = Reticle::GetReticleMatrix();
+			// the lua function uses the WRONG arg order, this is intentional
+			return SetMatrix(m.up_x, m.up_y, m.up_z, 
+							 m.right_x, m.right_y, m.right_z,
+							 m.front_x, m.front_y, m.front_z,
+							 0.0, 0.0, 0.0);
+		});
 
 	// Satellite
 
@@ -171,6 +181,10 @@ static int exu_Init(lua_State* L)
 	exu_api.set_function("SetLives", &Misc::SetLives);
 	exu_api.set_function("GetDifficulty", &Misc::GetDifficulty);
 	exu_api.set_function("SetDifficulty", &Misc::SetDifficulty);
+	exu_api.set_function("GetCoeffMortar", &Misc::GetCoeffMortar);
+	exu_api.set_function("SetCoeffMortar", &Misc::SetCoeffMortar);
+	exu_api.set_function("GetPlayerWeaponMask", &Misc::GetPlayerWeaponMask);
+	exu_api.set_function("SetPlayerWeaponMask", &Misc::SetPlayerWeaponMask);
 
 	// Play Options
 
@@ -227,10 +241,7 @@ static int exu_Init(lua_State* L)
 
 			Memory::Write(Misc::playOption, playOption);
 		});
-	exu_api.set_function("GetCoeffMortar", &Misc::GetCoeffMortar);
-	exu_api.set_function("SetCoeffMortar", &Misc::SetCoeffMortar);
-	exu_api.set_function("GetPlayerWeaponMask", &Misc::GetPlayerWeaponMask);
-	exu_api.set_function("SetPlayerWeaponMask", &Misc::SetPlayerWeaponMask);
+
 
 	// Patches
 
