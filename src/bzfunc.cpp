@@ -21,6 +21,7 @@
 #include "bzfunc.h"
 
 #include "asm.h"
+#include "Hook.h"
 #include "Log.h"
 #include "Memory.h"
 #include "Offsets.h"
@@ -412,5 +413,62 @@ namespace Misc
 		{
 			Memory::Write(Misc::playerWeapons, weapons &= (~(1 << (hardpoint))));
 		}
+	}
+
+	float GetScrapMultiplier()
+	{
+		return Misc::scrapMultiplier;
+	}
+
+	void SetScrapMultiplier(float multiplier)
+	{
+		Misc::scrapMultiplier = multiplier;
+	}
+
+	// The magic numbers in these functions correspond to the x86 opcodes for JNA (jump not above): 0x66,
+	// and JA (jump above) 0x67.
+
+	bool GetGlobalTurbo()
+	{
+		return (Memory::Read<std::uint8_t>(Misc::turbo, true) == 0x67) ? true : false;
+	}
+
+	// For some reason writing to memory using Memory::Write or just raw pointer
+	// dereference would corrupt the machine code, no idea why because this does
+	// seemingly the same thing. This function is voodoo but pretty much it just
+	// bypasses the various conditions that stop units from using turbo speed.
+	void SetGlobalTurbo(bool newTurbo)
+	{
+		static bool doneInit = false;
+		static float tolerance = 1.0f;
+
+		if (!doneInit)
+		{
+			DWORD temp;
+			VirtualProtect((LPVOID)Misc::turbo, 2, PAGE_EXECUTE_READWRITE, &temp);
+			// address of the target address of the comiss opcode
+			VirtualProtect((LPVOID)0x00601CA3, 4, PAGE_EXECUTE_READWRITE, &temp);
+
+			// save all these bytes cause we're gonna clobber them
+			unsigned char* turboBytes = new unsigned char[2];
+			memcpy(turboBytes, (void*)Misc::turbo, 2);
+			unsigned char* comissBytes = new unsigned char[4];
+			memcpy(comissBytes, (void*)0x00601CA3, 4);
+
+			Hook::AddOtherRestore({ Misc::turbo, turboBytes, 2 });
+			Hook::AddOtherRestore({ 0x00601CA3, comissBytes, 4 });
+
+			auto p_tolerance = &tolerance;
+			memcpy((void*)0x00601CA3, &p_tolerance, 4);
+
+			doneInit = true;
+		}
+		
+		static std::uint8_t origBytes[2] = { 0x76, 0x0C }; // JNA
+		static std::uint8_t nopBytes[2] = { 0x90, 0x90 }; // NOP (x2)
+		
+		// actually set the values/patch stuff
+		tolerance = (newTurbo == true) ? 0.9f : 1.0f;
+		memcpy((void*)Misc::turbo, (newTurbo == true) ? nopBytes : origBytes, 2);
 	}
 }

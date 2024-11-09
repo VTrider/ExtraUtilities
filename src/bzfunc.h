@@ -103,4 +103,9 @@ namespace Misc
 	void SetCoeffMortar(float newCoeff);
 	bool GetPlayerWeaponMask(int hardpoint);
 	void SetPlayerWeaponMask(int hardpoint, bool setting);
+	extern float scrapMultiplier;
+	float GetScrapMultiplier();
+	void SetScrapMultiplier(float multiplier);
+	bool GetGlobalTurbo();
+	void SetGlobalTurbo(bool turbo);
 }

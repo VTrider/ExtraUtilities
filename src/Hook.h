@@ -86,6 +86,12 @@ public:
         VirtualProtect(reinterpret_cast<void*>(hookAddress), length, curProtection, &temp);
     }
 
+    // For restoring misc bytes
+    static void AddOtherRestore(const HookData& data)
+    {
+        hookData.push_back(data);
+    }
+
     // you must ensure this gets called when the DLL unloads, otherwise you will insta crash
     // if you load into a stock map
     static void RestoreAll()

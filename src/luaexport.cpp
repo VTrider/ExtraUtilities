@@ -54,9 +54,14 @@ static int exu_Init(lua_State* L)
 
 	auto exu_api = (*lua)["exu_api"].get_or_create<sol::table>();
 
+	// Other Initialization
+
+	auto IsNetGame = lua->get<sol::function>("IsNetGame");
+	Misc::scrapMultiplier = (IsNetGame()) ? 2.0f : 1.0f;
+
 	// Metadata
 
-	exu_api.set_function("GetVersion", []() { return Exu::version.c_str(); });
+	exu_api.set_function("GetVersion", []() { return Exu::version; });
 
 	// Important Misc
 
@@ -244,6 +249,11 @@ static int exu_Init(lua_State* L)
 
 
 	// Patches
+
+	exu_api.set_function("GetScrapMultiplier", &Misc::GetScrapMultiplier);
+	exu_api.set_function("SetScrapMultiplier", &Misc::SetScrapMultiplier);
+	exu_api.set_function("GetGlobalTurbo", &Misc::GetGlobalTurbo);
+	exu_api.set_function("SetGlobalTurbo", &Misc::SetGlobalTurbo);
 
 	// Function Hooks
 

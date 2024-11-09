@@ -1,7 +1,7 @@
 --[[
 =============================================================
 *   Extra Utilities                                         *
-*   Version 0.9.0                                           *
+*   Version 0.10.0                                          *
 =============================================================
 *   This module is a script extender for Battlezone         *
 *   98 Redux 2.2.301. It includes over 60 custom lua        *
@@ -46,7 +46,7 @@ do
     -- Use the version and/or the crc32 to check for mod version
     -- mismatches that aren't caught by the game
     ExtraUtils.version = exu_api.GetVersion()
-    ExtraUtils.crc32 = "3F0C5010"
+    ExtraUtils.crc32 = "82279CA4"
     ExtraUtils.debug = false
 
     -------------
@@ -172,6 +172,7 @@ do
     ExtraUtils.SetPlayerWeaponMask = exu_api.SetPlayerWeaponMask
 
     -- Play Options
+
     ExtraUtils.GetDifficulty = exu_api.GetDifficulty
     ExtraUtils.SetDifficulty = exu_api.SetDifficulty
     ExtraUtils.GetAutoLevel = exu_api.GetAutoLevel
@@ -181,8 +182,12 @@ do
     ExtraUtils.GetReverseMouse = exu_api.GetReverseMouse
     ExtraUtils.SetReverseMouse = exu_api.SetReverseMouse
 
-
     -- Patches
+
+    ExtraUtils.GetScrapMultiplier = exu_api.GetScrapMultiplier
+    ExtraUtils.SetScrapMultiplier = exu_api.SetScrapMultiplier
+    ExtraUtils.GetGlobalTurbo = exu_api.GetGlobalTurbo
+    ExtraUtils.SetGlobalTurbo = exu_api.SetGlobalTurbo
 
     --- Enables velocity inheritance on the local player's ordnance
     --- You can control the ratio of velocity inherited by providing a float argument from 0-1.

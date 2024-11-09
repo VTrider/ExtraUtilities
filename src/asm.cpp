@@ -428,3 +428,29 @@ void __declspec(naked) PlayerWeaponsHook()
 		jmp [jmpBackPlayerWeapons]
 	}
 }
+
+float Misc::scrapMultiplier = 2;
+
+std::uint32_t jmpBackScrapGain = static_cast<std::uint32_t>(Hooks::scrapGain) + 17;
+// todo implement this
+void __declspec(naked) ScrapGainHook()
+{
+	__asm
+	{
+		mov ecx, [ebp-0x08]
+
+		sub esp, 0x10
+		movdqu [esp], xmm0
+
+		cvtsi2ss xmm0, ecx
+		mulss xmm0, [Misc::scrapMultiplier]
+		cvtss2si ecx, xmm0
+
+		movdqu xmm0, [esp]
+		add esp, 0x10
+
+		mov [ebp-0x08], ecx
+
+		jmp [jmpBackScrapGain]
+	}
+}

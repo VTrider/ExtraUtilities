@@ -29,6 +29,7 @@ void SelectNoneHook();
 void BulletHitCallback();
 void FogHook();
 void PlayerWeaponsHook();
+void ScrapGainHook();
 
 // callable functions
 

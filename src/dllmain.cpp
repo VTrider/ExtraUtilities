@@ -63,6 +63,7 @@ static void CodeInjection()
     Hook::CreateHook(Hooks::bulletHitCB, &BulletHitCallback, 5);
     Hook::CreateHook(fogHook, &FogHook, 9);
     Hook::CreateHook(Hooks::playerWeapons, &PlayerWeaponsHook, 5);
+    Hook::CreateHook(Hooks::scrapGain, &ScrapGainHook, 17);
 }
 
 //static void GUI()
