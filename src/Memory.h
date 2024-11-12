@@ -49,6 +49,7 @@ private:
 	// the thread upon entering the game
 	static inline auto nextCheck = std::chrono::steady_clock::now() + std::chrono::seconds(5);
 
+	// Ogre functions are at a weird offset that needs to be accounted for.
 	static std::uintptr_t GetOgreFunction(LPCSTR mangledName)
 	{
 		char* jmpAddress = reinterpret_cast<char*>(GetProcAddress(ogreMain, mangledName));

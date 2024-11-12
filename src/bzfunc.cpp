@@ -36,8 +36,6 @@
 #include <unordered_map>
 #include <vector>
 
-// For reticle cone angle degrees/3.75 = value needed
-
 /*---------------------
 * Important Functions *
 ----------------------*/

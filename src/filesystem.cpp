@@ -19,11 +19,25 @@
 // File Handling goes here
 
 #include "filesystem.h"
+
 #include <iostream>
 #include <filesystem>
 #include <fstream>
 #include <string>
+
 #include "Log.h"
+#include "exumeta.h"
+
+static bool GuardDirectory(std::filesystem::path& path)
+{
+	if (path.is_absolute())
+	{
+		if (path.string().starts_with(std::filesystem::current_path().string()))
+		{
+
+		}
+	}
+}
 
 void CreateEXUDirectory()
 {
