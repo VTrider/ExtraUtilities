@@ -38,7 +38,6 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 
 	if (!sndFile)
 	{
-		SystemLog->Out("Failed to open sound file", 1);
 		return 0;
 	}
 
@@ -53,16 +52,13 @@ ALuint Audio::MakeBuffer(const std::string& filePath)
 	if (fileInfo.channels == 1)
 	{
 		format = AL_FORMAT_MONO16;
-		SystemLog->Out("Created mono buffer", 3);
 	}
 	else if (fileInfo.channels == 2)
 	{
 		format = AL_FORMAT_STEREO16;
-		SystemLog->Out("Created stereo buffer", 3);
 	}
 	else
 	{
-		SystemLog->Out("Unsupported channel count", 1);
 		return 0;
 	}
 
@@ -106,34 +102,6 @@ void Audio::CleanSources()
 		}
 	}
 	requestLock.unlock();
-}
-
-void Audio::CheckError(const std::string& where)
-{
-	ALenum error = alGetError();
-	if (error != AL_NO_ERROR) {
-		SystemLog->Out(std::format("Extra Utilities Error in: {}", where));
-		switch (error) {
-		case AL_INVALID_NAME:
-			SystemLog->Out("OpenAL Error: Invalid Name", 1);
-			break;
-		case AL_INVALID_ENUM:
-			SystemLog->Out("OpenAL Error: Invalid Enum", 1);
-			break;
-		case AL_INVALID_VALUE:
-			SystemLog->Out("OpenAL Error: Invalid Value", 1);
-			break;
-		case AL_INVALID_OPERATION:
-			SystemLog->Out("OpenAL Error: Invalid Operation", 1);
-			break;
-		case AL_OUT_OF_MEMORY:
-			SystemLog->Out("OpenAL Error: Out Of Memory", 1);
-			break;
-		default:
-			SystemLog->Out("OpenAL Error: Unknown Error", 1);
-			break;
-		}
-	}
 }
 
 void Audio::ProcessSoundRequests()

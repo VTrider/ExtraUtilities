@@ -68,7 +68,7 @@ static void CodeInjection()
 
 //static void GUI()
 //{
-//    SystemLog->Out("Started GUI thread", 3);
+//    abcd->Out("Started GUI thread", 3);
 //    try
 //    {
 //        gui::Setup();
@@ -101,11 +101,8 @@ static void CodeInjection()
 //    gui::Destroy();
 //}
 
-std::unique_ptr<Log> SystemLog;
-
 static void AudioThread()
 {
-    SystemLog->Out("Started audio thread", 3);
     SoundDevice device = SoundDevice();
 
     while (true)
@@ -127,28 +124,6 @@ static void AudioThread()
 // it's okay to detach these threads cause they will stop automatically
 static DWORD WINAPI InitialThread(HMODULE) 
 {
-    SystemLog = std::make_unique<Log>(Log());
-
-    int level = SystemLog->GetLevel();
-    std::string levelString;
-    switch (level)
-    {
-    case 0:
-        levelString = "OFF";
-        break;
-    case 1:
-        levelString = "ERROR";
-        break;
-    case 2:
-        levelString = "WARNING";
-        break;
-    case 3:
-        levelString = "INFO";
-        break;
-    }
-    SystemLog->Out(std::format("Extra Utilities started successfully! Version: {}", Exu::version));
-    SystemLog->Out(std::format("Logging level is: {}", levelString));
-
     Memory::Init();
 
     FileSystem();
@@ -182,7 +157,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         // Also resets values that don't reset because they aren't expecting to be changed
         Hook::RestoreAll();
         Memory::RestoreAll();
-        SystemLog->Out("exu.dll detached from process", 3);
         break;
     }
     return TRUE;

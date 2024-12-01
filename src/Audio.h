@@ -56,7 +56,6 @@ private:
 public:
 	static bool IsMono(ALuint source);
 	static void CleanSources();
-	static void CheckError(const std::string& where);
 	static void ProcessSoundRequests();
 
 	static ALuint PlaySoundEffect(const std::string& filePath);

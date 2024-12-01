@@ -197,7 +197,6 @@ void gui::SetupMenu(LPDIRECT3DDEVICE9 d3dDevice) noexcept
 	// AFTER it's not possible to load fonts lol
 	float screenHeight = static_cast<float>(GetSystemMetrics(SM_CYSCREEN));
 	float scaledFontSize = std::floor(screenHeight / 60.0f);
-	SystemLog->Out(std::format("Vertical resolution is: {} - scaling font size to: {}", screenHeight, scaledFontSize), 3);
 	bzoneFont = io.Fonts->AddFontFromFileTTF("D:\\Steam\\steamapps\\common\\Battlezone 98 Redux\\addon\\dmplus\\BZONE.ttf", scaledFontSize, NULL, io.Fonts->GetGlyphRangesJapanese());
 	setup = true;
 }

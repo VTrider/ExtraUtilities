@@ -82,11 +82,9 @@ public:
 		{
 		case 0:
 			useWinApi = false;
-			SystemLog->Out("Access mode set to 0: direct access");
 			break;
 		case 1:
 			useWinApi = true;
-			SystemLog->Out("Access mode set to 1: windows api");
 			break;
 		}
 	}
@@ -100,7 +98,7 @@ public:
 			char exitFlag = Memory::Read<char>(Flags::inGame);
 			if (exitFlag == 0)
 			{
-				SystemLog->Out(message, 3);
+				auto temp = message;
 				return true;
 			}
 			else
@@ -130,65 +128,41 @@ public:
 
 	static T Read(const std::uintptr_t address, bool overrideProtection = false)
 	{
-		try
+		if (overrideProtection == true)
 		{
-			if (overrideProtection == true)
-			{
-				::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
-			}
-
-			T value = {};
-
-			if (useWinApi)
-			{
-				::ReadProcessMemory(pHandle, reinterpret_cast<const void*>(address), &value, sizeof(T), 0);
-			}
-			else
-			{
-				value = *reinterpret_cast<const T*>(address);
-			}
-
-			return value;
+			::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
 		}
-		catch (const std::exception& e)
+
+		T value = {};
+
+		if (useWinApi)
 		{
-			SystemLog->Out(std::format("[EXU ERROR]: Caught exception {}", e.what()));
-			return T{};
+			::ReadProcessMemory(pHandle, reinterpret_cast<const void*>(address), &value, sizeof(T), 0);
 		}
-		catch (...)
+		else
 		{
-			SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
-			return T{};
+			value = *reinterpret_cast<const T*>(address);
 		}
+
+		return value;
 	}
 	
 	template <typename T>
 
 	static void Write(const std::uintptr_t address, const T& value, bool overrideProtection = false)
 	{
-		try
+		if (overrideProtection == true)
 		{
-			if (overrideProtection == true)
-			{
-				::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
-			}
+			::VirtualProtect(reinterpret_cast<void*>(address), sizeof(T), PAGE_EXECUTE_READWRITE, &dummyOldProtection);
+		}
 
-			if (useWinApi)
-			{
-				::WriteProcessMemory(pHandle, reinterpret_cast<void*>(address), &value, sizeof(T), 0);
-			}
-			else
-			{
-				*reinterpret_cast<T*>(address) = value;
-			}
-		}
-		catch (const std::exception& e)
+		if (useWinApi)
 		{
-			SystemLog->Out(std::format("[EXU ERROR]: Caught exception {}", e.what()));
+			::WriteProcessMemory(pHandle, reinterpret_cast<void*>(address), &value, sizeof(T), 0);
 		}
-		catch (...)
+		else
 		{
-			SystemLog->Out("[EXU ERROR]: Caught unidentified exception, oh whale!");
+			*reinterpret_cast<T*>(address) = value;
 		}
 	}
 

@@ -28,16 +28,16 @@
 #include "Log.h"
 #include "exumeta.h"
 
-static bool GuardDirectory(std::filesystem::path& path)
-{
-	if (path.is_absolute())
-	{
-		if (path.string().starts_with(std::filesystem::current_path().string()))
-		{
-
-		}
-	}
-}
+//static bool GuardDirectory(std::filesystem::path& path)
+//{
+//	if (path.is_absolute())
+//	{
+//		if (path.string().starts_with(std::filesystem::current_path().string()))
+//		{
+//
+//		}
+//	}
+//}
 
 void CreateEXUDirectory()
 {

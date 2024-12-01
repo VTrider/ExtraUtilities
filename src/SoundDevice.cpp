@@ -14,7 +14,6 @@ SoundDevice::SoundDevice()
 	if (alcIsExtensionPresent(p_ALCDevice, "ALC_ENUMERATE_ALL_EXT"))
 	{
 		name = alcGetString(p_ALCDevice, ALC_ALL_DEVICES_SPECIFIER);
-		SystemLog->Out(std::format("Opened device: {}", name), 3);
 	}
 }
 

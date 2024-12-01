@@ -76,10 +76,7 @@ static int exu_Init(lua_State* L)
 			auto obj = FuncPtrs::GetHandle(reinterpret_cast<int>(handle));
 			return reinterpret_cast<void*>(obj);
 		});
-	exu_api.set_function("SysLogOut", [](const char* content, int level)
-		{
-			SystemLog->Out(content, level);
-		});
+
 
 	// Environment
 
@@ -836,8 +833,6 @@ static int lua_SourceIsMono(lua_State* L)
 }
 
 #pragma endregion AUDIO_SYSTEM
-
-extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
 
 extern "C" 
 {

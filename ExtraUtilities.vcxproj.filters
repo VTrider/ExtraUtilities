@@ -74,9 +74,6 @@
     <ClInclude Include="src\filesystem.h">
       <Filter>Header Files\exu</Filter>
     </ClInclude>
-    <ClInclude Include="src\Log.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
     <ClInclude Include="src\Memory.h">
       <Filter>Header Files\exu</Filter>
     </ClInclude>
