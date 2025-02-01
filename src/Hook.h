@@ -20,86 +20,115 @@
 
 #include <Windows.h>
 
-#include <iostream>
-#include <memory>
+#include <cstdint>
+#include <format>
+#include <string>
 #include <vector>
 
-struct HookData
+namespace ExtraUtilities
 {
-    std::uintptr_t hookAddress;
-    unsigned char* originalBytes;
-    int length;
-};
+	class Hook
+	{
+	private:
+		bool m_active = false;
 
-struct UnitLight
-{
-    std::string label;
-    std::unique_ptr<void*> light;
-};
+		uintptr_t m_address;
+		uint32_t m_length;
+		void* m_function;
 
-class Hook
-{
-private:
-    static inline std::vector<HookData> hookData{};
+		DWORD m_oldProtect{};
+		DWORD dummyProtect{};
+		std::vector<uint8_t> m_originalBytes;
 
-    static void Restore(std::uintptr_t address, unsigned char* originalBytes, int length)
-    {
-        DWORD curProtection;
-        VirtualProtect(reinterpret_cast<void*>(address), length, PAGE_EXECUTE_READWRITE, &curProtection);
+		static constexpr uint8_t NOP = 0x90;
+		static constexpr uint8_t JMP = 0xE9;
 
-        memcpy(reinterpret_cast<void*>(address), originalBytes, length);
+		bool ValidateHook() const
+		{
+			if (m_length < 5)
+			{
+				std::string error = std::format("Extra Utilities Error: Not enough space for hook at address {}", m_address);
+				MessageBox(0, error.c_str(), "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				return false;
+			}
+			return true;
+		}
 
-        delete[] originalBytes;
+		void DoHook()
+		{
+			uint8_t* p_address = reinterpret_cast<uint8_t*>(m_address);
 
-        DWORD temp;
-        VirtualProtect(reinterpret_cast<void*>(address), length, curProtection, &temp);
-    }
+			VirtualProtect(p_address, m_length, PAGE_EXECUTE_READWRITE, &m_oldProtect);
 
-public:
-    static inline std::vector<UnitLight> unitLights;
+			m_originalBytes.insert(m_originalBytes.end(), p_address, p_address + m_length);
 
-    // WARNING: be extremely careful and triple check that you counted the right number of fking bytes,
-    // if the hook is crashing despite proper usage, that probably means you interrupted some critical
-    // function so you need to hook a different location
-    static void CreateHook(std::uintptr_t hookAddress, void* function, int length)
-    {
-        if (length < 5) // need room for a jmp instruction
-        {
-            MessageBox(NULL, "You fool. You need at least 5 bytes to write a hook, go fix it before something breaks", "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-            return;
-        }
+			std::memset(p_address, NOP, m_length);
+			std::memset(p_address, JMP, 1);
 
-        DWORD curProtection;
-        VirtualProtect(reinterpret_cast<void*>(hookAddress), length, PAGE_EXECUTE_READWRITE, &curProtection);
+			ptrdiff_t relativeAddress = reinterpret_cast<uintptr_t>(m_function) - m_address - 5;
+			std::memcpy(p_address + 1, &relativeAddress, sizeof(relativeAddress));
 
-        unsigned char* originalBytes = new unsigned char[length];
-        memcpy(originalBytes, reinterpret_cast<void*>(hookAddress), length);
-        hookData.push_back({ hookAddress, originalBytes, length });
+			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
-        memset(reinterpret_cast<void*>(hookAddress), 0x90, length); // nops the hooked code so nothing bad happens
+			m_active = true;
+		}
 
-        DWORD relativeAddress = ((DWORD)function - (DWORD)hookAddress) - 5; // calculate the relative address of the function
-        *(BYTE*)hookAddress = 0xE9; // jump near - probably fine but might have to change to jump far (0xEA) in an edge case
-        *(DWORD*)((DWORD)hookAddress + 1) = relativeAddress; // writes the next 4 bytes with the target address (opcode is 5 bytes total)
+		void RestoreHook()
+		{
+			uint8_t* p_address = reinterpret_cast<uint8_t*>(m_address);
 
-        DWORD temp;
-        VirtualProtect(reinterpret_cast<void*>(hookAddress), length, curProtection, &temp);
-    }
+			VirtualProtect(p_address, m_length, PAGE_EXECUTE_READWRITE, &m_oldProtect);
 
-    // For restoring misc bytes
-    static void AddOtherRestore(const HookData& data)
-    {
-        hookData.push_back(data);
-    }
+			std::memcpy(p_address, m_originalBytes.data(), m_length);
 
-    // you must ensure this gets called when the DLL unloads, otherwise you will insta crash
-    // if you load into a stock map
-    static void RestoreAll()
-    {
-        for (const auto& data : hookData)
-        {
-            Restore(data.hookAddress, data.originalBytes, data.length);
-        }
-    }
+			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
-};
+			m_active = false;
+		}
+
+	public:
+		Hook(uintptr_t address, uint32_t length, void* function)
+			: m_address(address), m_length(length), m_function(function)
+		{
+			if (!ValidateHook())
+			{
+				return;
+			}
+
+			DoHook();
+		}
+
+		Hook(Hook& h) = delete; // hook should not be instantiated twice
+
+		Hook(Hook&& h) noexcept
+		{
+			this->m_address = h.m_address;
+			this->m_length = h.m_length;
+			this->m_function = h.m_function;
+			this->m_oldProtect = h.m_oldProtect;
+			this->dummyProtect = h.dummyProtect;
+			this->m_originalBytes = std::move(h.m_originalBytes);
+		}
+
+		~Hook()
+		{
+			RestoreHook();
+		}
+
+		void Reload()
+		{
+			if (!m_active)
+			{
+				DoHook();
+			}
+		}
+
+		void Unload()
+		{
+			if (m_active)
+			{
+				RestoreHook();
+			}
+		}
+	};
+}

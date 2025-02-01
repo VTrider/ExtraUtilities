@@ -13,87 +13,63 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\exu">
-      <UniqueIdentifier>{6793a5b2-dfa7-4d21-a5e0-0631ab03da0f}</UniqueIdentifier>
+    <Filter Include="Source Files\Exports">
+      <UniqueIdentifier>{26fb8715-0c85-4af7-9fc5-cd7f4f47024c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\exu">
-      <UniqueIdentifier>{a1adbcf0-6f85-4801-a673-19204c5c72fd}</UniqueIdentifier>
+    <Filter Include="Header Files\Exports">
+      <UniqueIdentifier>{0a0c9b89-cc90-4cd7-a51e-1c7ca44eec03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Memory Utilities">
+      <UniqueIdentifier>{c153b9cb-cde7-42be-9d96-dfab392512d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Audio.cpp">
-      <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bzfunc.cpp">
-      <Filter>Source Files\exu</Filter>
+    <ClCompile Include="src\LuaExport.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp">
-      <Filter>Source Files\exu</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\filesystem.cpp">
-      <Filter>Source Files\exu</Filter>
+    <ClCompile Include="src\Environment.cpp">
+      <Filter>Source Files\Exports</Filter>
     </ClCompile>
-    <ClCompile Include="src\luaexport.cpp">
-      <Filter>Source Files\exu</Filter>
+    <ClCompile Include="src\Reticle.cpp">
+      <Filter>Source Files\Exports</Filter>
     </ClCompile>
-    <ClCompile Include="src\dx9hook.cpp">
-      <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui.cpp">
-      <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\asm.cpp">
-      <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\usergui.cpp">
-      <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Memory.cpp">
-      <Filter>Source Files\exu</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SoundDevice.cpp">
-      <Filter>Source Files\exu</Filter>
+    <ClCompile Include="src\Satellite.cpp">
+      <Filter>Source Files\Exports</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Audio.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\bzfunc.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\bzr.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dx9hook.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\filesystem.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Memory.h">
-      <Filter>Header Files\exu</Filter>
-    </ClInclude>
     <ClInclude Include="src\Offsets.h">
-      <Filter>Header Files\exu</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\About.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BZR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LuaState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Environment.h">
+      <Filter>Header Files\Exports</Filter>
     </ClInclude>
     <ClInclude Include="src\Hook.h">
-      <Filter>Header Files\exu</Filter>
+      <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\asm.h">
-      <Filter>Header Files\exu</Filter>
+    <ClInclude Include="src\Offset.h">
+      <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\structs.h">
-      <Filter>Header Files\exu</Filter>
+    <ClInclude Include="src\Reticle.h">
+      <Filter>Header Files\Exports</Filter>
     </ClInclude>
-    <ClInclude Include="src\exumeta.h">
-      <Filter>Header Files\exu</Filter>
+    <ClInclude Include="src\Satellite.h">
+      <Filter>Header Files\Exports</Filter>
     </ClInclude>
-    <ClInclude Include="src\SoundDevice.h">
-      <Filter>Header Files\exu</Filter>
+    <ClInclude Include="src\Exports.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

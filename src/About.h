@@ -16,25 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Mod metadata file
+
 #pragma once
 
-// asm functions
+#include <string>
 
-void WeaponMaskHook();
-void OrdnanceVelocityHook();
-void OrdnancePositionHook();
-void ShotConvergenceHook();
-void LightPtrHook();
-void SelectNoneHook();
-void BulletHitCallback();
-void FogHook();
-void PlayerWeaponsHook();
-void ScrapGainHook();
-
-// callable functions
-
-void EnableOrdnanceTweak(float scalingFactor);
-void UpdateOrdnance(float vx, float vy, float vz, float px, float py, float pz);
-void EnableShotConvergence();
-void SetSelectNone(bool setting);
-
+namespace ExtraUtilities
+{
+	inline std::string version = "1.0.0-beta.1";
+}

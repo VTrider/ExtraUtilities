@@ -109,25 +109,28 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);WIN32_LEAN_AND_MEAN</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)\lib;$(ProjectDir)\bin;$(ProjectDir)\include;$(ProjectDir)\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d9.lib;lua5.1.lib;legacy_stdio_definitions.lib;user32.lib;OpenAL32.lib;urlmon.lib.;ole32.lib;Shell32.lib;winmm.lib;mpg123.lib;shlwapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>lua5.1.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
+      <LargeAddressAware>true</LargeAddressAware>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -136,14 +139,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions);WIN32_LEAN_AND_MEAN</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)\lib;$(ProjectDir)\bin;$(ProjectDir)\include;$(ProjectDir)\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
@@ -157,14 +160,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d9.lib;lua5.1.lib;legacy_stdio_definitions.lib;user32.lib;OpenAL32.lib;urlmon.lib.;ole32.lib;Shell32.lib;winmm.lib;mpg123.lib;shlwapi.lib</AdditionalDependencies>
+      <AdditionalDependencies>lua5.1.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
       <LargeAddressAware>true</LargeAddressAware>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <LinkStatus>false</LinkStatus>
-      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -210,32 +213,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\asm.cpp" />
-    <ClCompile Include="src\Audio.cpp" />
-    <ClCompile Include="src\bzfunc.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
-    <ClCompile Include="src\dx9hook.cpp" />
-    <ClCompile Include="src\filesystem.cpp" />
-    <ClCompile Include="src\gui.cpp" />
-    <ClCompile Include="src\luaexport.cpp" />
-    <ClCompile Include="src\Memory.cpp" />
-    <ClCompile Include="src\SoundDevice.cpp" />
-    <ClCompile Include="src\usergui.cpp" />
+    <ClCompile Include="src\Environment.cpp" />
+    <ClCompile Include="src\LuaExport.cpp" />
+    <ClCompile Include="src\Reticle.cpp" />
+    <ClCompile Include="src\Satellite.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\asm.h" />
-    <ClInclude Include="src\Audio.h" />
-    <ClInclude Include="src\bzfunc.h" />
-    <ClInclude Include="src\bzr.h" />
-    <ClInclude Include="src\dx9hook.h" />
-    <ClInclude Include="src\exumeta.h" />
-    <ClInclude Include="src\filesystem.h" />
-    <ClInclude Include="src\gui.h" />
+    <ClInclude Include="src\About.h" />
+    <ClInclude Include="src\BZR.h" />
+    <ClInclude Include="src\Environment.h" />
+    <ClInclude Include="src\Exports.h" />
     <ClInclude Include="src\Hook.h" />
-    <ClInclude Include="src\Memory.h" />
+    <ClInclude Include="src\LuaState.h" />
+    <ClInclude Include="src\Offset.h" />
     <ClInclude Include="src\Offsets.h" />
-    <ClInclude Include="src\SoundDevice.h" />
-    <ClInclude Include="src\structs.h" />
+    <ClInclude Include="src\Reticle.h" />
+    <ClInclude Include="src\Satellite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
