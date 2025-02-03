@@ -1,4 +1,24 @@
+/* Copyright (C) 2023-2025 VTrider
+ *
+ * This file is part of Extra Utilities.
+ *
+ * Extra Utilities is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "Reticle.h"
+
+#include "LuaHelpers.h"
 
 namespace ExtraUtilities::Lua::Reticle
 {
@@ -6,13 +26,7 @@ namespace ExtraUtilities::Lua::Reticle
 	{
 		BZR::VECTOR_3D pos = position.Read();
 
-		lua_getglobal(L, "SetVector");
-
-		lua_pushnumber(L, pos.x);
-		lua_pushnumber(L, pos.y);
-		lua_pushnumber(L, pos.z);
-
-		lua_call(L, 3, 1);
+		PushVector(L, pos);
 
 		return 1;
 	}
@@ -39,7 +53,10 @@ namespace ExtraUtilities::Lua::Reticle
 
 	int GetMatrix(lua_State* L)
 	{
-		lua_getglobal(L, "SetMatrix");
+		BZR::MAT_3D reticleMat = matrix.Read();
+
+		PushMatrix(L, reticleMat);
+
 		return 1;
 	}
 }

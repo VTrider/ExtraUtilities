@@ -22,6 +22,12 @@
     <Filter Include="Header Files\Memory Utilities">
       <UniqueIdentifier>{c153b9cb-cde7-42be-9d96-dfab392512d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Patches">
+      <UniqueIdentifier>{9757a244-77e8-42d2-b27f-8eb07342bf15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Patches">
+      <UniqueIdentifier>{cedb2a92-2dfc-4210-a305-192194eb5841}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LuaExport.cpp">
@@ -37,6 +43,27 @@
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
     <ClCompile Include="src\Satellite.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OS.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OS.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Radar.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ControlPanel.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BulletHitCallback.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShotConvergence.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,6 +97,33 @@
     </ClInclude>
     <ClInclude Include="src\Exports.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LuaHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ControlPanel.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Radar.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BasicPatch.h">
+      <Filter>Header Files\Memory Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InlinePatch.h">
+      <Filter>Header Files\Memory Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShotConvergence.h">
+      <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BulletHit.h">
+      <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Patches.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject.h">
+      <Filter>Header Files\Exports</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

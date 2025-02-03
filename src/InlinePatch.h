@@ -20,30 +20,16 @@
 
 #include "BasicPatch.h"
 
-#include <Windows.h>
-
-#include <format>
+#include <variant>
+#include <vector>
 
 namespace ExtraUtilities
 {
-	class Hook : public BasicPatch
+	template <class T>
+	class InlinePatch : public BasicPatch
 	{
 	private:
-		void* m_function;
-
-		static constexpr uint8_t NOP = 0x90;
-		static constexpr uint8_t JMP = 0xE9;
-
-		bool ValidateHook() const
-		{
-			if (m_length < 5)
-			{
-				std::string error = std::format("Extra Utilities Error: Not enough space for hook at address {}", m_address);
-				MessageBox(0, error.c_str(), "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-				return false;
-			}
-			return true;
-		}
+		std::vector<uint8_t> m_payload;
 
 		void DoPatch() override
 		{
@@ -53,11 +39,7 @@ namespace ExtraUtilities
 
 			m_originalBytes.insert(m_originalBytes.end(), p_address, p_address + m_length);
 
-			std::memset(p_address, NOP, m_length);
-			std::memset(p_address, JMP, 1);
-
-			ptrdiff_t relativeAddress = reinterpret_cast<uintptr_t>(m_function) - m_address - 5;
-			std::memcpy(p_address + 1, &relativeAddress, sizeof(relativeAddress));
+			std::memcpy(p_address, m_payload.data(), m_length);
 
 			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
@@ -65,25 +47,20 @@ namespace ExtraUtilities
 		}
 
 	public:
-		Hook(uintptr_t address, void* function, uint32_t length, bool startActive = true)
-			: BasicPatch(address, length, startActive), m_function(function)
+		InlinePatch(uintptr_t address, T* payload, size_t length, bool startActive = true)
+			: BasicPatch(address, length, startActive), m_payload((uint8_t*)payload, (uint8_t*)payload + length)
 		{
-			if (!ValidateHook())
-			{
-				return;
-			}
-
 			DoPatch();
 		}
 
-		Hook(Hook& h) = delete;
+		InlinePatch(InlinePatch& p) = delete;
 
-		Hook(Hook&& h) noexcept
-			: BasicPatch(std::move(h))
+		InlinePatch(InlinePatch&& p) noexcept
+			: BasicPatch(std::move(p))
 		{
-			this->m_function = h.m_function;
+			this->m_payload = std::move(p.m_payload);
 		}
 
-		~Hook() = default;
+		~InlinePatch() = default;
 	};
 }

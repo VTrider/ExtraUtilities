@@ -23,18 +23,9 @@
 
 #include <lua.hpp>
 
-#undef GetObject // windows.h name conflict
-
-namespace ExtraUtilities::Lua::Reticle
+namespace ExtraUtilities::Lua::Radar
 {
-	inline Offset position(BZR::Reticle::position);
-	inline Offset range(BZR::Reticle::range);
-	inline Offset object(BZR::Reticle::object);
-	inline Offset matrix(BZR::Reticle::matrix);
+	inline Offset state(BZR::Radar::state);
 
-	int GetPosition(lua_State* L);
-	int GetRange(lua_State* L);
-	int SetRange(lua_State* L);
-	int GetObject(lua_State* L);
-	int GetMatrix(lua_State* L);
+	int GetState(lua_State* L);
 }

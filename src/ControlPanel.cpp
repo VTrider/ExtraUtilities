@@ -16,25 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "ControlPanel.h"
 
-#include "BZR.h"
-#include "Offset.h"
-
-#include <lua.hpp>
-
-#undef GetObject // windows.h name conflict
-
-namespace ExtraUtilities::Lua::Reticle
+namespace ExtraUtilities::Lua::ControlPanel
 {
-	inline Offset position(BZR::Reticle::position);
-	inline Offset range(BZR::Reticle::range);
-	inline Offset object(BZR::Reticle::object);
-	inline Offset matrix(BZR::Reticle::matrix);
+	int SelectAdd(lua_State* L)
+	{
+		void* handle = lua_touserdata(L, 1);
+		BZR::GameObject* obj = BZR::GameObject::GetObj(reinterpret_cast<unsigned int>(handle));
+		BZR::ControlPanel::SelectAdd(controlPanel, obj);
+		return 0;
+	}
 
-	int GetPosition(lua_State* L);
-	int GetRange(lua_State* L);
-	int SetRange(lua_State* L);
-	int GetObject(lua_State* L);
-	int GetMatrix(lua_State* L);
+	int SelectNone(lua_State*)
+	{
+		BZR::ControlPanel::SelectNone(controlPanel);
+		return 0;
+	}
+
+	int SelectOne(lua_State* L)
+	{
+		void* handle = lua_touserdata(L, 1);
+		BZR::GameObject* obj = BZR::GameObject::GetObj(reinterpret_cast<unsigned int>(handle));
+		BZR::ControlPanel::SelectOne(controlPanel, obj);
+		return 0;
+	}
 }

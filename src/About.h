@@ -1,4 +1,4 @@
-/* Copyright (C) 2023-2024 VTrider
+/* Copyright (C) 2023-2025 VTrider
  *
  * This file is part of Extra Utilities.
  *

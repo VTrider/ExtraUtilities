@@ -1,4 +1,4 @@
-/* Copyright (C) 2023-2024 VTrider
+/* Copyright (C) 2023-2025 VTrider
  *
  * This file is part of Extra Utilities.
  *
@@ -16,6 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+/*
+* Memory Reader class with automatic
+* protection and restoration of the original
+* data
+*/
+
 #pragma once
 
 #include <Windows.h>
@@ -29,7 +35,7 @@ namespace ExtraUtilities
 		T* m_address;
 		T m_originalData;
 		DWORD m_oldProtect{};
-		static DWORD dummyProtect{};
+		static inline DWORD dummyProtect;
 
 	public:
 		Offset(T* address) : m_address(address)

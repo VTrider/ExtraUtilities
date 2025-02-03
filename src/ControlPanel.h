@@ -23,18 +23,11 @@
 
 #include <lua.hpp>
 
-#undef GetObject // windows.h name conflict
-
-namespace ExtraUtilities::Lua::Reticle
+namespace ExtraUtilities::Lua::ControlPanel
 {
-	inline Offset position(BZR::Reticle::position);
-	inline Offset range(BZR::Reticle::range);
-	inline Offset object(BZR::Reticle::object);
-	inline Offset matrix(BZR::Reticle::matrix);
+	inline auto controlPanel = BZR::ControlPanel::p_controlPanel;
 
-	int GetPosition(lua_State* L);
-	int GetRange(lua_State* L);
-	int SetRange(lua_State* L);
-	int GetObject(lua_State* L);
-	int GetMatrix(lua_State* L);
+	int SelectAdd(lua_State* L);
+	int SelectNone(lua_State* L);
+	int SelectOne(lua_State* L);
 }

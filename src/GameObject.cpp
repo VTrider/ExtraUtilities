@@ -16,25 +16,35 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "GameObject.h"
 
-#include "BZR.h"
-#include "Offset.h"
+#include "LuaHelpers.h"
 
 #include <lua.hpp>
 
-#undef GetObject // windows.h name conflict
-
-namespace ExtraUtilities::Lua::Reticle
+namespace ExtraUtilities::Lua::GameObject
 {
-	inline Offset position(BZR::Reticle::position);
-	inline Offset range(BZR::Reticle::range);
-	inline Offset object(BZR::Reticle::object);
-	inline Offset matrix(BZR::Reticle::matrix);
+	int GetHandle(lua_State* L)
+	{
+		void* gameObject = CheckHandle(L, 1);
+		unsigned int handle = BZR::GameObject::GetHandle(reinterpret_cast<int>(gameObject));
+		lua_pushlightuserdata(L, reinterpret_cast<void*>(handle));
+		return 1;
+	}
 
-	int GetPosition(lua_State* L);
-	int GetRange(lua_State* L);
-	int SetRange(lua_State* L);
-	int GetObject(lua_State* L);
-	int GetMatrix(lua_State* L);
+	int GetObj(lua_State* L)
+	{
+		void* handle = CheckHandle(L, 1);
+		BZR::GameObject* gameObject = BZR::GameObject::GetObj(reinterpret_cast<unsigned int>(handle));
+		lua_pushlightuserdata(L, gameObject);
+		return 1;
+	}
+
+	int SetAsUser(lua_State* L)
+	{
+		void* handle = CheckHandle(L, 1);
+		BZR::GameObject* obj = BZR::GameObject::GetObj(reinterpret_cast<unsigned int>(handle));
+		BZR::GameObject::SetAsUser(obj);
+		return 0;
+	}
 }

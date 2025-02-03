@@ -107,6 +107,9 @@
     <VcpkgUseStatic>true</VcpkgUseStatic>
     <VcpkgUseMD>false</VcpkgUseMD>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -125,7 +128,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua5.1.lib</AdditionalDependencies>
+      <AdditionalDependencies>lua5.1.lib;User32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -160,7 +163,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua5.1.lib</AdditionalDependencies>
+      <AdditionalDependencies>lua5.1.lib;User32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
       <LargeAddressAware>true</LargeAddressAware>
@@ -213,23 +216,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BulletHitCallback.cpp" />
+    <ClCompile Include="src\ControlPanel.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\Environment.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
+    <ClCompile Include="src\OS.cpp" />
+    <ClCompile Include="src\OS.h" />
+    <ClCompile Include="src\Radar.cpp" />
     <ClCompile Include="src\Reticle.cpp" />
     <ClCompile Include="src\Satellite.cpp" />
+    <ClCompile Include="src\ShotConvergence.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h" />
+    <ClInclude Include="src\BulletHit.h" />
     <ClInclude Include="src\BZR.h" />
+    <ClInclude Include="src\ControlPanel.h" />
     <ClInclude Include="src\Environment.h" />
     <ClInclude Include="src\Exports.h" />
+    <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Hook.h" />
+    <ClInclude Include="src\BasicPatch.h" />
+    <ClInclude Include="src\InlinePatch.h" />
+    <ClInclude Include="src\LuaHelpers.h" />
     <ClInclude Include="src\LuaState.h" />
     <ClInclude Include="src\Offset.h" />
     <ClInclude Include="src\Offsets.h" />
+    <ClInclude Include="src\Patches.h" />
+    <ClInclude Include="src\Radar.h" />
     <ClInclude Include="src\Reticle.h" />
     <ClInclude Include="src\Satellite.h" />
+    <ClInclude Include="src\ShotConvergence.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

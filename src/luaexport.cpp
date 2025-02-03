@@ -1,4 +1,4 @@
-/* Copyright (C) 2023-2024 VTrider
+/* Copyright (C) 2023-2025 VTrider
  *
  * This file is part of Extra Utilities.
  *
@@ -16,18 +16,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*----------------------------------
-* Exported lua functions go here,  *
-* sends/receieves data to/from the *
-* lua stack						   *
------------------------------------*/
+/*--------------------------------
+* Exported lua functions go here *
+--------------------------------*/
 
 #include "About.h"
 #include "Exports.h"
 #include "LuaState.h"
+#include "Patches.h"
 
 #include "lua.hpp"
 #include <Windows.h>
+
+#pragma push_macro("MessageBox")
+#undef MessageBox
 
 namespace ExtraUtilities::Lua
 {
@@ -47,16 +49,50 @@ namespace ExtraUtilities::Lua
 		int __declspec(dllexport) luaopen_exu(lua_State* L)
 		{
 			const luaL_Reg EXPORT[] = {
+				// Control Panel
+				{ "SelectAdd",  ControlPanel::SelectAdd },
+				{ "SelectNone", ControlPanel::SelectNone },
+				{ "SelectOne",  ControlPanel::SelectOne },
+
 				// Environment
 				{ "GetGravity", &Environment::GetGravity },
 				{ "SetGravity", &Environment::SetGravity },
 
+				// GameObject
+				{ "GetHandle", GameObject::GetHandle },
+				{ "GetObj",    GameObject::GetObj },
+				{ "SetAsUser", GameObject::SetAsUser },
+
+				// OS
+				{ "MessageBox",			 &OS::MessageBox },
+				{ "GetScreenResolution", &OS::GetScreenResolution },
+
+				// Patches
+				{ "GetShotConvergence", &Patches::GetShotConvergence },
+				{ "SetShotConvergence", &Patches::SetShotConvergence },
+
 				// Reticle
-				{ "GetReticlePos", &Reticle::GetPosition },
-				{ "GetReticleRange", &Reticle::GetRange },
-				{ "SetReticleRange", &Reticle::SetRange },
-				{ "GetReticleObject", &Reticle::GetObject},
-				{ "GetReticleMatrix", &Reticle::GetMatrix},
+				{ "GetReticlePos",    &Reticle::GetPosition },
+				{ "GetReticleRange",  &Reticle::GetRange },
+				{ "SetReticleRange",  &Reticle::SetRange },
+				{ "GetReticleObject", &Reticle::GetObject },
+				{ "GetReticleMatrix", &Reticle::GetMatrix },
+
+				// Satellite
+				
+				{ "GetSatState",     &Satellite::GetState },
+				{ "GetSatCursorPos", &Satellite::GetCursorPos },
+				{ "GetSatCameraPos", &Satellite::GetCameraPos },
+				{ "GetSatClickPos",  &Satellite::GetClickPos },
+				{ "GetSatPanSpeed",	 &Satellite::GetPanSpeed },
+				{ "SetSatPanSpeed",	 &Satellite::SetPanSpeed },
+				{ "GetSatMinZoom",	 &Satellite::GetMinZoom },
+				{ "SetSatMinZoom",	 &Satellite::SetMinZoom },
+				{ "GetSatMaxZoom",	 &Satellite::GetMaxZoom },
+				{ "SetSatMaxZoom",	 &Satellite::SetMaxZoom },
+				{ "GetSatZoom",		 &Satellite::GetZoom },
+				{ "SetSatZoom",		 &Satellite::SetZoom },
+				
 				{ 0, 0 }
 			};
 			luaL_register(L, "exu", EXPORT);
@@ -67,3 +103,5 @@ namespace ExtraUtilities::Lua
 		}
 	}
 }
+
+#pragma pop_macro("MessageBox")

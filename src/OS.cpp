@@ -16,25 +16,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "OS.h"
 
-#include "BZR.h"
-#include "Offset.h"
+#pragma push_macro("MessageBox")
+#undef MessageBox
 
-#include <lua.hpp>
-
-#undef GetObject // windows.h name conflict
-
-namespace ExtraUtilities::Lua::Reticle
+namespace ExtraUtilities::Lua::OS
 {
-	inline Offset position(BZR::Reticle::position);
-	inline Offset range(BZR::Reticle::range);
-	inline Offset object(BZR::Reticle::object);
-	inline Offset matrix(BZR::Reticle::matrix);
+	int MessageBox(lua_State* L)
+	{
+		const char* message = luaL_checkstring(L, 1);
+		MessageBoxA(0, message, "Extra Utilities", MB_OK | MB_APPLMODAL);
+		return 0;
+	}
 
-	int GetPosition(lua_State* L);
-	int GetRange(lua_State* L);
-	int SetRange(lua_State* L);
-	int GetObject(lua_State* L);
-	int GetMatrix(lua_State* L);
+	int GetScreenResolution(lua_State* L)
+	{
+		int width = GetSystemMetrics(SM_CXSCREEN);
+		int height = GetSystemMetrics(SM_CYSCREEN);
+
+		lua_pushnumber(L, width);
+		lua_pushnumber(L, height);
+
+		return 2;
+	}
 }
+
+#pragma pop_macro("MessageBox")
