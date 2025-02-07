@@ -33,7 +33,8 @@
 
 namespace ExtraUtilities::Lua
 {
-	void Init(lua_State* L)
+	// Other initialization
+	static void Init(lua_State* L)
 	{
 		state = L;
 
@@ -118,6 +119,7 @@ namespace ExtraUtilities::Lua
 				// Stock Extensions
 				{ "DoString", &StockExtensions::DoString },
 
+				// Function register table must end with a zero entry
 				{ 0, 0 }
 			};
 			luaL_register(L, "exu", EXPORT);

@@ -28,8 +28,8 @@ namespace ExtraUtilities::Lua::Radar
 
 	int SetState(lua_State* L)
 	{
-		int newState = luaL_checkinteger(L, 1);
-		if (!(0 <= newState <= 1))
+		uint8_t newState = static_cast<uint8_t>(luaL_checkinteger(L, 1));
+		if (newState != 0 && newState != 1)
 		{
 			luaL_error(L, "Invalid input: options are: 0, 1");
 		}
