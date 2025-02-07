@@ -20,7 +20,11 @@
 
 #include <Windows.h>
 
+#include <iostream>
+
 static_assert(_WIN32); // BZR is 32 bit
+
+HWND consoleWindow;
 
 BOOL WINAPI DllMain(
     HINSTANCE hModule,
@@ -31,8 +35,18 @@ BOOL WINAPI DllMain(
     {
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hModule);
-        break;
+#ifdef _DEBUG
+        AllocConsole();
+        freopen("CONOUT$", "w", stdout);
+        consoleWindow = GetConsoleWindow();
+        SetConsoleTitle("Extra Utilities Console");
+#endif
+            break;
     case DLL_PROCESS_DETACH:
+#ifdef _DEBUG
+        FreeConsole();
+        PostMessage(consoleWindow, WM_CLOSE, 0, 0);
+#endif
         break;
     }
     return TRUE;

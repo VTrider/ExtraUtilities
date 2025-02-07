@@ -29,7 +29,23 @@ namespace BZR
 	// Forward declarations
 	class GameObject;
 
-	struct MAT_3D {
+	struct Jammer
+	{
+		float maxSpeed;
+		GameObject* owner;
+	};
+
+	struct Scanner
+	{
+		float range;
+		float period;
+		bool active;
+		float sweep;
+		GameObject* owner;
+	};
+
+	struct MAT_3D
+	{
 		float right_x;
 		float right_y;
 		float right_z;
@@ -79,6 +95,19 @@ namespace BZR
 		inline auto gravityVector = (VECTOR_3D*)0x00871A80;
 	}
 
+	struct EULER {
+		float mass;
+		float mass_inv;
+		float v_mag;
+		float v_mag_inv;
+		float I;
+		float k_i;
+		VECTOR_3D v;
+		VECTOR_3D omega;
+		VECTOR_3D Accel;
+		VECTOR_3D Alpha;
+	};
+
 	class GameObject
 	{
 	public:
@@ -97,7 +126,43 @@ namespace BZR
 		// Use this to determine if you are in game since player will become null
 		// after exiting a map
 		static inline auto p_userObject = (void*)0x00917AFC;
+
+		using GameObjectClass = void;
+		using tagENTITY = void;
+		using OBJ76 = void;
+		using AiProcess = void;
+
+		uintptr_t vftableAttachable;
+		uint8_t padding_1[0x14];
+		uintptr_t vftableDistributedObject;
+		uint8_t padding_2[0xD4];
+		GameObjectClass* curPilot;
+		tagENTITY* ent;
+		OBJ76* obj;
+		GameObjectClass* objClass;
+		AiProcess* aiProcess;
+		const char* label;
+		int independence;
+		VECTOR_3D pos;
+		EULER euler;
+
+
+
+		// offset to scanner: 0x198
+		// offset to jammer: 0x19C
+		// offset to carrier: 0x1A0
 	};
+
+	namespace Multiplayer
+	{
+		inline auto lives = (int*)0x008E8D04;
+	}
+
+	namespace PlayOption
+	{
+		inline auto userProfilePtr = (void*)0x0094672C;
+		inline uint8_t playOptionOffset = 0x30;
+	}
 
 	namespace Satellite
 	{

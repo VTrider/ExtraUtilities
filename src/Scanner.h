@@ -17,7 +17,7 @@
 */
 
 /*
-* Memory Reader class with automatic
+* Memory Scanner class with automatic
 * protection and restoration of the original
 * data
 */
@@ -26,10 +26,13 @@
 
 #include <Windows.h>
 
+#include <iostream>
+#include <vector>
+
 namespace ExtraUtilities
 {
 	template <class T>
-	class Offset
+	class Scanner
 	{
 	private:
 		T* m_address;
@@ -38,16 +41,30 @@ namespace ExtraUtilities
 		static inline DWORD dummyProtect;
 
 	public:
-		Offset(T* address) : m_address(address)
+		Scanner(T* address) : m_address(address)
 		{
 			VirtualProtect(m_address, sizeof(T), PAGE_EXECUTE_READWRITE, &m_oldProtect);
 			m_originalData = Read();
 		}
 
-		Offset(Offset& o) = delete;
-		Offset(Offset&& o) = delete;
+		// Traverse multi-level pointer
+		Scanner(T* baseAddress, const std::vector<uint8_t>& offsets)
+		{
+			VirtualProtect(baseAddress, sizeof(T), PAGE_EXECUTE_READWRITE, &m_oldProtect);
+			uintptr_t address = reinterpret_cast<uintptr_t>(baseAddress);
+			for (size_t i = 0; i < offsets.size(); i++)
+			{
+				address = *reinterpret_cast<uintptr_t*>(address);
+				address += offsets[i];
+			}
+			m_address = reinterpret_cast<T*>(address);
+			m_originalData = Read();
+		}
 
-		~Offset()
+		Scanner(Scanner& o) = delete;
+		Scanner(Scanner&& o) = delete;
+
+		~Scanner()
 		{
 			Write(m_originalData);
 			VirtualProtect(m_address, sizeof(T), m_oldProtect, &dummyProtect);

@@ -66,6 +66,15 @@
     <ClCompile Include="src\GameObject.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
+    <ClCompile Include="src\Multiplayer.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayOption.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StockExtensions.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Offsets.h">
@@ -86,7 +95,7 @@
     <ClInclude Include="src\Hook.h">
       <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\Offset.h">
+    <ClInclude Include="src\Scanner.h">
       <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
     <ClInclude Include="src\Reticle.h">
@@ -123,6 +132,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GameObject.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Multiplayer.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayOption.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StockExtensions.h">
       <Filter>Header Files\Exports</Filter>
     </ClInclude>
   </ItemGroup>

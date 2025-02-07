@@ -19,20 +19,20 @@
 #pragma once
 
 #include "BZR.h"
-#include "Offset.h"
+#include "Scanner.h"
 
 #include <lua.hpp>
 
 namespace ExtraUtilities::Lua::Satellite
 {
-	inline Offset state(BZR::Satellite::state);
-	inline Offset cursorPos(BZR::Satellite::cursorPos);
-	inline Offset camPos(BZR::Satellite::camPos);
-	inline Offset clickPos(BZR::Satellite::clickPos);
-	inline Offset panSpeed(BZR::Satellite::panSpeed);
-	inline Offset minZoom(BZR::Satellite::minZoom);
-	inline Offset maxZoom(BZR::Satellite::maxZoom);
-	inline Offset zoom(BZR::Satellite::zoom);
+	inline Scanner state(BZR::Satellite::state);
+	inline Scanner cursorPos(BZR::Satellite::cursorPos);
+	inline Scanner camPos(BZR::Satellite::camPos);
+	inline Scanner clickPos(BZR::Satellite::clickPos);
+	inline Scanner panSpeed(BZR::Satellite::panSpeed);
+	inline Scanner minZoom(BZR::Satellite::minZoom);
+	inline Scanner maxZoom(BZR::Satellite::maxZoom);
+	inline Scanner zoom(BZR::Satellite::zoom);
 
 	int GetState(lua_State* L);
 	int GetCursorPos(lua_State* L);

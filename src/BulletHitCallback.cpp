@@ -79,7 +79,7 @@ namespace ExtraUtilities::Patch
 			lea eax, [ebp + 0x08] // gameobject* of hit object if it exists
 			push eax
 
-			mov eax, [ebx + 0x0C] // OrdnanceClass* - offset by -0x04 from 1.5, is 0x10 in 1.5
+			mov eax, [ebx + 0x0C] // OrdnanceClass* - Scanner by -0x04 from 1.5, is 0x10 in 1.5
 			lea ebx, [eax + 0x20] // odf char*
 			push ebx
 

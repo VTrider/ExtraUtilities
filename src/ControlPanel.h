@@ -19,7 +19,7 @@
 #pragma once
 
 #include "BZR.h"
-#include "Offset.h"
+#include "Scanner.h"
 
 #include <lua.hpp>
 

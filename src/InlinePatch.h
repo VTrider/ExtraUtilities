@@ -20,7 +20,6 @@
 
 #include "BasicPatch.h"
 
-#include <variant>
 #include <vector>
 
 namespace ExtraUtilities

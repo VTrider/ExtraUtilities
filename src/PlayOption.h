@@ -16,31 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ControlPanel.h"
+#pragma once
 
-#include "LuaHelpers.h"
+#include "BZR.h"
+#include "Scanner.h"
 
-namespace ExtraUtilities::Lua::ControlPanel
+#include <lua.hpp>
+
+namespace ExtraUtilities::Lua::PlayOption
 {
-	int SelectAdd(lua_State* L)
-	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
-		BZR::ControlPanel::SelectAdd(controlPanel, obj);
-		return 0;
-	}
+	// This value is a packed byte of bits that serve as flags for the following options
+	inline Scanner playOption((uint8_t*)BZR::PlayOption::userProfilePtr, { 0x30 });
 
-	int SelectNone(lua_State*)
-	{
-		BZR::ControlPanel::SelectNone(controlPanel);
-		return 0;
-	}
-
-	int SelectOne(lua_State* L)
-	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
-		BZR::ControlPanel::SelectOne(controlPanel, obj);
-		return 0;
-	}
+	int GetAutoLevel(lua_State* L);
+	int SetAutoLevel(lua_State* L);
+	int GetTLI(lua_State* L);
+	int SetTLI(lua_State* L);
+	int GetReverseMouse(lua_State* L);
+	int SetReverseMouse(lua_State* L);
 }

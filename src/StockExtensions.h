@@ -16,31 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ControlPanel.h"
+#pragma once
 
-#include "LuaHelpers.h"
+#include <lua.hpp>
 
-namespace ExtraUtilities::Lua::ControlPanel
+namespace ExtraUtilities::Lua::StockExtensions
 {
-	int SelectAdd(lua_State* L)
-	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
-		BZR::ControlPanel::SelectAdd(controlPanel, obj);
-		return 0;
-	}
-
-	int SelectNone(lua_State*)
-	{
-		BZR::ControlPanel::SelectNone(controlPanel);
-		return 0;
-	}
-
-	int SelectOne(lua_State* L)
-	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
-		BZR::ControlPanel::SelectOne(controlPanel, obj);
-		return 0;
-	}
+	int DoString(lua_State* L);
 }

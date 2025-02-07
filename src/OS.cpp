@@ -25,7 +25,7 @@ namespace ExtraUtilities::Lua::OS
 {
 	int MessageBox(lua_State* L)
 	{
-		const char* message = luaL_checkstring(L, 1);
+		const char* message = lua_tostring(L, 1);
 		MessageBoxA(0, message, "Extra Utilities", MB_OK | MB_APPLMODAL);
 		return 0;
 	}

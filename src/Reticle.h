@@ -19,7 +19,7 @@
 #pragma once
 
 #include "BZR.h"
-#include "Offset.h"
+#include "Scanner.h"
 
 #include <lua.hpp>
 
@@ -27,10 +27,10 @@
 
 namespace ExtraUtilities::Lua::Reticle
 {
-	inline Offset position(BZR::Reticle::position);
-	inline Offset range(BZR::Reticle::range);
-	inline Offset object(BZR::Reticle::object);
-	inline Offset matrix(BZR::Reticle::matrix);
+	inline Scanner position(BZR::Reticle::position);
+	inline Scanner range(BZR::Reticle::range);
+	inline Scanner object(BZR::Reticle::object);
+	inline Scanner matrix(BZR::Reticle::matrix);
 
 	int GetPosition(lua_State* L);
 	int GetRange(lua_State* L);

@@ -31,6 +31,7 @@ namespace ExtraUtilities::Lua::Environment
 		return 1;
 	}
 
+	// You can use individual floats or a vector 3d
 	int SetGravity(lua_State* L)
 	{
 		BZR::VECTOR_3D newGravity;

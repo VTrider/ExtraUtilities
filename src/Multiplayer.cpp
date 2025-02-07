@@ -16,31 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ControlPanel.h"
+#include "Multiplayer.h"
 
-#include "LuaHelpers.h"
+#include <lua.hpp>
 
-namespace ExtraUtilities::Lua::ControlPanel
+namespace ExtraUtilities::Lua::Multiplayer
 {
-	int SelectAdd(lua_State* L)
+	int GetLives(lua_State* L)
 	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
-		BZR::ControlPanel::SelectAdd(controlPanel, obj);
-		return 0;
+		lua_pushnumber(L, lives.Read());
+		return 1;
 	}
 
-	int SelectNone(lua_State*)
+	int SetLives(lua_State* L)
 	{
-		BZR::ControlPanel::SelectNone(controlPanel);
-		return 0;
-	}
-
-	int SelectOne(lua_State* L)
-	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
-		BZR::ControlPanel::SelectOne(controlPanel, obj);
+		int newLives = luaL_checkinteger(L, 1);
+		lives.Write(newLives);
 		return 0;
 	}
 }

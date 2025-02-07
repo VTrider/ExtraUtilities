@@ -25,4 +25,15 @@ namespace ExtraUtilities::Lua::Radar
 		lua_pushnumber(L, state.Read());
 		return 1;
 	}
+
+	int SetState(lua_State* L)
+	{
+		int newState = luaL_checkinteger(L, 1);
+		if (!(0 <= newState <= 1))
+		{
+			luaL_error(L, "Invalid input: options are: 0, 1");
+		}
+		state.Write(newState);
+		return 0;
+	}
 }

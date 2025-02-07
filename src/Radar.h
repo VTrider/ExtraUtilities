@@ -19,13 +19,16 @@
 #pragma once
 
 #include "BZR.h"
-#include "Offset.h"
+#include "Scanner.h"
 
 #include <lua.hpp>
 
 namespace ExtraUtilities::Lua::Radar
 {
-	inline Offset state(BZR::Radar::state);
+	inline Scanner state(BZR::Radar::state);
 
+	// 1 = radar
+	// 0 = minimap
 	int GetState(lua_State* L);
+	int SetState(lua_State* L);
 }

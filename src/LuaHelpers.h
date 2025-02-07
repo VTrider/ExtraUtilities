@@ -65,12 +65,12 @@ namespace ExtraUtilities::Lua
 		return lua_toboolean(L, idx);
 	}
 
-	inline void* CheckHandle(lua_State* L, int idx)
+	inline int CheckHandle(lua_State* L, int idx)
 	{
 		if (!lua_isuserdata(L, idx))
 		{
 			luaL_typerror(L, idx, "handle");
 		}
-		return lua_touserdata(L, idx);
+		return reinterpret_cast<int>(lua_touserdata(L, idx));
 	}
 }

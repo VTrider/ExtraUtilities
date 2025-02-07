@@ -50,18 +50,28 @@ namespace ExtraUtilities::Lua
 		{
 			const luaL_Reg EXPORT[] = {
 				// Control Panel
-				{ "SelectAdd",  ControlPanel::SelectAdd },
-				{ "SelectNone", ControlPanel::SelectNone },
-				{ "SelectOne",  ControlPanel::SelectOne },
+				{ "SelectAdd",  &ControlPanel::SelectAdd },
+				{ "SelectNone", &ControlPanel::SelectNone },
+				{ "SelectOne",  &ControlPanel::SelectOne },
 
 				// Environment
 				{ "GetGravity", &Environment::GetGravity },
 				{ "SetGravity", &Environment::SetGravity },
 
 				// GameObject
-				{ "GetHandle", GameObject::GetHandle },
-				{ "GetObj",    GameObject::GetObj },
-				{ "SetAsUser", GameObject::SetAsUser },
+				{ "GetHandle",		&GameObject::GetHandle },
+				{ "GetObj",			&GameObject::GetObj },
+				{ "SetAsUser",		&GameObject::SetAsUser },
+				{ "GetRadarRange",	&GameObject::GetRadarRange },
+				{ "SetRadarRange",	&GameObject::SetRadarRange },
+				{ "GetRadarPeriod", &GameObject::GetRadarPeriod },
+				{ "SetRadarPeriod", &GameObject::SetRadarPeriod },
+				{ "GetVelocJam",	&GameObject::GetVelocJam },
+				{ "SetVelocJam",	&GameObject::SetVelocJam },
+
+				// Multiplayer
+				{ "GetLives", &Multiplayer::GetLives },
+				{ "SetLives", &Multiplayer::SetLives },
 
 				// OS
 				{ "MessageBox",			 &OS::MessageBox },
@@ -70,6 +80,18 @@ namespace ExtraUtilities::Lua
 				// Patches
 				{ "GetShotConvergence", &Patches::GetShotConvergence },
 				{ "SetShotConvergence", &Patches::SetShotConvergence },
+
+				// Play Options
+				{ "GetAutoLevel",	 &PlayOption::GetAutoLevel },
+				{ "SetAutoLevel",	 &PlayOption::SetAutoLevel },
+				{ "GetTLI",			 &PlayOption::GetTLI },
+				{ "SetTLI",			 &PlayOption::SetTLI },
+				{ "GetReverseMouse", &PlayOption::GetReverseMouse },
+				{ "SetReverseMouse", &PlayOption::SetReverseMouse },
+
+				// Radar
+				{ "GetRadarState", &Radar::GetState },
+				{ "SetRadarState", &Radar::SetState }, 
 
 				// Reticle
 				{ "GetReticlePos",    &Reticle::GetPosition },
@@ -93,6 +115,9 @@ namespace ExtraUtilities::Lua
 				{ "GetSatZoom",		 &Satellite::GetZoom },
 				{ "SetSatZoom",		 &Satellite::SetZoom },
 				
+				// Stock Extensions
+				{ "DoString", &StockExtensions::DoString },
+
 				{ 0, 0 }
 			};
 			luaL_register(L, "exu", EXPORT);

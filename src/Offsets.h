@@ -45,7 +45,6 @@ namespace Hooks // memory addresses of functions of interest
 
 namespace Misc
 {
-	constexpr std::uintptr_t lives      = 0x008E8D04; // int
 	constexpr std::uintptr_t difficulty = 0x25CFA1C; // char
 	constexpr std::uintptr_t coeffMortar = 0x008A2858; // float
 	constexpr std::uintptr_t turbo = 0x00601CB5;

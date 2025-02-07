@@ -114,7 +114,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);WIN32_LEAN_AND_MEAN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -122,10 +122,13 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <SupportJustMyCode>false</SupportJustMyCode>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>lua5.1.lib;User32.lib</AdditionalDependencies>
@@ -142,7 +145,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions);WIN32_LEAN_AND_MEAN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;EXTRAUTILITIES_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions);WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -222,12 +225,15 @@
     <ClCompile Include="src\Environment.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
+    <ClCompile Include="src\Multiplayer.cpp" />
     <ClCompile Include="src\OS.cpp" />
     <ClCompile Include="src\OS.h" />
+    <ClCompile Include="src\PlayOption.cpp" />
     <ClCompile Include="src\Radar.cpp" />
     <ClCompile Include="src\Reticle.cpp" />
     <ClCompile Include="src\Satellite.cpp" />
     <ClCompile Include="src\ShotConvergence.cpp" />
+    <ClCompile Include="src\StockExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h" />
@@ -242,13 +248,16 @@
     <ClInclude Include="src\InlinePatch.h" />
     <ClInclude Include="src\LuaHelpers.h" />
     <ClInclude Include="src\LuaState.h" />
-    <ClInclude Include="src\Offset.h" />
+    <ClInclude Include="src\Multiplayer.h" />
+    <ClInclude Include="src\Scanner.h" />
     <ClInclude Include="src\Offsets.h" />
     <ClInclude Include="src\Patches.h" />
+    <ClInclude Include="src\PlayOption.h" />
     <ClInclude Include="src\Radar.h" />
     <ClInclude Include="src\Reticle.h" />
     <ClInclude Include="src\Satellite.h" />
     <ClInclude Include="src\ShotConvergence.h" />
+    <ClInclude Include="src\StockExtensions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
