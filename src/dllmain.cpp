@@ -41,7 +41,7 @@ BOOL WINAPI DllMain(
         consoleWindow = GetConsoleWindow();
         SetConsoleTitle("Extra Utilities Console");
 #endif
-            break;
+        break;
     case DLL_PROCESS_DETACH:
 #ifdef _DEBUG
         FreeConsole();

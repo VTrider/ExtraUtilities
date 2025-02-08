@@ -28,6 +28,7 @@
 #include "lua.hpp"
 #include <Windows.h>
 
+// Avoid name collision with winapi macro
 #pragma push_macro("MessageBox")
 #undef MessageBox
 
@@ -90,6 +91,7 @@ namespace ExtraUtilities::Lua
 
 		lua_setfield(L, exuIdx, "SATELLITE");
 
+		// VTnoia lua pop in case I missed something before
 		lua_pop(L, -1);
 	}
 
@@ -171,11 +173,11 @@ namespace ExtraUtilities::Lua
 				{ "SetSatZoom",		 &Satellite::SetZoom },
 
 				// Sound Options
-				{ "GetMusicVolume", &SoundOptions::GetMusicVolume },
+				{ "GetMusicVolume",   &SoundOptions::GetMusicVolume },
 				{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
 				{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
-				{ "GetVoiceVolume", &SoundOptions::GetVoiceVolume },
-				{ "SetVoiceVolume", &SoundOptions::SetVoiceVolume },
+				{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
+				{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
 
 				// Stock Extensions
 				{ "DoString", &StockExtensions::DoString },
