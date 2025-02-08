@@ -16,22 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include "InlinePatch.h"
+#include "Ordnance.h"
 
 #include <lua.hpp>
 
-#include <cstdint>
-
-namespace ExtraUtilities::Patch
+namespace ExtraUtilities::Lua::Ordnance
 {
-	constexpr uintptr_t wingmanWeaponAimVftableEntry = 0x0088A4FC;
-	constexpr uintptr_t walkerUpdateWeaponAim = 0x0060F320;
-}
+	int GetCoeffBallistic(lua_State* L)
+	{
+		lua_pushnumber(L, coeffBallistic.Read());
+		return 1;
+	}
 
-namespace ExtraUtilities::Lua::Patches
-{
-	int GetShotConvergence(lua_State* L);
-	int SetShotConvergence(lua_State* L);
+	int SetCoeffBallistic(lua_State* L)
+	{
+		float newCoeff = static_cast<float>(luaL_checknumber(L, 1));
+		coeffBallistic.Write(newCoeff);
+		return 0;
+	}
 }

@@ -42,6 +42,19 @@ namespace ExtraUtilities::Lua::PlayOption
 		return 0;
 	}
 
+	int GetDifficulty(lua_State* L)
+	{
+		lua_pushnumber(L, difficulty.Read());
+		return 1;
+	}
+
+	int SetDifficulty(lua_State* L)
+	{
+		uint8_t newDifficulty = static_cast<uint8_t>(luaL_checkinteger(L, 1));
+		difficulty.Write(newDifficulty);
+		return 0;
+	}
+
 	int GetTLI(lua_State* L)
 	{
 		bool TLIbit = (playOption.Read() >> 5) & 1;

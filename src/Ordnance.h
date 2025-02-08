@@ -18,20 +18,15 @@
 
 #pragma once
 
-#include "InlinePatch.h"
+#include "BZR.h"
+#include "Scanner.h"
 
 #include <lua.hpp>
 
-#include <cstdint>
-
-namespace ExtraUtilities::Patch
+namespace ExtraUtilities::Lua::Ordnance
 {
-	constexpr uintptr_t wingmanWeaponAimVftableEntry = 0x0088A4FC;
-	constexpr uintptr_t walkerUpdateWeaponAim = 0x0060F320;
-}
+	inline Scanner coeffBallistic(BZR::Ordnance::coeffBallistic);
 
-namespace ExtraUtilities::Lua::Patches
-{
-	int GetShotConvergence(lua_State* L);
-	int SetShotConvergence(lua_State* L);
+	int GetCoeffBallistic(lua_State* L);
+	int SetCoeffBallistic(lua_State* L);
 }

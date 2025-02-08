@@ -18,20 +18,22 @@
 
 #pragma once
 
-#include "InlinePatch.h"
+#include "BZR.h"
+#include "Scanner.h"
 
 #include <lua.hpp>
 
-#include <cstdint>
-
-namespace ExtraUtilities::Patch
+namespace ExtraUtilities::Lua::SoundOptions
 {
-	constexpr uintptr_t wingmanWeaponAimVftableEntry = 0x0088A4FC;
-	constexpr uintptr_t walkerUpdateWeaponAim = 0x0060F320;
-}
+	using namespace BZR::SoundOptions;
 
-namespace ExtraUtilities::Lua::Patches
-{
-	int GetShotConvergence(lua_State* L);
-	int SetShotConvergence(lua_State* L);
+	inline Scanner musicVolume(soundStruct1, { musicOffset }, false); // only a display value
+	inline Scanner sfxVolume(soundStruct2, { sfxOffset }, false);
+	inline Scanner voiceVolume(soundStruct2, { voiceOffset }, false);
+
+	int GetMusicVolume(lua_State* L);
+	int GetEffectsVolume(lua_State* L);
+	int SetEffectsVolume(lua_State* L);
+	int GetVoiceVolume(lua_State* L);
+	int SetVoiceVolume(lua_State* L);
 }

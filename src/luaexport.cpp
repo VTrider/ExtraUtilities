@@ -36,11 +36,59 @@ namespace ExtraUtilities::Lua
 	// Other initialization
 	static void Init(lua_State* L)
 	{
-		state = L;
+		state = L; // save the state pointer to use in callbacks
 
+		// Register all this stuff inside the library table
 		lua_getglobal(L, "exu");
+
+		int exuIdx = lua_gettop(L);
+
+		// Version string
 		lua_pushstring(L, version.c_str());
-		lua_setfield(L, -2, "version");
+		lua_setfield(L, exuIdx, "version");
+
+		// Difficulty enum
+		lua_newtable(L);
+
+		lua_pushinteger(L, 0);
+		lua_setfield(L, -2, "VERY_EASY");
+
+		lua_pushinteger(L, 1);
+		lua_setfield(L, -2, "EASY");
+
+		lua_pushinteger(L, 2);
+		lua_setfield(L, -2, "MEDIUM");
+
+		lua_pushinteger(L, 3);
+		lua_setfield(L, -2, "HARD");
+
+		lua_pushinteger(L, 4);
+		lua_setfield(L, -2, "VERY_HARD");
+
+		// Set the field inside the library table
+		lua_setfield(L, exuIdx, "DIFFICULTY");
+
+		// Radar state enum
+		lua_newtable(L);
+
+		lua_pushinteger(L, 0);
+		lua_setfield(L, -2, "MINIMAP");
+
+		lua_pushinteger(L, 1);
+		lua_setfield(L, -2, "RADAR");
+
+		lua_setfield(L, exuIdx, "RADAR");
+
+		// Satellite state enum
+		lua_newtable(L);
+
+		lua_pushinteger(L, 0);
+		lua_setfield(L, -2, "DISABLED");
+
+		lua_pushinteger(L, 1);
+		lua_setfield(L, -2, "ENABLED");
+
+		lua_setfield(L, exuIdx, "SATELLITE");
 
 		lua_pop(L, -1);
 	}
@@ -74,6 +122,10 @@ namespace ExtraUtilities::Lua
 				{ "GetLives", &Multiplayer::GetLives },
 				{ "SetLives", &Multiplayer::SetLives },
 
+				// Ordnance
+				{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },
+				{ "SetCoeffBallistic", &Ordnance::SetCoeffBallistic },
+
 				// OS
 				{ "MessageBox",			 &OS::MessageBox },
 				{ "GetScreenResolution", &OS::GetScreenResolution },
@@ -85,6 +137,8 @@ namespace ExtraUtilities::Lua
 				// Play Options
 				{ "GetAutoLevel",	 &PlayOption::GetAutoLevel },
 				{ "SetAutoLevel",	 &PlayOption::SetAutoLevel },
+				{ "GetDifficulty",   &PlayOption::GetDifficulty },
+				{ "SetDifficulty",   &PlayOption::SetDifficulty },
 				{ "GetTLI",			 &PlayOption::GetTLI },
 				{ "SetTLI",			 &PlayOption::SetTLI },
 				{ "GetReverseMouse", &PlayOption::GetReverseMouse },
@@ -115,7 +169,14 @@ namespace ExtraUtilities::Lua
 				{ "SetSatMaxZoom",	 &Satellite::SetMaxZoom },
 				{ "GetSatZoom",		 &Satellite::GetZoom },
 				{ "SetSatZoom",		 &Satellite::SetZoom },
-				
+
+				// Sound Options
+				{ "GetMusicVolume", &SoundOptions::GetMusicVolume },
+				{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
+				{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
+				{ "GetVoiceVolume", &SoundOptions::GetVoiceVolume },
+				{ "SetVoiceVolume", &SoundOptions::SetVoiceVolume },
+
 				// Stock Extensions
 				{ "DoString", &StockExtensions::DoString },
 

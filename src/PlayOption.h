@@ -26,10 +26,14 @@
 namespace ExtraUtilities::Lua::PlayOption
 {
 	// This value is a packed byte of bits that serve as flags for the following options
-	inline Scanner playOption((uint8_t*)BZR::PlayOption::userProfilePtr, { 0x30 });
+	inline Scanner playOption((uint8_t*)BZR::PlayOption::userProfilePtr, { BZR::PlayOption::playOptionOffset });
+
+	inline Scanner difficulty(BZR::PlayOption::difficulty);
 
 	int GetAutoLevel(lua_State* L);
 	int SetAutoLevel(lua_State* L);
+	int GetDifficulty(lua_State* L);
+	int SetDifficulty(lua_State* L);
 	int GetTLI(lua_State* L);
 	int SetTLI(lua_State* L);
 	int GetReverseMouse(lua_State* L);

@@ -23,4 +23,5 @@
 #pragma once
 
 #include "BulletHit.h"
+#include "GlobalTurbo.h"
 #include "ShotConvergence.h"

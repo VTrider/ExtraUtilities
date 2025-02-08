@@ -36,22 +36,26 @@ namespace ExtraUtilities
 	{
 	private:
 		T* m_address;
+		bool m_restoreData; // should you restore the data after leaving game? usually yes but sometimes no for things like game settings
 		T m_originalData;
 		DWORD m_oldProtect{};
 		static inline DWORD dummyProtect;
 
 	public:
-		Scanner(T* address) : m_address(address)
+		Scanner(T* address, bool restoreData = true)
+			: m_address(address), m_restoreData(restoreData)
 		{
 			VirtualProtect(m_address, sizeof(T), PAGE_EXECUTE_READWRITE, &m_oldProtect);
 			m_originalData = Read();
 		}
 
 		// Traverse multi-level pointer
-		Scanner(T* baseAddress, const std::vector<uint8_t>& offsets)
+		Scanner(T* baseAddress, const std::initializer_list<uint8_t>& offsetsList, bool restoreData = true)
+			: m_restoreData(restoreData)
 		{
 			VirtualProtect(baseAddress, sizeof(T), PAGE_EXECUTE_READWRITE, &m_oldProtect);
 			uintptr_t address = reinterpret_cast<uintptr_t>(baseAddress);
+			std::vector offsets = offsetsList;
 			for (size_t i = 0; i < offsets.size(); i++)
 			{
 				address = *reinterpret_cast<uintptr_t*>(address);
@@ -66,7 +70,10 @@ namespace ExtraUtilities
 
 		~Scanner()
 		{
-			Write(m_originalData);
+			if (m_restoreData == true)
+			{
+				Write(m_originalData);
+			}
 			VirtualProtect(m_address, sizeof(T), m_oldProtect, &dummyProtect);
 		}
 

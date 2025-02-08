@@ -75,11 +75,17 @@
     <ClCompile Include="src\StockExtensions.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ordnance.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GlobalTurbo.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SoundOptions.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Offsets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\About.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -141,6 +147,15 @@
       <Filter>Header Files\Exports</Filter>
     </ClInclude>
     <ClInclude Include="src\StockExtensions.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ordnance.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GlobalTurbo.h">
+      <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SoundOptions.h">
       <Filter>Header Files\Exports</Filter>
     </ClInclude>
   </ItemGroup>

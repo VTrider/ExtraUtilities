@@ -158,10 +158,18 @@ namespace BZR
 		inline auto lives = (int*)0x008E8D04;
 	}
 
+	class Ordnance
+	{
+	public:
+		static inline auto coeffBallistic = (float*)0x008A2858;
+	};
+
 	namespace PlayOption
 	{
 		inline auto userProfilePtr = (void*)0x0094672C;
 		inline uint8_t playOptionOffset = 0x30;
+
+		inline auto difficulty = (uint8_t*)0x25CFA1C;
 	}
 
 	namespace Satellite
@@ -174,6 +182,15 @@ namespace BZR
 		inline auto minZoom = (float*)0x00872400;
 		inline auto maxZoom = (float*)0x008723F4;
 		inline auto zoom = (float*)0x009C91B0;
+	}
+
+	namespace SoundOptions
+	{
+		inline auto soundStruct1 = (uint8_t*)0x0094672C; // this points to the music *display* value
+		inline auto soundStruct2 = (uint32_t*)0x00915594; // this points to the sfx and voice *real* values
+		inline uint8_t musicOffset = 0x2A;
+		inline uint8_t sfxOffset = 0x08;
+		inline uint8_t voiceOffset = 0x0C;
 	}
 
 	namespace Steam
