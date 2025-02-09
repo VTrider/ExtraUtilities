@@ -19,6 +19,7 @@
 #pragma once
 
 #include "BZR.h"
+#include "Ogre.h"
 #include "Scanner.h"
 
 #include <lua.hpp>
@@ -29,4 +30,8 @@ namespace ExtraUtilities::Lua::Environment
 
 	int GetGravity(lua_State* L);
 	int SetGravity(lua_State* L);
+	int GetFog(lua_State* L);
+	int SetFog(lua_State* L);
+	int GetSunAmbient(lua_State* L);
+	int SetSunAmbient(lua_State* L);
 }

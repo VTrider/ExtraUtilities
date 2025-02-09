@@ -28,14 +28,18 @@
 #include "lua.hpp"
 #include <Windows.h>
 
+#include <thread> 
+
 // Avoid name collision with winapi macro
 #pragma push_macro("MessageBox")
 #undef MessageBox
 
 namespace ExtraUtilities::Lua
 {
+	// TODO: fix this shit from crashing with heap corruption on script load
+
 	// Other initialization
-	static void Init(lua_State* L)
+	int Init(lua_State* L)
 	{
 		state = L; // save the state pointer to use in callbacks
 
@@ -45,7 +49,7 @@ namespace ExtraUtilities::Lua
 		int exuIdx = lua_gettop(L);
 
 		// Version string
-		lua_pushstring(L, version.c_str());
+		lua_pushstring(L, "test");
 		lua_setfield(L, exuIdx, "version");
 
 		// Difficulty enum
@@ -93,8 +97,10 @@ namespace ExtraUtilities::Lua
 
 		// VTnoia lua pop in case I missed something before
 		lua_pop(L, -1);
-	}
 
+		return 0;
+	}
+	
 	extern "C"
 	{
 		int __declspec(dllexport) luaopen_exu(lua_State* L)
@@ -106,8 +112,12 @@ namespace ExtraUtilities::Lua
 				{ "SelectOne",  &ControlPanel::SelectOne },
 
 				// Environment
-				{ "GetGravity", &Environment::GetGravity },
-				{ "SetGravity", &Environment::SetGravity },
+				{ "GetGravity",    &Environment::GetGravity },
+				{ "SetGravity",    &Environment::SetGravity },
+				{ "GetFog",		   &Environment::GetFog },
+				{ "SetFog",		   &Environment::SetFog },
+				{ "GetSunAmbient", &Environment::GetSunAmbient },
+				{ "SetSunAmbient", &Environment::SetSunAmbient },
 
 				// GameObject
 				{ "GetHandle",		&GameObject::GetHandle },
@@ -182,12 +192,22 @@ namespace ExtraUtilities::Lua
 				// Stock Extensions
 				{ "DoString", &StockExtensions::DoString },
 
+				{ "Test", [](lua_State* L) -> int
+				{
+					void* alloc;
+					lua_getallocf(L, &alloc);
+					std::cout << alloc << '\n';
+					return 0;
+				}},
+
 				// Function register table must end with a zero entry
 				{ 0, 0 }
 			};
 			luaL_register(L, "exu", EXPORT);
 
-			Init(L);
+			state = L;
+
+			// Init(L);
 
 			return 0;
 		}

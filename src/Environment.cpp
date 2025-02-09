@@ -58,4 +58,70 @@ namespace ExtraUtilities::Lua::Environment
 
 		return 0;
 	}
+
+	int GetFog(lua_State* L)
+	{
+		OgreFog fog = Patch::fog->Read();
+
+		lua_createtable(L, 0, 5);
+
+		lua_pushnumber(L, fog.r);
+		lua_setfield(L, -2, "r");
+
+		lua_pushnumber(L, fog.g);
+		lua_setfield(L, -2, "g");
+
+		lua_pushnumber(L, fog.b);
+		lua_setfield(L, -2, "b");
+
+		lua_pushnumber(L, fog.start);
+		lua_setfield(L, -2, "start");
+
+		lua_pushnumber(L, fog.ending);
+		lua_setfield(L, -2, "ending");
+
+		return 1;
+	}
+
+	int SetFog(lua_State* L)
+	{
+		float r = static_cast<float>(luaL_checknumber(L, 1));
+		float g = static_cast<float>(luaL_checknumber(L, 2));
+		float b = static_cast<float>(luaL_checknumber(L, 3));
+		float start = static_cast<float>(luaL_checknumber(L, 4));
+		float ending = static_cast<float>(luaL_checknumber(L, 5));
+
+		Patch::fog->Write({ r, g, b, start, ending });
+
+		return 0;
+	}
+
+	int GetSunAmbient(lua_State* L)
+	{
+		OgreColor sun = Patch::sunAmbient->Read();
+
+		lua_createtable(L, 0, 3);
+
+		lua_pushnumber(L, sun.r);
+		lua_setfield(L, -2, "r");
+
+		lua_pushnumber(L, sun.g);
+		lua_setfield(L, -2, "g");
+
+		lua_pushnumber(L, sun.b);
+		lua_setfield(L, -2, "b");
+
+		return 1;
+	}
+
+	int SetSunAmbient(lua_State* L)
+	{
+		float r = static_cast<float>(luaL_checknumber(L, 1));
+		float g = static_cast<float>(luaL_checknumber(L, 2));
+		float b = static_cast<float>(luaL_checknumber(L, 3));
+
+		Patch::sunAmbient->Write({r, g, b});
+
+		return 0;
+	}
 }

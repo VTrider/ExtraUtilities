@@ -23,6 +23,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -81,15 +82,16 @@
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <SupportJustMyCode>false</SupportJustMyCode>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua5.1.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;lua5.1.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -124,7 +126,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua5.1.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>User32.lib;lua5.1.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
       <LargeAddressAware>true</LargeAddressAware>
@@ -143,6 +145,7 @@
     <ClCompile Include="src\GlobalTurbo.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
     <ClCompile Include="src\Multiplayer.cpp" />
+    <ClCompile Include="src\Ogre.cpp" />
     <ClCompile Include="src\Ordnance.cpp" />
     <ClCompile Include="src\OS.cpp" />
     <ClCompile Include="src\OS.h" />
@@ -169,6 +172,7 @@
     <ClInclude Include="src\LuaHelpers.h" />
     <ClInclude Include="src\LuaState.h" />
     <ClInclude Include="src\Multiplayer.h" />
+    <ClInclude Include="src\Ogre.h" />
     <ClInclude Include="src\Ordnance.h" />
     <ClInclude Include="src\Scanner.h" />
     <ClInclude Include="src\Patches.h" />
@@ -176,6 +180,7 @@
     <ClInclude Include="src\Radar.h" />
     <ClInclude Include="src\Reticle.h" />
     <ClInclude Include="src\Satellite.h" />
+    <ClInclude Include="src\BasicScanner.h" />
     <ClInclude Include="src\ShotConvergence.h" />
     <ClInclude Include="src\SoundOptions.h" />
     <ClInclude Include="src\StockExtensions.h" />

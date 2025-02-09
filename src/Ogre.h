@@ -16,13 +16,39 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Combined header for patches
-*/
-
 #pragma once
 
-#include "BulletHit.h"
-#include "GlobalTurbo.h"
-#include "Ogre.h"
-#include "ShotConvergence.h"
+#include "Scanner.h"
+
+#include <cstdint>
+#include <memory>
+
+namespace ExtraUtilities
+{
+	struct OgreFog
+	{
+		OgreFog() = default;
+		OgreFog(float r, float g, float b, float start, float ending)
+			: r(r), g(g), b(b), start(start), ending(ending) {}
+
+		float r;
+		float g;
+		float b;
+		uint8_t padding[4] = {0};
+		float start;
+		float ending;
+	};
+
+	struct OgreColor
+	{
+		float r, g, b;
+	};
+}
+
+namespace ExtraUtilities::Patch
+{
+	inline const uintptr_t sceneManagerHookAddr = BasicScanner::CalculateAddress(0x3B521E, ScannerProperties::BaseAddress::OGRE);
+
+	inline std::unique_ptr<Scanner<OgreFog>> fog;
+	inline std::unique_ptr<Scanner<OgreColor>> sunAmbient;
+}

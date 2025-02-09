@@ -20,11 +20,22 @@
 
 #include <Windows.h>
 
+#include <cstdlib>
 #include <iostream>
 
 static_assert(_WIN32); // BZR is 32 bit
 
+FILE _iob[] = { *stdin, *stdout, *stderr };
+extern "C" FILE* __cdecl __iob_func(void) { return _iob; }
+
 HWND consoleWindow;
+
+void start()
+{
+    int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+    flag |= _CRTDBG_LEAK_CHECK_DF;
+    _CrtSetDbgFlag(flag);
+}
 
 BOOL WINAPI DllMain(
     HINSTANCE hModule,
@@ -40,6 +51,8 @@ BOOL WINAPI DllMain(
         freopen("CONOUT$", "w", stdout);
         consoleWindow = GetConsoleWindow();
         SetConsoleTitle("Extra Utilities Console");
+        start();
+        
 #endif
         break;
     case DLL_PROCESS_DETACH:
