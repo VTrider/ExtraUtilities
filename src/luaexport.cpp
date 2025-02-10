@@ -39,14 +39,16 @@ namespace ExtraUtilities::Lua
 	// MUST BE EXECUTED ON SEPARATE THREAD! Read note at bottom of luaopen
 	int Init(lua_State* L)
 	{
+		state = L; // save the state pointer to use in callbacks
+
 		// Register all this stuff inside the library table
 		lua_getglobal(L, "exu");
 
 		int exuIdx = lua_gettop(L);
 
 		// Version string
-		lua_pushstring(L, "test");
-		lua_setfield(L, exuIdx, "version");
+		lua_pushstring(L, version.c_str());
+		lua_setfield(L, exuIdx, "VERSION");
 
 		// Difficulty enum
 		lua_newtable(L);
@@ -96,7 +98,7 @@ namespace ExtraUtilities::Lua
 
 		return 0;
 	}
-	
+
 	extern "C"
 	{
 		int __declspec(dllexport) luaopen_exu(lua_State* L)
@@ -188,25 +190,26 @@ namespace ExtraUtilities::Lua
 				// Stock Extensions
 				{ "DoString", &StockExtensions::DoString },
 
-				{ "Test", [](lua_State* L) -> int
+				{ "Test", [](lua_State*) -> int
 				{
-					void* alloc;
-					lua_getallocf(L, &alloc);
-					std::cout << alloc << '\n';
 					return 0;
 				}},
 
 				// Function register table must end with a zero entry
 				{ 0, 0 }
 			};
+
+			// Ok.. this is voodoo LOL. I believe the heap corruption is caused when
+			// pushing a large amount of data into the lua state triggers a reallocation,
+			// so if you stop the garbage collector and resume after the library is registered
+			// and initialized it will won't get corrupted.
+
+			lua_gc(L, LUA_GCSTOP, 0);
+
 			luaL_register(L, "exu", EXPORT);
+			Init(L);
 
-			// Important note: this MUST be executed by a separate thread for some reason LOL.
-			// calling Init() directly in luaopen will insta crash with heap corruption, but this
-			// seems *knock on wood* to work fine
-			std::jthread t(Init, L);
-
-			state = L; // save the state pointer to use in callbacks
+			lua_gc(L, LUA_GCRESTART, 0);
 
 			return 0;
 		}

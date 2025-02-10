@@ -73,7 +73,10 @@ namespace ExtraUtilities
 				return;
 			}
 
-			DoPatch();
+			if (m_active)
+			{
+				DoPatch();
+			}
 		}
 
 		Hook(Hook& h) = delete;
