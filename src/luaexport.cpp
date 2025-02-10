@@ -36,7 +36,7 @@
 
 namespace ExtraUtilities::Lua
 {
-	// Other initialization
+	// MUST BE EXECUTED ON SEPARATE THREAD! Read note at bottom of luaopen
 	int Init(lua_State* L)
 	{
 		// Register all this stuff inside the library table
