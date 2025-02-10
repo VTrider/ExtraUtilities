@@ -59,7 +59,7 @@ namespace ExtraUtilities::Patch
 		lua_pop(L, -1);
 	}
 
-	static __declspec(naked) void BulletHitCallback()
+	static void __declspec(naked) BulletHitCallback()
 	{
 		// stuff like this MUST be static if you wanna keep it in the scope of the function
 		// cause it will be stored elsewhere and you want the hook to only use the asm
