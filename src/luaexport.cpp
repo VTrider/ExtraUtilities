@@ -203,6 +203,9 @@ namespace ExtraUtilities::Lua
 			// pushing a large amount of data into the lua state triggers a reallocation,
 			// so if you stop the garbage collector and resume after the library is registered
 			// and initialized it will won't get corrupted.
+			//
+			// So: it is CRITICAL that any initialization is done while the garbage collector
+			// is STOPPED (in between the lua_gc calls)
 
 			lua_gc(L, LUA_GCSTOP, 0);
 
