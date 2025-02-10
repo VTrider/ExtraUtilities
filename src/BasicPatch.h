@@ -56,7 +56,16 @@ namespace ExtraUtilities
 
 	public:
 		BasicPatch(uintptr_t address, size_t length, bool startActive)
-			: m_address(address), m_length(length), m_active(startActive) {}
+			: m_address(address), m_length(length), m_active(startActive)
+		{
+			uint8_t* p_address = reinterpret_cast<uint8_t*>(m_address);
+
+			VirtualProtect(p_address, m_length, PAGE_EXECUTE_READWRITE, &m_oldProtect);
+
+			m_originalBytes.insert(m_originalBytes.end(), p_address, p_address + m_length);
+
+			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
+		}
 
 		BasicPatch(BasicPatch& p) = delete; // Patch should not be initialized twice
 

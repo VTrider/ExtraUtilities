@@ -143,6 +143,8 @@ namespace ExtraUtilities::Lua
 				// Patches
 				{ "GetShotConvergence", &Patches::GetShotConvergence },
 				{ "SetShotConvergence", &Patches::SetShotConvergence },
+				{ "GetGlobalTurbo",     &Patches::GetGlobalTurbo },
+				{ "SetGlobalTurbo",     &Patches::SetGlobalTurbo },
 
 				// Play Options
 				{ "GetAutoLevel",	 &PlayOption::GetAutoLevel },

@@ -60,9 +60,6 @@
     <ClCompile Include="src\BulletHitCallback.cpp">
       <Filter>Source Files\Patches</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShotConvergence.cpp">
-      <Filter>Source Files\Patches</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameObject.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
@@ -78,13 +75,16 @@
     <ClCompile Include="src\Ordnance.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
-    <ClCompile Include="src\GlobalTurbo.cpp">
-      <Filter>Source Files\Patches</Filter>
-    </ClCompile>
     <ClCompile Include="src\SoundOptions.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
     <ClCompile Include="src\Ogre.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShotConvergence.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GlobalTurbo.cpp">
       <Filter>Source Files\Patches</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,9 +131,6 @@
     <ClInclude Include="src\InlinePatch.h">
       <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\ShotConvergence.h">
-      <Filter>Header Files\Patches</Filter>
-    </ClInclude>
     <ClInclude Include="src\BulletHit.h">
       <Filter>Header Files\Patches</Filter>
     </ClInclude>
@@ -155,9 +152,6 @@
     <ClInclude Include="src\Ordnance.h">
       <Filter>Header Files\Exports</Filter>
     </ClInclude>
-    <ClInclude Include="src\GlobalTurbo.h">
-      <Filter>Header Files\Patches</Filter>
-    </ClInclude>
     <ClInclude Include="src\SoundOptions.h">
       <Filter>Header Files\Exports</Filter>
     </ClInclude>
@@ -165,6 +159,12 @@
       <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
     <ClInclude Include="src\Ogre.h">
+      <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShotConvergence.h">
+      <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GlobalTurbo.h">
       <Filter>Header Files\Patches</Filter>
     </ClInclude>
   </ItemGroup>

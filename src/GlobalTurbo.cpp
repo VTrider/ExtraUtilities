@@ -18,7 +18,46 @@
 
 #include "GlobalTurbo.h"
 
+#include "InlinePatch.h"
+#include "LuaHelpers.h"
+
 namespace ExtraUtilities::Patch
 {
+	InlinePatch turboPatch1(comissPatch, &p_tolerance, 4, false);
+	InlinePatch turboPatch2(turboConditionPatch, { 0x90, 0x90 }, false);
+}
 
+namespace ExtraUtilities::Lua::Patches
+{
+	int GetGlobalTurbo(lua_State* L)
+	{
+		if (Patch::turboPatch1.IsActive() && Patch::turboPatch2.IsActive())
+		{
+			lua_pushboolean(L, true);
+		}
+		else
+		{
+			lua_pushboolean(L, false);
+		}
+
+		return 0;
+	}
+
+	int SetGlobalTurbo(lua_State* L)
+	{
+		bool state = CheckBool(L, 1);
+
+		if (state == true)
+		{
+			Patch::turboPatch1.Reload();
+			Patch::turboPatch2.Reload();
+		}
+		else
+		{
+			Patch::turboPatch1.Unload();
+			Patch::turboPatch2.Unload();
+		}
+
+		return 0;
+	}
 }

@@ -29,7 +29,7 @@ namespace ExtraUtilities
 	class Hook : public BasicPatch
 	{
 	private:
-		void* m_function;
+		const void* m_function;
 
 		static constexpr uint8_t NOP = 0x90;
 		static constexpr uint8_t JMP = 0xE9;
@@ -51,13 +51,12 @@ namespace ExtraUtilities
 
 			VirtualProtect(p_address, m_length, PAGE_EXECUTE_READWRITE, &m_oldProtect);
 
-			m_originalBytes.insert(m_originalBytes.end(), p_address, p_address + m_length);
-
 			std::memset(p_address, NOP, m_length);
 			std::memset(p_address, JMP, 1);
 
 			ptrdiff_t relativeAddress = reinterpret_cast<uintptr_t>(m_function) - m_address - 5;
-			std::memcpy(p_address + 1, &relativeAddress, sizeof(relativeAddress));
+			// +1 byte because the first is the jmp instruction, next 4 the address
+			std::memcpy(p_address + 1, &relativeAddress, sizeof(relativeAddress)); 
 
 			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
@@ -65,7 +64,7 @@ namespace ExtraUtilities
 		}
 
 	public:
-		Hook(uintptr_t address, void* function, uint32_t length, bool startActive = true)
+		Hook(uintptr_t address, const void* function, size_t length, bool startActive = true)
 			: BasicPatch(address, length, startActive), m_function(function)
 		{
 			if (!ValidateHook())

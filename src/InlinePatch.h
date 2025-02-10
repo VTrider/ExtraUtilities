@@ -24,7 +24,6 @@
 
 namespace ExtraUtilities
 {
-	template <class T>
 	class InlinePatch : public BasicPatch
 	{
 	private:
@@ -36,8 +35,6 @@ namespace ExtraUtilities
 
 			VirtualProtect(p_address, m_length, PAGE_EXECUTE_READWRITE, &m_oldProtect);
 
-			m_originalBytes.insert(m_originalBytes.end(), p_address, p_address + m_length);
-
 			std::memcpy(p_address, m_payload.data(), m_length);
 
 			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
@@ -46,10 +43,24 @@ namespace ExtraUtilities
 		}
 
 	public:
-		InlinePatch(uintptr_t address, T* payload, size_t length, bool startActive = true)
+		// Single typed value inline patch
+		InlinePatch(uintptr_t address, const void* payload, size_t length, bool startActive = true)
 			: BasicPatch(address, length, startActive), m_payload((uint8_t*)payload, (uint8_t*)payload + length)
 		{
-			DoPatch();
+			if (m_active)
+			{
+				DoPatch();
+			}
+		}
+
+		// Shellcode inline patch
+		InlinePatch(uintptr_t address, std::vector<uint8_t> payload, bool startActive = true)
+			: BasicPatch(address, payload.size(), startActive), m_payload(payload)
+		{
+			if (m_active)
+			{
+				DoPatch();
+			}
 		}
 
 		InlinePatch(InlinePatch& p) = delete;
