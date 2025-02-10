@@ -36,13 +36,9 @@
 
 namespace ExtraUtilities::Lua
 {
-	// TODO: fix this shit from crashing with heap corruption on script load
-
 	// Other initialization
 	int Init(lua_State* L)
 	{
-		state = L; // save the state pointer to use in callbacks
-
 		// Register all this stuff inside the library table
 		lua_getglobal(L, "exu");
 
@@ -205,9 +201,12 @@ namespace ExtraUtilities::Lua
 			};
 			luaL_register(L, "exu", EXPORT);
 
-			state = L;
+			// Important note: this MUST be executed by a separate thread for some reason LOL.
+			// calling Init() directly in luaopen will insta crash with heap corruption, but this
+			// seems *knock on wood* to work fine
+			std::jthread t(Init, L);
 
-			// Init(L);
+			state = L; // save the state pointer to use in callbacks
 
 			return 0;
 		}
