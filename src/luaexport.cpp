@@ -22,6 +22,7 @@
 
 #include "About.h"
 #include "Exports.h"
+#include "LuaHelpers.h"
 #include "LuaState.h"
 #include "Patches.h"
 
@@ -49,6 +50,29 @@ namespace ExtraUtilities::Lua
 		// Version string
 		lua_pushstring(L, version.c_str());
 		lua_setfield(L, exuIdx, "VERSION");
+
+		// Defaults enum
+		lua_newtable(L);
+
+		lua_pushnumber(L, 4.9f);
+		lua_setfield(L, -2, "COEFF_BALLISTIC");
+
+		PushVector(L, { 0.f, -9.8f, 0.f });
+		lua_setfield(L, -2, "GRAVITY_VECTOR");
+
+		lua_pushnumber(L, 200.f);
+		lua_setfield(L, -2, "RETICLE_RANGE");
+
+		lua_pushnumber(L, 8.f);
+		lua_setfield(L, -2, "SAT_MAX_ZOOM");
+
+		lua_pushnumber(L, 2.f);
+		lua_setfield(L, -2, "SAT_MIN_ZOOM");
+
+		lua_pushnumber(L, 1250.f);
+		lua_setfield(L, -2, "SAT_PAN_SPEED");
+
+		lua_setfield(L, exuIdx, "DEFAULTS");
 
 		// Difficulty enum
 		lua_newtable(L);
