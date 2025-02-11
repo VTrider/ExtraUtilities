@@ -36,7 +36,7 @@
 
 namespace ExtraUtilities::Lua
 {
-	// MUST BE EXECUTED ON SEPARATE THREAD! Read note at bottom of luaopen
+	// MUST BE EXECUTED WHEN GARBAGE COLLECTOR IS PAUSED! See note at bottom.
 	int Init(lua_State* L)
 	{
 		state = L; // save the state pointer to use in callbacks
