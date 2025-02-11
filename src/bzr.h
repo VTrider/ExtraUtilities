@@ -155,7 +155,14 @@ namespace BZR
 
 	namespace Multiplayer
 	{
+		inline auto isNetGame = (bool*)0x00917f7b;
+
+		// Real life counter, does not update the scoreboard in real time however
 		inline auto lives = (int*)0x008E8D04;
+
+		// Call this function to update the scoreboard with the current life count
+		using _UpdateLives = void(*)(void);
+		inline _UpdateLives UpdateLives = (_UpdateLives)0x006260f0;
 	}
 
 	class Ordnance

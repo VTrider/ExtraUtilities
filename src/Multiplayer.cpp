@@ -32,6 +32,14 @@ namespace ExtraUtilities::Lua::Multiplayer
 	{
 		int newLives = luaL_checkinteger(L, 1);
 		lives.Write(newLives);
+
+		// This will crash if done in singleplayer,
+		// not like lives do anything in SP anyways tho
+		if (isNetGame.Read() == true)
+		{
+			BZR::Multiplayer::UpdateLives();
+		}
+		
 		return 0;
 	}
 }

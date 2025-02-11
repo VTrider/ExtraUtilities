@@ -25,6 +25,7 @@
 
 namespace ExtraUtilities::Lua::Multiplayer
 {
+	inline Scanner isNetGame(BZR::Multiplayer::isNetGame, BasicScanner::Restore::DISABLED);
 	inline Scanner lives(BZR::Multiplayer::lives);
 
 	int GetLives(lua_State* L);
