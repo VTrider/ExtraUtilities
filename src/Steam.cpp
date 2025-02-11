@@ -16,23 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Combined header for lua exports
-*/
-
-#pragma once
-
-#include "ControlPanel.h"
-#include "Environment.h"
-#include "GameObject.h"
-#include "IO.h"
-#include "Multiplayer.h"
-#include "Ordnance.h"
-#include "OS.h"
-#include "PlayOption.h"
-#include "Radar.h"
-#include "Reticle.h"
-#include "Satellite.h"
-#include "SoundOptions.h"
 #include "Steam.h"
-#include "StockExtensions.h"
+
+#include <string>
+
+namespace ExtraUtilities::Lua::Steam
+{
+	int GetSteam64(lua_State* L)
+	{
+		std::string formattedSteam64 = std::to_string(steam64.Read());
+		lua_pushstring(L, formattedSteam64.c_str());
+		return 1;
+	}
+}

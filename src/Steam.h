@@ -16,23 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Combined header for lua exports
-*/
-
 #pragma once
 
-#include "ControlPanel.h"
-#include "Environment.h"
-#include "GameObject.h"
-#include "IO.h"
-#include "Multiplayer.h"
-#include "Ordnance.h"
-#include "OS.h"
-#include "PlayOption.h"
-#include "Radar.h"
-#include "Reticle.h"
-#include "Satellite.h"
-#include "SoundOptions.h"
-#include "Steam.h"
-#include "StockExtensions.h"
+#include "BZR.h"
+#include "Scanner.h"
+
+#include <lua.hpp>
+
+namespace ExtraUtilities::Lua::Steam
+{
+	inline Scanner steam64(BZR::Steam::steam64);
+
+	int GetSteam64(lua_State* L);
+}

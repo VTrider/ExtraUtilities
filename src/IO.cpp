@@ -16,23 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Combined header for lua exports
-*/
-
-#pragma once
-
-#include "ControlPanel.h"
-#include "Environment.h"
-#include "GameObject.h"
 #include "IO.h"
-#include "Multiplayer.h"
-#include "Ordnance.h"
-#include "OS.h"
-#include "PlayOption.h"
-#include "Radar.h"
-#include "Reticle.h"
-#include "Satellite.h"
-#include "SoundOptions.h"
-#include "Steam.h"
-#include "StockExtensions.h"
+
+namespace ExtraUtilities::Lua::IO
+{
+	int GetGameKey(lua_State* L)
+	{
+		std::string key = luaL_checkstring(L, 1);
+		
+		auto it = keyMap.find(ToUpper(key));
+
+		int vKey;
+
+		if (it != keyMap.end())
+		{
+			vKey = it->second;
+		}
+		else
+		{
+			luaL_argerror(L, 1, "Extra Utilities Error: invalid key - see wiki");
+			return 0;
+		}
+
+		// this ternary is necessary cause you need to evaluate the
+		// truthiness in C++ due to the weird return value of GetAsyncKeyState
+		lua_pushboolean(L, GetAsyncKeyState(vKey) ? true : false);
+
+		return 1;
+	}
+}

@@ -143,6 +143,7 @@
     <ClCompile Include="src\Environment.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\GlobalTurbo.cpp" />
+    <ClCompile Include="src\IO.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
     <ClCompile Include="src\Multiplayer.cpp" />
     <ClCompile Include="src\Ogre.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="src\Satellite.cpp" />
     <ClCompile Include="src\ShotConvergence.cpp" />
     <ClCompile Include="src\SoundOptions.cpp" />
+    <ClCompile Include="src\Steam.cpp" />
     <ClCompile Include="src\StockExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +171,7 @@
     <ClInclude Include="src\Hook.h" />
     <ClInclude Include="src\BasicPatch.h" />
     <ClInclude Include="src\InlinePatch.h" />
+    <ClInclude Include="src\IO.h" />
     <ClInclude Include="src\LuaHelpers.h" />
     <ClInclude Include="src\LuaState.h" />
     <ClInclude Include="src\Multiplayer.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="src\BasicScanner.h" />
     <ClInclude Include="src\ShotConvergence.h" />
     <ClInclude Include="src\SoundOptions.h" />
+    <ClInclude Include="src\Steam.h" />
     <ClInclude Include="src\StockExtensions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

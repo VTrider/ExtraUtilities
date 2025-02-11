@@ -128,6 +128,9 @@ namespace ExtraUtilities::Lua
 				{ "GetVelocJam",	&GameObject::GetVelocJam },
 				{ "SetVelocJam",	&GameObject::SetVelocJam },
 
+				// IO
+				{ "GetGameKey", &IO::GetGameKey },
+
 				// Multiplayer
 				{ "GetLives", &Multiplayer::GetLives },
 				{ "SetLives", &Multiplayer::SetLives },
@@ -158,7 +161,7 @@ namespace ExtraUtilities::Lua
 
 				// Radar
 				{ "GetRadarState", &Radar::GetState },
-				{ "SetRadarState", &Radar::SetState }, 
+				{ "SetRadarState", &Radar::SetState },
 
 				// Reticle
 				{ "GetReticlePos",    &Reticle::GetPosition },
@@ -168,7 +171,7 @@ namespace ExtraUtilities::Lua
 				{ "GetReticleMatrix", &Reticle::GetMatrix },
 
 				// Satellite
-				
+
 				{ "GetSatState",     &Satellite::GetState },
 				{ "GetSatCursorPos", &Satellite::GetCursorPos },
 				{ "GetSatCameraPos", &Satellite::GetCameraPos },
@@ -188,6 +191,9 @@ namespace ExtraUtilities::Lua
 				{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
 				{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
 				{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
+
+				// Steam
+				{ "GetSteam64", &Steam::GetSteam64 },
 
 				// Stock Extensions
 				{ "DoString", &StockExtensions::DoString },
