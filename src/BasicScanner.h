@@ -28,16 +28,6 @@
 
 namespace ExtraUtilities
 {
-	namespace ScannerProperties
-	{
-		enum class BaseAddress : uint8_t
-		{
-			ABSOLUTE, // use absolute address, for most cases in BZR
-			BZR, // use BZR module base, not necessary due to lack of ASLR
-			OGRE // use ogre module base, necessary for ogre functions since the dll is loaded in a random location
-		};
-	}
-
 	class BasicScanner
 	{
 	protected:
@@ -47,10 +37,25 @@ namespace ExtraUtilities
 		BasicScanner() = default;
 
 	public:
-		// Calculates an address from module offset for use in a hook as opposed to accessing data
-		static uintptr_t CalculateAddress(uintptr_t offset, ScannerProperties::BaseAddress baseAddress)
+		// Should the scanner restore the original data when the dll exits?
+		enum class Restore : uint8_t
 		{
-			using enum ScannerProperties::BaseAddress;
+			ENABLED,
+			DISABLED
+		};
+
+		// What base address to use when calculating memory addresses
+		enum class BaseAddress : uint8_t
+		{
+			ABSOLUTE, // use absolute address, for most cases in BZR
+			BZR, // use BZR module base, not necessary due to lack of ASLR
+			OGRE // use ogre module base, necessary for ogre functions since the dll is loaded in a random location
+		};
+
+		// Calculates an address from module offset for use in a hook as opposed to accessing data
+		static uintptr_t CalculateAddress(uintptr_t offset, BaseAddress baseAddress)
+		{
+			using enum BaseAddress;
 			switch (baseAddress)
 			{
 			case ABSOLUTE:

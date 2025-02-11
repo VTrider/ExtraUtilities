@@ -29,8 +29,15 @@ namespace ExtraUtilities
 {
 	class BasicPatch
 	{
+	public:
+		enum class Status
+		{
+			ACTIVE, // patched code is running
+			INACTIVE // game code is running
+		};
+
 	protected:
-		bool m_active;
+		Status m_status;
 
 		uintptr_t m_address;
 		size_t m_length;
@@ -51,12 +58,12 @@ namespace ExtraUtilities
 
 			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
-			m_active = false;
+			m_status = Status::INACTIVE;
 		}
 
 	public:
-		BasicPatch(uintptr_t address, size_t length, bool startActive)
-			: m_address(address), m_length(length), m_active(startActive)
+		BasicPatch(uintptr_t address, size_t length, Status status)
+			: m_address(address), m_length(length), m_status(status)
 		{
 			uint8_t* p_address = reinterpret_cast<uint8_t*>(m_address);
 
@@ -71,7 +78,7 @@ namespace ExtraUtilities
 
 		BasicPatch(BasicPatch&& p) noexcept
 		{
-			this->m_active = p.m_active;
+			this->m_status = p.m_status;
 			this->m_address = p.m_address;
 			this->m_length = p.m_length;
 			this->m_oldProtect = p.m_oldProtect;
@@ -86,12 +93,12 @@ namespace ExtraUtilities
 
 		bool IsActive()
 		{
-			return m_active;
+			return m_status == Status::ACTIVE ? true : false;
 		}
 
 		void Reload()
 		{
-			if (!m_active)
+			if (m_status == Status::INACTIVE)
 			{
 				DoPatch();
 			}
@@ -99,7 +106,7 @@ namespace ExtraUtilities
 
 		void Unload()
 		{
-			if (m_active)
+			if (m_status == Status::ACTIVE)
 			{
 				RestorePatch();
 			}

@@ -47,7 +47,7 @@ namespace ExtraUtilities
 
 namespace ExtraUtilities::Patch
 {
-	inline const uintptr_t sceneManagerHookAddr = BasicScanner::CalculateAddress(0x3B521E, ScannerProperties::BaseAddress::OGRE);
+	inline const uintptr_t sceneManagerHookAddr = BasicScanner::CalculateAddress(0x3B521E, BasicScanner::BaseAddress::OGRE);
 
 	inline std::unique_ptr<Scanner<OgreFog>> fog;
 	inline std::unique_ptr<Scanner<OgreColor>> sunAmbient;

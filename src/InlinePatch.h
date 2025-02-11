@@ -39,25 +39,25 @@ namespace ExtraUtilities
 
 			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
-			m_active = true;
+			m_status = Status::ACTIVE;
 		}
 
 	public:
 		// Single typed value inline patch
-		InlinePatch(uintptr_t address, const void* payload, size_t length, bool startActive = true)
-			: BasicPatch(address, length, startActive), m_payload((uint8_t*)payload, (uint8_t*)payload + length)
+		InlinePatch(uintptr_t address, const void* payload, size_t length, Status status)
+			: BasicPatch(address, length, status), m_payload((uint8_t*)payload, (uint8_t*)payload + length)
 		{
-			if (m_active)
+			if (m_status == Status::ACTIVE)
 			{
 				DoPatch();
 			}
 		}
 
 		// Shellcode inline patch
-		InlinePatch(uintptr_t address, std::vector<uint8_t> payload, bool startActive = true)
-			: BasicPatch(address, payload.size(), startActive), m_payload(payload)
+		InlinePatch(uintptr_t address, std::vector<uint8_t> payload, Status status)
+			: BasicPatch(address, payload.size(), status), m_payload(payload)
 		{
-			if (m_active)
+			if (m_status == Status::ACTIVE)
 			{
 				DoPatch();
 			}

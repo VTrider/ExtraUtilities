@@ -31,8 +31,9 @@ namespace ExtraUtilities
 	private:
 		const void* m_function;
 
-		static constexpr uint8_t NOP = 0x90;
-		static constexpr uint8_t JMP = 0xE9;
+		// x86 instructions
+		static constexpr uint8_t NOP = 0x90; // no operation
+		static constexpr uint8_t JMP = 0xE9; // jump
 
 		bool ValidateHook() const
 		{
@@ -60,19 +61,19 @@ namespace ExtraUtilities
 
 			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
-			m_active = true;
+			m_status = Status::ACTIVE;
 		}
 
 	public:
-		Hook(uintptr_t address, const void* function, size_t length, bool startActive = true)
-			: BasicPatch(address, length, startActive), m_function(function)
+		Hook(uintptr_t address, const void* function, size_t length, Status status)
+			: BasicPatch(address, length, status), m_function(function)
 		{
 			if (!ValidateHook())
 			{
 				return;
 			}
 
-			if (m_active)
+			if (m_status == Status::ACTIVE)
 			{
 				DoPatch();
 			}

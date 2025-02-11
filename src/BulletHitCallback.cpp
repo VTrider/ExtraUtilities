@@ -96,5 +96,5 @@ namespace ExtraUtilities::Patch
 			jmp [jmpBack]
 		}
 	}
-	Hook bulletHitHook(bulletHit, &BulletHitCallback, 7);
+	Hook bulletHitHook(bulletHit, &BulletHitCallback, 7, Hook::Status::ACTIVE);
 }

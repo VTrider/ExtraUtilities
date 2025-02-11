@@ -41,10 +41,10 @@ namespace ExtraUtilities
 	private:
 		// This needs to be initialized first so that the address of the
 		// desired value can be resolved properly
-		ScannerProperties::BaseAddress m_baseAddress; // what base address to use when accessing memory
+		BaseAddress m_baseAddress; // what base address to use when accessing memory
 
 		T* m_address;
-		bool m_restoreData; // should you restore the data after leaving game? usually yes but sometimes no for things like game settings
+		Restore m_restoreData; // should you restore the data after leaving game? usually yes but sometimes no for things like game settings
 		T m_originalData;
 
 		DWORD m_oldProtect{}; // Original memory protection value
@@ -53,7 +53,7 @@ namespace ExtraUtilities
 		// Finds the true address from addresses that require an offset from a module
 		T* ResolveBase(T* offset)
 		{
-			using enum ScannerProperties::BaseAddress;
+			using enum BaseAddress;
 			switch (m_baseAddress)
 			{
 			case ABSOLUTE:
@@ -68,8 +68,8 @@ namespace ExtraUtilities
 		}
 
 	public:
-		Scanner(T* address, bool restoreData = true, 
-			ScannerProperties::BaseAddress baseAddress = ScannerProperties::BaseAddress::ABSOLUTE)
+		Scanner(T* address, Restore restoreData = Restore::ENABLED, 
+			BaseAddress baseAddress = BaseAddress::ABSOLUTE)
 			: m_address(ResolveBase(address)), m_restoreData(restoreData), m_baseAddress(baseAddress)
 		{
 			VirtualProtect(m_address, sizeof(T), PAGE_EXECUTE_READWRITE, &m_oldProtect);
@@ -77,8 +77,8 @@ namespace ExtraUtilities
 		}
 
 		// Traverse multi-level pointer
-		Scanner(T* address, const std::initializer_list<uint8_t>& offsetsList, bool restoreData = true, 
-			ScannerProperties::BaseAddress baseAddress = ScannerProperties::BaseAddress::ABSOLUTE)
+		Scanner(T* address, const std::initializer_list<uint8_t>& offsetsList, Restore restoreData = Restore::ENABLED, 
+			BaseAddress baseAddress = BaseAddress::ABSOLUTE)
 			: m_address(ResolveBase(address)), m_restoreData(restoreData), m_baseAddress(baseAddress)
 		{
 			VirtualProtect(m_address, sizeof(T), PAGE_EXECUTE_READWRITE, &m_oldProtect);
@@ -106,7 +106,7 @@ namespace ExtraUtilities
 
 		~Scanner()
 		{
-			if (m_restoreData == true)
+			if (m_restoreData == Restore::ENABLED)
 			{
 				Write(m_originalData);
 			}

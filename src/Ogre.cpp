@@ -81,5 +81,5 @@ namespace ExtraUtilities::Patch
 			jmp [jmpBack]
 		}
 	}
-	Hook sceneManagerHook(sceneManagerHookAddr, &GetOgreSceneManager, 7);
+	Hook sceneManagerHook(sceneManagerHookAddr, &GetOgreSceneManager, 7, Hook::Status::ACTIVE);
 }

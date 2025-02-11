@@ -23,7 +23,7 @@
 
 namespace ExtraUtilities::Patch
 {
-	InlinePatch shotConvergence(wingmanWeaponAimVftableEntry, &walkerUpdateWeaponAim, 4, false);
+	InlinePatch shotConvergence(wingmanWeaponAimVftableEntry, &walkerUpdateWeaponAim, 4, InlinePatch::Status::INACTIVE);
 }
 
 namespace ExtraUtilities::Lua::Patches
