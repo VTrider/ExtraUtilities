@@ -146,11 +146,14 @@ namespace BZR
 		VECTOR_3D pos;
 		EULER euler;
 
-
-
 		// offset to scanner: 0x198
 		// offset to jammer: 0x19C
 		// offset to carrier: 0x1A0
+
+		// OGRE
+
+		// Offsets to get to the light object GameObject* -> f0 -> a8
+		static inline uintptr_t setDiffuseColorOffset = 0x220280;
 	};
 
 	namespace Multiplayer

@@ -151,6 +151,7 @@ namespace ExtraUtilities::Lua
 				{ "SetRadarPeriod", &GameObject::SetRadarPeriod },
 				{ "GetVelocJam",	&GameObject::GetVelocJam },
 				{ "SetVelocJam",	&GameObject::SetVelocJam },
+				{ "SetDiffuseColor", &GameObject::SetDiffuseColor },
 
 				// IO
 				{ "GetGameKey", &IO::GetGameKey },

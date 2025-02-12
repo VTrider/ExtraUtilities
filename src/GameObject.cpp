@@ -140,4 +140,29 @@ namespace ExtraUtilities::Lua::GameObject
 		}
 		return 0;
 	}
+
+	int SetDiffuseColor(lua_State* L)
+	{
+		int handle = CheckHandle(L, 1);
+
+		auto obj = BZR::GameObject::GetObj(handle);
+
+		void* light;
+		__asm
+		{
+			mov eax, [obj]
+			mov ebx, [eax+0xf0]
+			mov eax, [ebx+0xa8]
+			mov [light], eax
+		}
+
+		if (light == nullptr)
+		{
+			return 0;
+		}
+
+		SetDiffuseColor2(light, 10.f, 5.f, 10.f);
+
+		return 0;
+	}
 }

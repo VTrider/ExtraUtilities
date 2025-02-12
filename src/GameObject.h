@@ -25,6 +25,10 @@
 
 namespace ExtraUtilities::Lua::GameObject
 {
+	inline uintptr_t setDiffuseColor = BasicScanner::CalculateAddress(BZR::GameObject::setDiffuseColorOffset, BasicScanner::BaseAddress::OGRE);
+	using _SetDiffuseColor = void(__thiscall*)(void*, float, float, float);
+	inline _SetDiffuseColor SetDiffuseColor2 = (_SetDiffuseColor)setDiffuseColor;
+
 	int GetHandle(lua_State* L);
 	int GetObj(lua_State* L);
 	int SetAsUser(lua_State* L);
@@ -36,4 +40,6 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int GetVelocJam(lua_State* L);
 	int SetVelocJam(lua_State* L);
+
+	int SetDiffuseColor(lua_State* L);
 }
