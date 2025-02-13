@@ -150,10 +150,48 @@ namespace BZR
 		// offset to jammer: 0x19C
 		// offset to carrier: 0x1A0
 
-		// OGRE
+		// Gets the scanner object for a GameObject (the radar controller)
+		BZR::Scanner* GetScanner()
+		{
+			BZR::Scanner* scanner;
 
-		// Offsets to get to the light object GameObject* -> f0 -> a8
-		static inline uintptr_t setDiffuseColorOffset = 0x220280;
+			// didn't want to deal with pointer casting on the
+			// unaligned gameobject class so here's some asm
+			__asm
+			{
+				mov ecx, [ecx + 0x198] // ecx is always the this pointer
+				mov [scanner], ecx
+			}
+
+			return scanner;
+		}
+
+		// Gets the jammer object for a GameObject (velocjam controller)
+		BZR::Jammer* GetJammer()
+		{
+			BZR::Jammer* jammer;
+
+			__asm
+			{
+				mov ecx, [ecx + 0x19C]
+				mov[jammer], ecx
+			}
+
+			return jammer;
+		}
+
+		// Offsets to get to the ogre light object from GameObject* -> f0 -> a8
+		void* GetLight()
+		{
+			void* light;
+			__asm
+			{
+				mov ecx, [ecx+0xf0]
+				mov ecx, [ecx+0xa8]
+				mov [light], ecx
+			}
+			return light;
+		}
 	};
 
 	namespace Multiplayer
@@ -166,6 +204,15 @@ namespace BZR
 		// Call this function to update the scoreboard with the current life count
 		using _UpdateLives = void(*)(void);
 		inline _UpdateLives UpdateLives = (_UpdateLives)0x006260f0;
+	}
+
+	namespace Ogre
+	{
+		// Function offsets from OgreMain.dll
+		constexpr uintptr_t setDiffuseColorOffset = 0x220280;
+		constexpr uintptr_t setSpecularColorOffset = 0x2204B0;
+		constexpr uintptr_t setSpotlightRangeOffset = 0x220550;
+		constexpr uintptr_t setVisibleOffset = 0x220EF0;
 	}
 
 	class Ordnance
@@ -221,7 +268,5 @@ namespace BZR
 		inline auto object = (GameObject**)0x00979F40;
 		inline auto matrix = (MAT_3D*)0x025CE6F8;
 	}
-
-
 }
 

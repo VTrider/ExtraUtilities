@@ -35,6 +35,7 @@ namespace ExtraUtilities
 		static inline uintptr_t m_ogreMainModuleBase = reinterpret_cast<uintptr_t>(GetModuleHandle("OgreMain.dll"));
 
 		BasicScanner() = default;
+		virtual ~BasicScanner() = default;
 
 	public:
 		// Should the scanner restore the original data when the dll exits?

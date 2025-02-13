@@ -61,7 +61,7 @@ namespace ExtraUtilities::Lua::Environment
 
 	int GetFog(lua_State* L)
 	{
-		OgreFog fog = Patch::fog->Read();
+		Ogre::Fog fog = Patch::fog->Read();
 
 		lua_createtable(L, 0, 5);
 
@@ -98,7 +98,7 @@ namespace ExtraUtilities::Lua::Environment
 
 	int GetSunAmbient(lua_State* L)
 	{
-		OgreColor sun = Patch::sunAmbient->Read();
+		Ogre::Color sun = Patch::sunAmbient->Read();
 
 		lua_createtable(L, 0, 3);
 

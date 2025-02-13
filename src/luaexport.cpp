@@ -72,7 +72,7 @@ namespace ExtraUtilities::Lua
 		lua_pushnumber(L, 1250.f);
 		lua_setfield(L, -2, "SAT_PAN_SPEED");
 
-		lua_setfield(L, exuIdx, "DEFAULTS");
+		lua_setfield(L, exuIdx, "DEFAULTS"); // Set the field inside the library table
 
 		// Difficulty enum
 		lua_newtable(L);
@@ -92,8 +92,38 @@ namespace ExtraUtilities::Lua
 		lua_pushinteger(L, 4);
 		lua_setfield(L, -2, "VERY_HARD");
 
-		// Set the field inside the library table
 		lua_setfield(L, exuIdx, "DIFFICULTY");
+
+		// Ogre
+		lua_newtable(L);
+
+		lua_newtable(L); // Default headlight color (diffuse and specular)
+
+		lua_pushnumber(L, 1.0f);
+		lua_setfield(L, -2, "R");
+
+		lua_pushnumber(L, 1.0f);
+		lua_setfield(L, -2, "G");
+
+		lua_pushnumber(L, 1.0f);
+		lua_setfield(L, -2, "B");
+
+		lua_setfield(L, -2, "HEADLIGHT_COLOR"); // end color rable
+
+		lua_newtable(L); // Default headlight range
+
+		lua_pushnumber(L, 0.1745f);
+		lua_setfield(L, -2, "INNER_ANGLE");
+
+		lua_pushnumber(L, 0.3490f);
+		lua_setfield(L, -2, "OUTER_ANGLE");
+
+		lua_pushnumber(L, 1.0f);
+		lua_setfield(L, -2, "FALLOFF");
+
+		lua_setfield(L, -2, "HEADLIGHT_RANGE"); // end range table
+
+		lua_setfield(L, -2, "OGRE"); // end ogre enum
 
 		// Radar state enum
 		lua_newtable(L);
@@ -151,7 +181,10 @@ namespace ExtraUtilities::Lua
 				{ "SetRadarPeriod", &GameObject::SetRadarPeriod },
 				{ "GetVelocJam",	&GameObject::GetVelocJam },
 				{ "SetVelocJam",	&GameObject::SetVelocJam },
-				{ "SetDiffuseColor", &GameObject::SetDiffuseColor },
+				{ "SetHeadlightDiffuse", &GameObject::SetHeadlightDiffuse },
+				{ "SetHeadlightSpecular", &GameObject::SetHeadlightSpecular },
+				{ "SetHeadlightRange", &GameObject::SetHeadlightRange },
+				{ "SetHeadlightVisible", &GameObject::SetHeadlightVisible },
 
 				// IO
 				{ "GetGameKey", &IO::GetGameKey },

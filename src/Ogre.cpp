@@ -24,8 +24,8 @@ namespace ExtraUtilities::Patch
 {
 	void __cdecl InitOgreScanners(void* sceneManager)
 	{
-		OgreFog* fogOffset;
-		OgreColor* sunlightOffset;
+		Ogre::Fog* fogOffset;
+		Ogre::Color* sunlightOffset;
 
 		__asm
 		{
@@ -39,8 +39,8 @@ namespace ExtraUtilities::Patch
 		}
 
 		// these gotta be heap allocated cause we can't reference local vars
-		fog = std::make_unique<Scanner<OgreFog>>(fogOffset);
-		sunAmbient = std::make_unique<Scanner<OgreColor>>(sunlightOffset);
+		fog = std::make_unique<Scanner<Ogre::Fog>>(fogOffset);
+		sunAmbient = std::make_unique<Scanner<Ogre::Color>>(sunlightOffset);
 	}
 
 	// this can't be inside the naked function cause the arithmetic and
