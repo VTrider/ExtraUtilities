@@ -26,17 +26,29 @@ namespace ExtraUtilities::Lua
 {
 	inline void PushVector(lua_State* L, const BZR::VECTOR_3D& v)
 	{
-		lua_getglobal(L, "SetVector");
+	#ifdef GC_PATCH
+		lua_gc(L, LUA_GCSTOP, 0);
+	#endif
 
+		lua_getglobal(L, "SetVector");
+		
 		lua_pushnumber(L, v.x);
 		lua_pushnumber(L, v.y);
 		lua_pushnumber(L, v.z);
 
 		lua_call(L, 3, 1);
+
+	#ifdef GC_PATCH
+		lua_gc(L, LUA_GCRESTART, 0);
+	#endif
 	}
 
 	inline void PushMatrix(lua_State* L, const BZR::MAT_3D& m)
 	{
+	#ifdef GC_PATCH
+		lua_gc(L, LUA_GCSTOP, 0);
+	#endif
+
 		lua_getglobal(L, "SetMatrix");
 
 		// These are in the "wrong" order because the game lua function is broken
@@ -54,6 +66,10 @@ namespace ExtraUtilities::Lua
 		lua_pushnumber(L, m.posit_z);
 
 		lua_call(L, 12, 1);
+
+	#ifdef GC_PATCH
+		lua_gc(L, LUA_GCRESTART, 0);
+	#endif
 	}
 
 	inline bool CheckBool(lua_State* L, int idx)
@@ -65,12 +81,12 @@ namespace ExtraUtilities::Lua
 		return lua_toboolean(L, idx);
 	}
 
-	inline int CheckHandle(lua_State* L, int idx)
+	inline BZR::handle CheckHandle(lua_State* L, int idx)
 	{
 		if (!lua_isuserdata(L, idx))
 		{
 			luaL_typerror(L, idx, "handle");
 		}
-		return reinterpret_cast<int>(lua_touserdata(L, idx));
+		return reinterpret_cast<BZR::handle>(lua_touserdata(L, idx));
 	}
 }

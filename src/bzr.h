@@ -26,6 +26,9 @@
 
 namespace BZR
 {
+	// Typedefs
+	using handle = unsigned int; // internally handles are unsigned ints
+
 	// Forward declarations
 	class GameObject;
 	using GameObjectClass = void;
@@ -147,13 +150,13 @@ namespace BZR
 	class GameObject
 	{
 	public:
-		using _GetHandle = unsigned int(__thiscall*)(int);
+		using _GetHandle = handle(__thiscall*)(GameObject*);
 		static inline _GetHandle GetHandle = (_GetHandle)(0x00462380);
 
 		// Credit to Janne for this function -VT
-		static GameObject* GetObj(unsigned int handle)
+		static GameObject* GetObj(handle h)
 		{
-			return (GameObject*)(((handle >> 0x14) * 0x400) + 0x260DB20);
+			return (GameObject*)(((h >> 0x14) * 0x400) + 0x260DB20);
 		}
 
 		using _SetAsUser = void(__thiscall*)(GameObject*);

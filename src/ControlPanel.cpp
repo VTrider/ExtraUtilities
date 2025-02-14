@@ -24,8 +24,8 @@ namespace ExtraUtilities::Lua::ControlPanel
 {
 	int SelectAdd(lua_State* L)
 	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::GameObject* obj = BZR::GameObject::GetObj(h);
 		BZR::ControlPanel::SelectAdd(controlPanel, obj);
 		return 0;
 	}
@@ -38,8 +38,8 @@ namespace ExtraUtilities::Lua::ControlPanel
 
 	int SelectOne(lua_State* L)
 	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::GameObject* obj = BZR::GameObject::GetObj(h);
 		BZR::ControlPanel::SelectOne(controlPanel, obj);
 		return 0;
 	}
