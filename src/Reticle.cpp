@@ -46,8 +46,7 @@ namespace ExtraUtilities::Lua::Reticle
 
 	int GetObject(lua_State* L)
 	{
-		auto handle = BZR::GameObject::GetHandle(reinterpret_cast<int>(object.Read()));
-		lua_pushlightuserdata(L, reinterpret_cast<void*>(handle));
+		lua_pushlightuserdata(L, reinterpret_cast<void*>(object.Read()));
 		return 1;
 	}
 

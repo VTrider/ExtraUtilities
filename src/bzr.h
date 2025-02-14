@@ -299,7 +299,7 @@ namespace BZR
 		inline auto angle = (float*)0x025CE714;
 		inline auto position = (VECTOR_3D*)0x025CE79C;
 		inline auto range = (float*)0x00886B20;
-		inline auto object = (GameObject**)0x00979F40;
+		inline auto object = (int*)0x00979F40;
 		inline auto matrix = (MAT_3D*)0x025CE6F8;
 	}
 }

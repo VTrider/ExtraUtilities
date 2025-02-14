@@ -28,8 +28,9 @@ namespace ExtraUtilities::Lua::SoundOptions
 	using namespace BZR::SoundOptions;
 
 	inline Scanner musicVolume(soundStruct1, { musicOffset }, BasicScanner::Restore::DISABLED); // only a display value
-	inline Scanner sfxVolume(soundStruct2, { sfxOffset }, BasicScanner::Restore::DISABLED);
-	inline Scanner voiceVolume(soundStruct2, { voiceOffset }, BasicScanner::Restore::DISABLED);
+	// TODO: Offset on struct 2 is nullptr
+	// inline Scanner sfxVolume(soundStruct2, { sfxOffset }, BasicScanner::Restore::DISABLED);
+	// inline Scanner voiceVolume(soundStruct2, { voiceOffset }, BasicScanner::Restore::DISABLED);
 
 	int GetMusicVolume(lua_State* L);
 	int GetEffectsVolume(lua_State* L);

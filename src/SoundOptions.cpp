@@ -26,7 +26,7 @@ namespace ExtraUtilities::Lua::SoundOptions
 		return 1;
 	}
 
-	int GetEffectsVolume(lua_State* L)
+	/*int GetEffectsVolume(lua_State* L)
 	{
 		lua_pushnumber(L, sfxVolume.Read());
 		return 1;
@@ -58,5 +58,5 @@ namespace ExtraUtilities::Lua::SoundOptions
 		}
 		voiceVolume.Write(newVolume);
 		return 0;
-	}
+	}*/
 }
