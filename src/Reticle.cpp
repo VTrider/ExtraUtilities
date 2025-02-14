@@ -46,7 +46,18 @@ namespace ExtraUtilities::Lua::Reticle
 
 	int GetObject(lua_State* L)
 	{
-		lua_pushlightuserdata(L, reinterpret_cast<void*>(object.Read()));
+		int handle = object.Read();
+
+		if (handle == 0)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+		else
+		{
+			lua_pushlightuserdata(L, reinterpret_cast<void*>(handle));
+		}
+		
 		return 1;
 	}
 
