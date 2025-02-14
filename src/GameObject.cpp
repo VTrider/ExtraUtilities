@@ -27,58 +27,58 @@ namespace ExtraUtilities::Lua::GameObject
 {
 	int GetHandle(lua_State* L)
 	{
-		int gameObject = CheckHandle(L, 1);
-		unsigned int handle = BZR::GameObject::GetHandle(gameObject);
-		lua_pushlightuserdata(L, reinterpret_cast<void*>(handle));
+		auto gameObject = reinterpret_cast<BZR::GameObject*>(CheckHandle(L, 1));
+		BZR::handle h = BZR::GameObject::GetHandle(gameObject);
+		lua_pushlightuserdata(L, reinterpret_cast<void*>(h));
 		return 1;
 	}
 
 	int GetObj(lua_State* L)
 	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::GameObject* obj = BZR::GameObject::GetObj(h);
 		lua_pushlightuserdata(L, obj);
 		return 1;
 	}
 
 	int SetAsUser(lua_State* L)
 	{
-		unsigned int handle = CheckHandle(L, 1);
-		BZR::GameObject* obj = BZR::GameObject::GetObj(handle);
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::GameObject* obj = BZR::GameObject::GetObj(h);
 		BZR::GameObject::SetAsUser(obj);
 		return 0;
 	}
 
 	int GetRadarRange(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
-		BZR::Scanner* scanner = BZR::GameObject::GetObj(handle)->GetScanner();
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::Scanner* scanner = BZR::GameObject::GetObj(h)->GetScanner();
 		lua_pushnumber(L, scanner->range);
 		return 1;
 	}
 
 	int SetRadarRange(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
+		BZR::handle h = CheckHandle(L, 1);
 		float range = static_cast<float>(luaL_checknumber(L, 2));
-		BZR::Scanner* scanner = BZR::GameObject::GetObj(handle)->GetScanner();
+		BZR::Scanner* scanner = BZR::GameObject::GetObj(h)->GetScanner();
 		scanner->range = range;
 		return 0;
 	}
 
 	int GetRadarPeriod(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
-		BZR::Scanner* scanner = BZR::GameObject::GetObj(handle)->GetScanner();
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::Scanner* scanner = BZR::GameObject::GetObj(h)->GetScanner();
 		lua_pushnumber(L, scanner->period);
 		return 1;
 	}
 
 	int SetRadarPeriod(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
+		BZR::handle h = CheckHandle(L, 1);
 		float period = static_cast<float>(luaL_checknumber(L, 2));
-		BZR::Scanner* scanner = BZR::GameObject::GetObj(handle)->GetScanner();
+		BZR::Scanner* scanner = BZR::GameObject::GetObj(h)->GetScanner();
 		scanner->period = period;
 		scanner->sweep = 0.01f; // this causes it to immediately update and skip the current sweep
 
@@ -87,8 +87,8 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int GetVelocJam(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
-		BZR::Jammer* jammer = BZR::GameObject::GetObj(handle)->GetJammer();
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::Jammer* jammer = BZR::GameObject::GetObj(h)->GetJammer();
 		if (jammer != nullptr) // sometimes your gameobject may not have a jammer, like if you're a pilot for example
 		{
 			lua_pushnumber(L, jammer->maxSpeed);
@@ -102,9 +102,9 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int SetVelocJam(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
+		BZR::handle h = CheckHandle(L, 1);
 		float maxSpeed = static_cast<float>(luaL_checknumber(L, 2));
-		BZR::Jammer* jammer = BZR::GameObject::GetObj(handle)->GetJammer();
+		BZR::Jammer* jammer = BZR::GameObject::GetObj(h)->GetJammer();
 		if (jammer != nullptr)
 		{
 			jammer->maxSpeed = maxSpeed;
@@ -114,12 +114,12 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int SetHeadlightDiffuse(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
+		BZR::handle h = CheckHandle(L, 1);
 		float r = static_cast<float>(luaL_checknumber(L, 2));
 		float g = static_cast<float>(luaL_checknumber(L, 3));
 		float b = static_cast<float>(luaL_checknumber(L, 4));
 
-		auto obj = BZR::GameObject::GetObj(handle);
+		auto obj = BZR::GameObject::GetObj(h);
 
 		void* light = obj->GetLight();
 
@@ -135,12 +135,12 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int SetHeadlightSpecular(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
+		BZR::handle h = CheckHandle(L, 1);
 		float r = static_cast<float>(luaL_checknumber(L, 2));
 		float g = static_cast<float>(luaL_checknumber(L, 3));
 		float b = static_cast<float>(luaL_checknumber(L, 4));
 
-		auto obj = BZR::GameObject::GetObj(handle);
+		auto obj = BZR::GameObject::GetObj(h);
 
 		void* light = obj->GetLight();
 
@@ -156,12 +156,12 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int SetHeadlightRange(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
+		BZR::handle h = CheckHandle(L, 1);
 		float innerAngle = static_cast<float>(luaL_checknumber(L, 2));
 		float outerAngle = static_cast<float>(luaL_checknumber(L, 3));
 		float falloff = static_cast<float>(luaL_checknumber(L, 4));
 
-		auto obj = BZR::GameObject::GetObj(handle);
+		auto obj = BZR::GameObject::GetObj(h);
 
 		void* light = obj->GetLight();
 
@@ -177,10 +177,10 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int SetHeadlightVisible(lua_State* L)
 	{
-		int handle = CheckHandle(L, 1);
+		BZR::handle h = CheckHandle(L, 1);
 		bool visible = CheckBool(L, 2);
 
-		auto obj = BZR::GameObject::GetObj(handle);
+		auto obj = BZR::GameObject::GetObj(h);
 
 		void* light = obj->GetLight();
 

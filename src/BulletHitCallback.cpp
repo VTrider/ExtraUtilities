@@ -26,9 +26,13 @@
 
 namespace ExtraUtilities::Patch
 {
-	static void __cdecl LuaCallback(const char* odf, int* obj, double position[3])
+	static void __cdecl LuaCallback(const char* odf, BZR::GameObject* obj, double position[3])
 	{
 		lua_State* L = Lua::state;
+
+	#ifdef GC_PATCH
+		lua_gc(L, LUA_GCSTOP, 0);
+	#endif
 
 		lua_getglobal(L, "SetVector");
 		lua_pushnumber(L, position[0]);
@@ -46,17 +50,21 @@ namespace ExtraUtilities::Patch
 		}
 
 		lua_pushstring(L, odf);
-		if (*obj == 0)
+		if (obj == nullptr)
 		{
 			lua_pushnil(L);
 		}
 		else
 		{
-			lua_pushlightuserdata(L, reinterpret_cast<void*>(BZR::GameObject::GetHandle(*obj)));
+			lua_pushlightuserdata(L, reinterpret_cast<void*>(BZR::GameObject::GetHandle(obj)));
 		}
 		lua_pushvalue(L, posVector);
 		lua_call(L, 3, 0);
 		lua_pop(L, -1);
+
+	#ifdef GC_PATCH
+		lua_gc(L, LUA_GCRESTART, 0);
+	#endif
 	}
 
 	static void __declspec(naked) BulletHitCallback()
@@ -76,7 +84,7 @@ namespace ExtraUtilities::Patch
 			lea eax, [ecx + 0x48] // position, vec3 of doubles 8*3 bytes
 			push eax
 
-			lea eax, [ebp + 0x08] // gameobject* of hit object if it exists
+			mov eax, [ebp + 0x08] // gameobject* of hit object if it exists
 			push eax
 
 			mov eax, [ebx + 0x0C] // OrdnanceClass* - Scanner by -0x04 from 1.5, is 0x10 in 1.5

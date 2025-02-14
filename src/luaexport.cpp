@@ -325,13 +325,15 @@ namespace ExtraUtilities::Lua
 			// So: it is CRITICAL that any initialization is done while the garbage collector
 			// is STOPPED (in between the lua_gc calls)
 
+		#ifdef GC_PATCH
 			lua_gc(L, LUA_GCSTOP, 0);
-
+		#endif
 			luaL_register(L, "exu", EXPORT);
 			Init(L);
 
+		#ifdef GC_PATCH
 			lua_gc(L, LUA_GCRESTART, 0);
-
+		#endif
 			return 0;
 		}
 	}
