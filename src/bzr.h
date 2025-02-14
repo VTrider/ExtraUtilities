@@ -28,6 +28,10 @@ namespace BZR
 {
 	// Forward declarations
 	class GameObject;
+	using GameObjectClass = void;
+	class tagENTITY;
+	using OBJ76 = void;
+	using AiProcess = void;
 
 	struct Jammer
 	{
@@ -69,10 +73,42 @@ namespace BZR
 	namespace Camera
 	{
 		inline auto zoomFactorFPP = (float*)0x008EAD10;
-		inline auto zoomFactorGlobal = (float*)0x008EAB10;
+		inline auto zoomFactorTPP = (float*)0x008EAB10;
 		inline auto maxZoomFactor = (float*)0x008A2688;
 		inline auto minZoomFactor = (float*)0x008A25FC;
 		inline auto viewFrustum = (void*)0x008EABE0;
+
+		enum View
+		{
+			// Camera types
+			FIRST_PERSON = 0x100,
+			THIRD_PERSON = 0x101,
+
+			// SetView Values
+
+			// User assignable views
+			COCKPIT = 1, // F1
+			NO_COCKPIT = 2, // F2
+			CHASE = 4, // F3
+			ORBIT = 5, // F4
+			NO_HUD = 3, // F5
+			EDITOR = 6, // F9
+			CHEAT_SATELLITE = 7, // F10
+			FREECAM = 9, // F11
+
+			TOGGLE_SATELLITE = 8, // 9 key with satellite built and powered
+			TERRAIN_EDIT = 0x2A // CTRL+E
+		};
+
+		inline auto currentView = (int*)0x02CECEA0;
+
+		using _Set_View = void(__cdecl*)(tagENTITY*, int); // 2nd param is an enum
+		inline _Set_View Set_View = (_Set_View)0x0061D120;
+	}
+
+	namespace Cheats
+	{
+		inline auto editMode = (bool*)0x009454b8;
 	}
 
 	class ControlPanel
@@ -127,10 +163,8 @@ namespace BZR
 		// after exiting a map
 		static inline auto p_userObject = (void*)0x00917AFC;
 
-		using GameObjectClass = void;
-		using tagENTITY = void;
-		using OBJ76 = void;
-		using AiProcess = void;
+		// the naming is based off the 1.5 pdb, the inconsistency is intentional
+		static inline auto user_entity_ptr = (tagENTITY**)0x00920c78;
 
 		uintptr_t vftableAttachable;
 		uint8_t padding_1[0x14];

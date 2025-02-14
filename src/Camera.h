@@ -16,24 +16,31 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Combined header for lua exports
-*/
-
 #pragma once
 
-#include "Camera.h"
-#include "ControlPanel.h"
-#include "Environment.h"
-#include "GameObject.h"
-#include "IO.h"
-#include "Multiplayer.h"
-#include "Ordnance.h"
-#include "OS.h"
-#include "PlayOption.h"
-#include "Radar.h"
-#include "Reticle.h"
-#include "Satellite.h"
-#include "SoundOptions.h"
-#include "Steam.h"
-#include "StockExtensions.h"
+#include "BZR.h"
+#include "Scanner.h"
+
+#include <lua.hpp>
+
+namespace ExtraUtilities::Lua::Camera
+{
+	inline Scanner zoomFPP(BZR::Camera::zoomFactorFPP);
+	inline Scanner zoomTPP(BZR::Camera::zoomFactorTPP);
+	inline Scanner minZoom(BZR::Camera::minZoomFactor);
+	inline Scanner maxZoom(BZR::Camera::maxZoomFactor);
+	inline Scanner userEntity(BZR::GameObject::user_entity_ptr);
+	inline Scanner currentView(BZR::Camera::currentView);
+
+	int GetZoom(lua_State* L);
+	int SetZoom(lua_State* L);
+
+	int GetMinZoom(lua_State* L);
+	int SetMinZoom(lua_State* L);
+
+	int GetMaxZoom(lua_State* L);
+	int SetMaxZoom(lua_State* L);
+
+	int GetView(lua_State* L);
+	int SetView(lua_State* L);
+}

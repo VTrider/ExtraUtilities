@@ -51,8 +51,55 @@ namespace ExtraUtilities::Lua
 		lua_pushstring(L, version.c_str());
 		lua_setfield(L, exuIdx, "VERSION");
 
+		// Camera enum
+		lua_newtable(L);
+
+		lua_pushinteger(L, BZR::Camera::FIRST_PERSON);
+		lua_setfield(L, -2, "FIRST_PERSON");
+
+		lua_pushinteger(L, BZR::Camera::THIRD_PERSON);
+		lua_setfield(L, -2, "THIRD_PERSON");
+
+		lua_pushinteger(L, BZR::Camera::COCKPIT);
+		lua_setfield(L, -2, "COCKPIT");
+
+		lua_pushinteger(L, BZR::Camera::NO_COCKPIT);
+		lua_setfield(L, -2, "NO_COCKPIT");
+
+		lua_pushinteger(L, BZR::Camera::CHASE);
+		lua_setfield(L, -2, "CHASE");
+
+		lua_pushinteger(L, BZR::Camera::ORBIT);
+		lua_setfield(L, -2, "ORBIT");
+
+		lua_pushinteger(L, BZR::Camera::NO_HUD);
+		lua_setfield(L, -2, "NO_HUD");
+
+		lua_pushinteger(L, BZR::Camera::EDITOR);
+		lua_setfield(L, -2, "EDITOR");
+
+		lua_pushinteger(L, BZR::Camera::CHEAT_SATELLITE);
+		lua_setfield(L, -2, "CHEAT_SATELLITE");
+
+		lua_pushinteger(L, BZR::Camera::FREECAM);
+		lua_setfield(L, -2, "FREECAM");
+
+		lua_pushinteger(L, BZR::Camera::TOGGLE_SATELLITE);
+		lua_setfield(L, -2, "TOGGLE_SATELLITE");
+
+		lua_pushinteger(L, BZR::Camera::TERRAIN_EDIT);
+		lua_setfield(L, -2, "TERRAIN_EDIT");
+
+		lua_setfield(L, -2, "CAMERA"); // end camera enum
+
 		// Defaults enum
 		lua_newtable(L);
+
+		lua_pushnumber(L, 0.99f);
+		lua_setfield(L, -2, "CAMERA_MIN_ZOOM");
+
+		lua_pushnumber(L, 1.60f);
+		lua_setfield(L, -2, "CAMERA_MAX_ZOOM");
 
 		lua_pushnumber(L, 4.9f);
 		lua_setfield(L, -2, "COEFF_BALLISTIC");
@@ -158,6 +205,16 @@ namespace ExtraUtilities::Lua
 		int __declspec(dllexport) luaopen_exu(lua_State* L)
 		{
 			const luaL_Reg EXPORT[] = {
+				// Camera
+				{ "GetCameraZoom", Camera::GetZoom },
+				{ "SetCameraZoom", Camera::SetZoom },
+				{ "GetCameraMinZoom", Camera::GetMinZoom },
+				{ "SetCameraMinZoom", Camera::SetMinZoom },
+				{ "GetCameraMaxZoom", Camera::GetMaxZoom },
+				{ "SetCameraMaxZoom", Camera::SetMaxZoom },
+				{ "GetView", Camera::GetView },
+				{ "SetView", Camera::SetView },
+
 				// Control Panel
 				{ "SelectAdd",  &ControlPanel::SelectAdd },
 				{ "SelectNone", &ControlPanel::SelectNone },
@@ -255,11 +312,6 @@ namespace ExtraUtilities::Lua
 
 				// Stock Extensions
 				{ "DoString", &StockExtensions::DoString },
-
-				{ "Test", [](lua_State*) -> int
-				{
-					return 0;
-				}},
 
 				// Function register table must end with a zero entry
 				{ 0, 0 }
