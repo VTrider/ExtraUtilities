@@ -162,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h" />
-    <ClInclude Include="src\BulletHit.h" />
+    <ClInclude Include="src\BulletHitCallback.h" />
     <ClInclude Include="src\BZR.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\ControlPanel.h" />

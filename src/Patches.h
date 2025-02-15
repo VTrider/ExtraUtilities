@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "BulletHit.h"
+#include "BulletHitCallback.h"
 #include "GlobalTurbo.h"
 #include "Ogre.h"
 #include "ShotConvergence.h"

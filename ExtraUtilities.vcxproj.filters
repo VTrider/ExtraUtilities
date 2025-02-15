@@ -140,7 +140,7 @@
     <ClInclude Include="src\InlinePatch.h">
       <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\BulletHit.h">
+    <ClInclude Include="src\BulletHitCallback.h">
       <Filter>Header Files\Patches</Filter>
     </ClInclude>
     <ClInclude Include="src\Patches.h">

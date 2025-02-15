@@ -22,5 +22,5 @@
 
 namespace ExtraUtilities::Patch
 {
-	constexpr uintptr_t bulletHit = 0x00480774;
+	constexpr uintptr_t bulletHit = 0x00480771;
 }

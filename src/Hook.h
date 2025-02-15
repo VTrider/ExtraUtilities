@@ -30,14 +30,15 @@ namespace ExtraUtilities
 	{
 	private:
 		const void* m_function;
+		const void** p_function = &m_function; // pointer to the function for memcpy
 
-		// x86 instructions
+		// x86 shellcode
 		static constexpr uint8_t NOP = 0x90; // no operation
-		static constexpr uint8_t JMP = 0xE9; // jump
+		static constexpr uint8_t CALL[] = { 0xFF, 0x15 }; // call near absolute indirect
 
 		bool ValidateHook() const
 		{
-			if (m_length < 5)
+			if (m_length < 6)
 			{
 				std::string error = std::format("Extra Utilities Error: Not enough space for hook at address {}", m_address);
 				MessageBox(0, error.c_str(), "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
@@ -53,11 +54,12 @@ namespace ExtraUtilities
 			VirtualProtect(p_address, m_length, PAGE_EXECUTE_READWRITE, &m_oldProtect);
 
 			std::memset(p_address, NOP, m_length);
-			std::memset(p_address, JMP, 1);
+			std::memcpy(p_address, CALL, 2);
 
-			ptrdiff_t relativeAddress = reinterpret_cast<uintptr_t>(m_function) - m_address - 5;
-			// +1 byte because the first is the jmp instruction, next 4 the address
-			std::memcpy(p_address + 1, &relativeAddress, sizeof(relativeAddress)); 
+			// +2 bytes because the first two are the jmp instruction, next 4 is the address.
+			// importantly the call instruction needs a static pointer to the function, 
+			// not one in stack memory, that's why the pointer is a class member
+			std::memcpy(p_address + 2, &p_function, sizeof(uintptr_t)); 
 
 			VirtualProtect(p_address, m_length, m_oldProtect, &dummyProtect);
 
@@ -85,6 +87,7 @@ namespace ExtraUtilities
 			: BasicPatch(std::move(h))
 		{
 			this->m_function = h.m_function;
+			this->p_function = h.p_function;
 		}
 
 		~Hook() = default;
