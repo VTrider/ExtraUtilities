@@ -22,8 +22,6 @@
 
 #include <Windows.h>
 
-#include <format>
-
 namespace ExtraUtilities
 {
 	class Hook : public BasicPatch
@@ -40,9 +38,7 @@ namespace ExtraUtilities
 		{
 			if (m_length < 6)
 			{
-				std::string error = std::format("Extra Utilities Error: Not enough space for hook at address {}", m_address);
-				MessageBox(0, error.c_str(), "Uh Oh!", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-				return false;
+				std::terminate();
 			}
 			return true;
 		}
