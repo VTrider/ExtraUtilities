@@ -24,6 +24,7 @@
 
 namespace ExtraUtilities::Lua
 {
+	// Pushes one bz vector to the stack
 	inline void PushVector(lua_State* L, const BZR::VECTOR_3D& v)
 	{
 	#ifdef GC_PATCH
@@ -43,6 +44,7 @@ namespace ExtraUtilities::Lua
 	#endif
 	}
 
+	// Pushes one bz matrix to the stack
 	inline void PushMatrix(lua_State* L, const BZR::MAT_3D& m)
 	{
 	#ifdef GC_PATCH

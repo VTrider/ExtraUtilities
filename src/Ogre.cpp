@@ -43,10 +43,6 @@ namespace ExtraUtilities::Patch
 		sunAmbient = std::make_unique<Scanner<Ogre::Color>>(sunlightOffset);
 	}
 
-	// this can't be inside the naked function cause the arithmetic and
-	// runtime initialization of the ogremain address causes additional code
-	// to be generated which fks up the hook
-	uintptr_t jmpBack = sceneManagerHookAddr + 7;
 	static void __declspec(naked) GetOgreSceneManager()
 	{	
 		static int doneInit = 0x0;
@@ -74,11 +70,12 @@ namespace ExtraUtilities::Patch
 
 			resume:
 
+			// Game code
 			mov ebx, ecx
 			mov eax, [ebx]
 			mov edi, [ebp+0x08]
 
-			jmp [jmpBack]
+			ret
 		}
 	}
 	Hook sceneManagerHook(sceneManagerHookAddr, &GetOgreSceneManager, 7, Hook::Status::ACTIVE);

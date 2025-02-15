@@ -16,30 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BulletHit.h"
+#include "BulletHitCallback.h"
 
 #include "BZR.h"
 #include "Hook.h"
+#include "LuaHelpers.h"
 #include "LuaState.h"
 
 #include <lua.hpp>
 
 namespace ExtraUtilities::Patch
 {
-	static void __cdecl LuaCallback(const char* odf, BZR::GameObject* obj, double position[3])
+	static void __cdecl LuaCallback(const char* odf, BZR::GameObject* shooter, BZR::GameObject* hitObject, BZR::MAT_3D* transform)
 	{
 		lua_State* L = Lua::state;
 
 	#ifdef GC_PATCH
 		lua_gc(L, LUA_GCSTOP, 0);
 	#endif
-
-		lua_getglobal(L, "SetVector");
-		lua_pushnumber(L, position[0]);
-		lua_pushnumber(L, position[1]);
-		lua_pushnumber(L, position[2]);
-		lua_call(L, 3, 1);
-		int posVector = lua_gettop(L);
 
 		lua_getglobal(L, "exu");
 		lua_getfield(L, -1, "BulletHit");
@@ -49,17 +43,31 @@ namespace ExtraUtilities::Patch
 			return;
 		}
 
-		lua_pushstring(L, odf);
-		if (obj == nullptr)
+		lua_pushstring(L, odf); // First param
+		
+		// Second param
+		lua_pushlightuserdata(L, reinterpret_cast<void*>(BZR::GameObject::GetHandle(shooter))); // this should never be nullptr
+
+		// Third param
+		if (hitObject == nullptr)
 		{
 			lua_pushnil(L);
 		}
 		else
 		{
-			lua_pushlightuserdata(L, reinterpret_cast<void*>(BZR::GameObject::GetHandle(obj)));
+			lua_pushlightuserdata(L, reinterpret_cast<void*>(BZR::GameObject::GetHandle(hitObject)));
 		}
-		lua_pushvalue(L, posVector);
-		lua_call(L, 3, 0);
+
+		// Fourth param
+		Lua::PushMatrix(L, *transform);
+
+		// Push matrix re-enables the GC
+	#ifdef GC_PATCH
+		lua_gc(L, LUA_GCSTOP, 0);
+	#endif
+
+		lua_call(L, 4, 0);
+
 		lua_pop(L, -1);
 
 	#ifdef GC_PATCH
@@ -69,40 +77,41 @@ namespace ExtraUtilities::Patch
 
 	static void __declspec(naked) BulletHitCallback()
 	{
-		// stuff like this MUST be static if you wanna keep it in the scope of the function
-		// cause it will be stored elsewhere and you want the hook to only use the asm
-		static uintptr_t jmpBack = bulletHit + 7;
-		// I wrote this a long time ago so idk wtf is going on
 		__asm
 		{
+			// Game code
+			mov ecx, [eax + 0x14]
+			add ecx, 0x38
+
 			pushad
 			pushfd
 
 			// eax has the this pointer (bullet/ordnance inheritance bs)
 			lea ebx, [eax] // I stored it here don't remember why
 
-			lea eax, [ecx + 0x48] // position, vec3 of doubles 8*3 bytes
+			lea eax, [ecx-0x18] // matrix
 			push eax
 
-			mov eax, [ebp + 0x08] // gameobject* of hit object if it exists
+			mov eax, [ebp+0x08] // gameobject* of hit object if it exists
 			push eax
 
-			mov eax, [ebx + 0x0C] // OrdnanceClass* - Scanner by -0x04 from 1.5, is 0x10 in 1.5
-			lea ebx, [eax + 0x20] // odf char*
+			// now we're gonna do some voodoo to get the shooter handle
+			mov eax, [ebx + 0xD8] // obj76 of the ordnance owner
+			mov eax, [eax + 0x8C] // gameobject* of the obj76
+			push eax
+
+			mov eax, [ebx+0x0C] // OrdnanceClass* - Scanner by -0x04 from 1.5, is 0x10 in 1.5
+			lea ebx, [eax+0x20] // odf char*
 			push ebx
 
 			call LuaCallback
-			add esp, 0x0C
+			add esp, 0x10
 
 			popfd
 			popad
 
-			add ecx, 0x38
-			push ecx
-			mov edx, [ebp + 0x0C]
-
-			jmp [jmpBack]
+			ret
 		}
 	}
-	Hook bulletHitHook(bulletHit, &BulletHitCallback, 7, Hook::Status::ACTIVE);
+	Hook bulletHitHook(bulletHit, &BulletHitCallback, 6, Hook::Status::ACTIVE);
 }

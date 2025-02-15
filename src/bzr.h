@@ -70,6 +70,9 @@ namespace BZR
 
 	struct VECTOR_3D
 	{
+		VECTOR_3D() : x(0), y(0), z(0) {}
+		VECTOR_3D(float x, float y, float z) : x(x), y(y), z(z) {}
+		VECTOR_3D(double x, double y, double z) : x(static_cast<float>(x)), y(static_cast<float>(y)), z(static_cast<float>(z)) {}
 		float x, y, z;
 	};
 
