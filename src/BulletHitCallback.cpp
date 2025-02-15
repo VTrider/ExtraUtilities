@@ -46,8 +46,15 @@ namespace ExtraUtilities::Patch
 		lua_pushstring(L, odf); // First param
 		
 		// Second param
-		lua_pushlightuserdata(L, reinterpret_cast<void*>(BZR::GameObject::GetHandle(shooter))); // this should never be nullptr
-
+		if (shooter == nullptr)
+		{
+			lua_pushnil(L);
+		}
+		else
+		{
+			lua_pushlightuserdata(L, reinterpret_cast<void*>(BZR::GameObject::GetHandle(shooter)));
+		}
+		
 		// Third param
 		if (hitObject == nullptr)
 		{
@@ -96,8 +103,15 @@ namespace ExtraUtilities::Patch
 			push eax
 
 			// now we're gonna do some voodoo to get the shooter handle
-			mov eax, [ebx + 0xD8] // obj76 of the ordnance owner
-			mov eax, [eax + 0x8C] // gameobject* of the obj76
+			mov eax, [ebx+0xD8] // obj76 of the ordnance owner
+
+			cmp eax, 0x0
+			je skip
+
+			mov eax, [eax+0x8C] // gameobject* of the obj76
+
+			skip:
+
 			push eax
 
 			mov eax, [ebx+0x0C] // OrdnanceClass* - Scanner by -0x04 from 1.5, is 0x10 in 1.5
