@@ -93,6 +93,18 @@ namespace ExtraUtilities::Patch
 			pushad
 			pushfd
 
+			// The function calls in this patch appear to modify
+			// xmm0, xmm2, and xmm3, we need to save them
+			sub esp, 0x10
+			movdqu [esp], xmm0
+
+			sub esp, 0x10
+			movdqu [esp], xmm2
+
+			sub esp, 0x10
+			movdqu [esp], xmm3
+
+
 			// eax has the this pointer (bullet/ordnance inheritance bs)
 			lea ebx, [eax] // I stored it here don't remember why
 
@@ -119,6 +131,15 @@ namespace ExtraUtilities::Patch
 			push ebx
 
 			call LuaCallback
+			add esp, 0x10
+
+			movdqu xmm3, [esp]
+			add esp, 0x10
+
+			movdqu xmm2, [esp]
+			add esp, 0x10
+
+			movdqu xmm0, [esp]
 			add esp, 0x10
 
 			popfd
