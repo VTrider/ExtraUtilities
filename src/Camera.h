@@ -29,8 +29,9 @@ namespace ExtraUtilities::Lua::Camera
 	inline Scanner zoomTPP(BZR::Camera::zoomFactorTPP);
 	inline Scanner minZoom(BZR::Camera::minZoomFactor);
 	inline Scanner maxZoom(BZR::Camera::maxZoomFactor);
-	inline Scanner userEntity(BZR::GameObject::user_entity_ptr);
-	inline Scanner currentView(BZR::Camera::currentView);
+	inline Scanner userEntity(BZR::GameObject::user_entity_ptr, BasicScanner::Restore::DISABLED);
+	// restore needs to be disabled to prevent camera state being saved after leaving a game
+	inline Scanner currentView(BZR::Camera::currentView, BasicScanner::Restore::DISABLED);
 
 	int GetZoom(lua_State* L);
 	int SetZoom(lua_State* L);
