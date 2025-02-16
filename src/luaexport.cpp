@@ -302,10 +302,10 @@ namespace ExtraUtilities::Lua
 
 				// Sound Options
 				{ "GetMusicVolume",   &SoundOptions::GetMusicVolume },
-				//{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
-				//{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
-				//{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
-				//{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
+				{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
+				{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
+				{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
+				{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
 
 				// Steam
 				{ "GetSteam64", &Steam::GetSteam64 },
