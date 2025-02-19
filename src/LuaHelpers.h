@@ -27,10 +27,6 @@ namespace ExtraUtilities::Lua
 	// Pushes one bz vector to the stack
 	inline void PushVector(lua_State* L, const BZR::VECTOR_3D& v)
 	{
-	#ifdef GC_PATCH
-		lua_gc(L, LUA_GCSTOP, 0);
-	#endif
-
 		lua_getglobal(L, "SetVector");
 		
 		lua_pushnumber(L, v.x);
@@ -38,19 +34,11 @@ namespace ExtraUtilities::Lua
 		lua_pushnumber(L, v.z);
 
 		lua_call(L, 3, 1);
-
-	#ifdef GC_PATCH
-		lua_gc(L, LUA_GCRESTART, 0);
-	#endif
 	}
 
 	// Pushes one bz matrix to the stack
 	inline void PushMatrix(lua_State* L, const BZR::MAT_3D& m)
 	{
-	#ifdef GC_PATCH
-		lua_gc(L, LUA_GCSTOP, 0);
-	#endif
-
 		lua_getglobal(L, "SetMatrix");
 
 		// These are in the "wrong" order because the game lua function is broken
@@ -68,10 +56,6 @@ namespace ExtraUtilities::Lua
 		lua_pushnumber(L, m.posit_z);
 
 		lua_call(L, 12, 1);
-
-	#ifdef GC_PATCH
-		lua_gc(L, LUA_GCRESTART, 0);
-	#endif
 	}
 
 	inline bool CheckBool(lua_State* L, int idx)

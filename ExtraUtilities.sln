@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExtraUtilities", "ExtraUtilities.vcxproj", "{686F973B-64C2-43C3-9FD7-4FB6A6A7FAFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5B18AC9A-BF31-4401-B45D-61C1A2B0DC67} = {5B18AC9A-BF31-4401-B45D-61C1A2B0DC67}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua5.1-BZR", "Lua5.1-BZR\Lua5.1-BZR.vcxproj", "{5B18AC9A-BF31-4401-B45D-61C1A2B0DC67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{686F973B-64C2-43C3-9FD7-4FB6A6A7FAFA}.Debug|x86.Build.0 = Debug|Win32
 		{686F973B-64C2-43C3-9FD7-4FB6A6A7FAFA}.Release|x86.ActiveCfg = Release|Win32
 		{686F973B-64C2-43C3-9FD7-4FB6A6A7FAFA}.Release|x86.Build.0 = Release|Win32
+		{5B18AC9A-BF31-4401-B45D-61C1A2B0DC67}.Debug|x86.ActiveCfg = Debug|Win32
+		{5B18AC9A-BF31-4401-B45D-61C1A2B0DC67}.Debug|x86.Build.0 = Debug|Win32
+		{5B18AC9A-BF31-4401-B45D-61C1A2B0DC67}.Release|x86.ActiveCfg = Release|Win32
+		{5B18AC9A-BF31-4401-B45D-61C1A2B0DC67}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

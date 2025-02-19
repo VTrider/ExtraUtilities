@@ -64,4 +64,4 @@
 
 src/bzr.h linguist-vendored
 include/** linguist-vendored
-
+Lua5.1-BZR/** linguist-vendored
