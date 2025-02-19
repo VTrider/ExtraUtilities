@@ -29,6 +29,7 @@
 #include "lua.hpp"
 #include <Windows.h>
 
+#include <sstream>
 #include <thread> 
 
 // Avoid name collision with winapi macro
@@ -302,10 +303,10 @@ namespace ExtraUtilities::Lua
 
 				// Sound Options
 				{ "GetMusicVolume",   &SoundOptions::GetMusicVolume },
-				{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
-				{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
-				{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
-				{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
+				//{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
+				//{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
+				//{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
+				//{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
 
 				// Steam
 				{ "GetSteam64", &Steam::GetSteam64 },
@@ -317,23 +318,9 @@ namespace ExtraUtilities::Lua
 				{ 0, 0 }
 			};
 
-			// Ok.. this is voodoo LOL. I believe the heap corruption is caused when
-			// pushing a large amount of data into the lua state triggers a reallocation,
-			// so if you stop the garbage collector and resume after the library is registered
-			// and initialized it will won't get corrupted.
-			//
-			// So: it is CRITICAL that any initialization is done while the garbage collector
-			// is STOPPED (in between the lua_gc calls)
+			 luaL_register(L, "exu", EXPORT);
+			 Init(L);
 
-		#ifdef GC_PATCH
-			lua_gc(L, LUA_GCSTOP, 0);
-		#endif
-			luaL_register(L, "exu", EXPORT);
-			Init(L);
-
-		#ifdef GC_PATCH
-			lua_gc(L, LUA_GCRESTART, 0);
-		#endif
 			return 0;
 		}
 	}

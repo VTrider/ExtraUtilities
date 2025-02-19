@@ -31,10 +31,6 @@ namespace ExtraUtilities::Patch
 	{
 		lua_State* L = Lua::state;
 
-	#ifdef GC_PATCH
-		lua_gc(L, LUA_GCSTOP, 0);
-	#endif
-
 		lua_getglobal(L, "exu");
 		lua_getfield(L, -1, "BulletHit");
 
@@ -68,18 +64,9 @@ namespace ExtraUtilities::Patch
 		// Fourth param
 		Lua::PushMatrix(L, *transform);
 
-		// Push matrix re-enables the GC
-	#ifdef GC_PATCH
-		lua_gc(L, LUA_GCSTOP, 0);
-	#endif
-
 		lua_call(L, 4, 0);
 
 		lua_pop(L, -1);
-
-	#ifdef GC_PATCH
-		lua_gc(L, LUA_GCRESTART, 0);
-	#endif
 	}
 
 	static void __declspec(naked) BulletHitCallback()
