@@ -19,7 +19,7 @@ Join the battlezone community discord: https://discord.gg/battlezonestrategy
 
 ### For Developers:
 
-Written in C++20, contributions welcome!
+Written in C++20, contributions welcome! One important note is that it is critical that you use the custom lua library, it is patched to be compatible with BZR. Using different binaries will cause a heap corruption.
 
 Build Dependencies:
 - Windows SDK
