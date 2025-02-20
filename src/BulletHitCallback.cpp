@@ -109,6 +109,8 @@ namespace ExtraUtilities::Patch
 			// now we're gonna do some voodoo to get the shooter handle
 			mov eax, [ebx+0xD8] // obj76 of the ordnance owner
 
+			// this *shouldn't* be null but apparently BL encountered this,
+			// needs more testing with modded weapons
 			cmp eax, 0x0
 			je skip
 
