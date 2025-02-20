@@ -200,128 +200,125 @@ namespace ExtraUtilities::Lua
 		return 0;
 	}
 
-	extern "C"
+	extern "C" int __declspec(dllexport) luaopen_exu(lua_State* L)
 	{
-		int __declspec(dllexport) luaopen_exu(lua_State* L)
-		{
-			const luaL_Reg EXPORT[] = {
-				// Camera
-				{ "GetCameraZoom", Camera::GetZoom },
-				{ "SetCameraZoom", Camera::SetZoom },
-				{ "GetCameraMinZoom", Camera::GetMinZoom },
-				{ "SetCameraMinZoom", Camera::SetMinZoom },
-				{ "GetCameraMaxZoom", Camera::GetMaxZoom },
-				{ "SetCameraMaxZoom", Camera::SetMaxZoom },
-				{ "GetView", Camera::GetView },
-				{ "SetView", Camera::SetView },
+		const luaL_Reg EXPORT[] = {
+			// Camera
+			{ "GetCameraMaxZoom", Camera::GetMaxZoom },
+			{ "SetCameraMaxZoom", Camera::SetMaxZoom },
+			{ "GetCameraMinZoom", Camera::GetMinZoom },
+			{ "SetCameraMinZoom", Camera::SetMinZoom },
+			{ "GetCameraView", Camera::GetView },
+			{ "SetCameraView", Camera::SetView },
+			{ "GetCameraZoom", Camera::GetZoom },
+			{ "SetCameraZoom", Camera::SetZoom },
 
-				// Control Panel
-				{ "SelectAdd",  &ControlPanel::SelectAdd },
-				{ "SelectNone", &ControlPanel::SelectNone },
-				{ "SelectOne",  &ControlPanel::SelectOne },
+			// Control Panel
+			{ "SelectAdd",  &ControlPanel::SelectAdd },
+			{ "SelectNone", &ControlPanel::SelectNone },
+			{ "SelectOne",  &ControlPanel::SelectOne },
 
-				// Environment
-				{ "GetGravity",    &Environment::GetGravity },
-				{ "SetGravity",    &Environment::SetGravity },
-				{ "GetFog",		   &Environment::GetFog },
-				{ "SetFog",		   &Environment::SetFog },
-				{ "GetSunAmbient", &Environment::GetSunAmbient },
-				{ "SetSunAmbient", &Environment::SetSunAmbient },
+			// Environment
+			{ "GetFog",		   &Environment::GetFog },
+			{ "SetFog",		   &Environment::SetFog },
+			{ "GetGravity",    &Environment::GetGravity },
+			{ "SetGravity",    &Environment::SetGravity },
+			{ "GetSunAmbient", &Environment::GetSunAmbient },
+			{ "SetSunAmbient", &Environment::SetSunAmbient },
 
-				// GameObject
-				{ "GetHandle",		&GameObject::GetHandle },
-				{ "GetObj",			&GameObject::GetObj },
-				{ "SetAsUser",		&GameObject::SetAsUser },
-				{ "GetRadarRange",	&GameObject::GetRadarRange },
-				{ "SetRadarRange",	&GameObject::SetRadarRange },
-				{ "GetRadarPeriod", &GameObject::GetRadarPeriod },
-				{ "SetRadarPeriod", &GameObject::SetRadarPeriod },
-				{ "GetVelocJam",	&GameObject::GetVelocJam },
-				{ "SetVelocJam",	&GameObject::SetVelocJam },
-				{ "SetHeadlightDiffuse", &GameObject::SetHeadlightDiffuse },
-				{ "SetHeadlightSpecular", &GameObject::SetHeadlightSpecular },
-				{ "SetHeadlightRange", &GameObject::SetHeadlightRange },
-				{ "SetHeadlightVisible", &GameObject::SetHeadlightVisible },
+			// GameObject
+			{ "SetAsUser",		&GameObject::SetAsUser },
+			{ "GetHandle",		&GameObject::GetHandle },
+			{ "SetHeadlightDiffuse", &GameObject::SetHeadlightDiffuse },
+			{ "SetHeadlightSpecular", &GameObject::SetHeadlightSpecular },
+			{ "SetHeadlightRange", &GameObject::SetHeadlightRange },
+			{ "SetHeadlightVisible", &GameObject::SetHeadlightVisible },
+			{ "GetObj",			&GameObject::GetObj },
+			{ "GetRadarRange",	&GameObject::GetRadarRange },
+			{ "SetRadarRange",	&GameObject::SetRadarRange },
+			{ "GetRadarPeriod", &GameObject::GetRadarPeriod },
+			{ "SetRadarPeriod", &GameObject::SetRadarPeriod },
+			{ "GetVelocJam",	&GameObject::GetVelocJam },
+			{ "SetVelocJam",	&GameObject::SetVelocJam },
 
-				// IO
-				{ "GetGameKey", &IO::GetGameKey },
+			// IO
+			{ "GetGameKey", &IO::GetGameKey },
 
-				// Multiplayer
-				{ "GetLives", &Multiplayer::GetLives },
-				{ "SetLives", &Multiplayer::SetLives },
+			// Multiplayer
+			{ "GetLives", &Multiplayer::GetLives },
+			{ "SetLives", &Multiplayer::SetLives },
 
-				// Ordnance
-				{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },
-				{ "SetCoeffBallistic", &Ordnance::SetCoeffBallistic },
+			// Ordnance
+			{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },
+			{ "SetCoeffBallistic", &Ordnance::SetCoeffBallistic },
 
-				// OS
-				{ "MessageBox",			 &OS::MessageBox },
-				{ "GetScreenResolution", &OS::GetScreenResolution },
+			// OS
+			{ "GetScreenResolution", &OS::GetScreenResolution },
+			{ "MessageBox",			 &OS::MessageBox },
 
-				// Patches
-				{ "GetShotConvergence", &Patches::GetShotConvergence },
-				{ "SetShotConvergence", &Patches::SetShotConvergence },
-				{ "GetGlobalTurbo",     &Patches::GetGlobalTurbo },
-				{ "SetGlobalTurbo",     &Patches::SetGlobalTurbo },
+			// Patches
+			{ "GetGlobalTurbo",     &Patches::GetGlobalTurbo },
+			{ "SetGlobalTurbo",     &Patches::SetGlobalTurbo },
+			{ "GetShotConvergence", &Patches::GetShotConvergence },
+			{ "SetShotConvergence", &Patches::SetShotConvergence },
 
-				// Play Options
-				{ "GetAutoLevel",	 &PlayOption::GetAutoLevel },
-				{ "SetAutoLevel",	 &PlayOption::SetAutoLevel },
-				{ "GetDifficulty",   &PlayOption::GetDifficulty },
-				{ "SetDifficulty",   &PlayOption::SetDifficulty },
-				{ "GetTLI",			 &PlayOption::GetTLI },
-				{ "SetTLI",			 &PlayOption::SetTLI },
-				{ "GetReverseMouse", &PlayOption::GetReverseMouse },
-				{ "SetReverseMouse", &PlayOption::SetReverseMouse },
+			// Play Options
+			{ "GetAutoLevel",	 &PlayOption::GetAutoLevel },
+			{ "SetAutoLevel",	 &PlayOption::SetAutoLevel },
+			{ "GetDifficulty",   &PlayOption::GetDifficulty },
+			{ "SetDifficulty",   &PlayOption::SetDifficulty },
+			{ "GetTLI",			 &PlayOption::GetTLI },
+			{ "SetTLI",			 &PlayOption::SetTLI },
+			{ "GetReverseMouse", &PlayOption::GetReverseMouse },
+			{ "SetReverseMouse", &PlayOption::SetReverseMouse },
 
-				// Radar
-				{ "GetRadarState", &Radar::GetState },
-				{ "SetRadarState", &Radar::SetState },
+			// Radar
+			{ "GetRadarState", &Radar::GetState },
+			{ "SetRadarState", &Radar::SetState },
 
-				// Reticle
-				{ "GetReticlePos",    &Reticle::GetPosition },
-				{ "GetReticleRange",  &Reticle::GetRange },
-				{ "SetReticleRange",  &Reticle::SetRange },
-				{ "GetReticleObject", &Reticle::GetObject },
-				{ "GetReticleMatrix", &Reticle::GetMatrix },
+			// Reticle
+			{ "GetReticleMatrix", &Reticle::GetMatrix },
+			{ "GetReticleObject", &Reticle::GetObject },
+			{ "GetReticlePos",    &Reticle::GetPosition },
+			{ "GetReticleRange",  &Reticle::GetRange },
+			{ "SetReticleRange",  &Reticle::SetRange },
 
-				// Satellite
+			// Satellite
 
-				{ "GetSatState",     &Satellite::GetState },
-				{ "GetSatCursorPos", &Satellite::GetCursorPos },
-				{ "GetSatCameraPos", &Satellite::GetCameraPos },
-				{ "GetSatClickPos",  &Satellite::GetClickPos },
-				{ "GetSatPanSpeed",	 &Satellite::GetPanSpeed },
-				{ "SetSatPanSpeed",	 &Satellite::SetPanSpeed },
-				{ "GetSatMinZoom",	 &Satellite::GetMinZoom },
-				{ "SetSatMinZoom",	 &Satellite::SetMinZoom },
-				{ "GetSatMaxZoom",	 &Satellite::GetMaxZoom },
-				{ "SetSatMaxZoom",	 &Satellite::SetMaxZoom },
-				{ "GetSatZoom",		 &Satellite::GetZoom },
-				{ "SetSatZoom",		 &Satellite::SetZoom },
+			{ "GetSatCameraPos", &Satellite::GetCameraPos },
+			{ "GetSatClickPos",  &Satellite::GetClickPos },
+			{ "GetSatCursorPos", &Satellite::GetCursorPos },
+			{ "GetSatMaxZoom",	 &Satellite::GetMaxZoom },
+			{ "SetSatMaxZoom",	 &Satellite::SetMaxZoom },
+			{ "GetSatMinZoom",	 &Satellite::GetMinZoom },
+			{ "SetSatMinZoom",	 &Satellite::SetMinZoom },
+			{ "GetSatPanSpeed",	 &Satellite::GetPanSpeed },
+			{ "SetSatPanSpeed",	 &Satellite::SetPanSpeed },
+			{ "GetSatState",     &Satellite::GetState },
+			{ "GetSatZoom",		 &Satellite::GetZoom },
+			{ "SetSatZoom",		 &Satellite::SetZoom },
 
-				// Sound Options
-				{ "GetMusicVolume",   &SoundOptions::GetMusicVolume },
-				//{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
-				//{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
-				//{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
-				//{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
+			// Sound Options
+			{ "GetMusicVolume",   &SoundOptions::GetMusicVolume },
+			//{ "GetEffectsVolume", &SoundOptions::GetEffectsVolume },
+			//{ "SetEffectsVolume", &SoundOptions::SetEffectsVolume },
+			//{ "GetVoiceVolume",   &SoundOptions::GetVoiceVolume },
+			//{ "SetVoiceVolume",   &SoundOptions::SetVoiceVolume },
 
-				// Steam
-				{ "GetSteam64", &Steam::GetSteam64 },
+			// Steam
+			{ "GetSteam64", &Steam::GetSteam64 },
 
-				// Stock Extensions
-				{ "DoString", &StockExtensions::DoString },
+			// Stock Extensions
+			{ "DoString", &StockExtensions::DoString },
 
-				// Function register table must end with a zero entry
-				{ 0, 0 }
-			};
+			// Function register table must end with a zero entry
+			{ 0, 0 }
+		};
 
-			 luaL_register(L, "exu", EXPORT);
-			 Init(L);
+		luaL_register(L, "exu", EXPORT);
+		Init(L);
 
-			return 0;
-		}
+		return 0;
 	}
 }
 

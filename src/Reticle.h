@@ -32,9 +32,9 @@ namespace ExtraUtilities::Lua::Reticle
 	inline Scanner object(BZR::Reticle::object);
 	inline Scanner matrix(BZR::Reticle::matrix);
 
+	int GetMatrix(lua_State* L);
+	int GetObject(lua_State* L);
 	int GetPosition(lua_State* L);
 	int GetRange(lua_State* L);
 	int SetRange(lua_State* L);
-	int GetObject(lua_State* L);
-	int GetMatrix(lua_State* L);
 }

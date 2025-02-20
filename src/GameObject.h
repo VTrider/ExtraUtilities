@@ -25,20 +25,22 @@
 
 namespace ExtraUtilities::Lua::GameObject
 {
-	int GetHandle(lua_State* L);
-	int GetObj(lua_State* L);
 	int SetAsUser(lua_State* L);
 
-	int GetRadarRange(lua_State* L);
-	int SetRadarRange(lua_State* L);
-	int GetRadarPeriod(lua_State* L);
-	int SetRadarPeriod(lua_State* L);
-
-	int GetVelocJam(lua_State* L);
-	int SetVelocJam(lua_State* L);
+	int GetHandle(lua_State* L);
 
 	int SetHeadlightDiffuse(lua_State* L);
 	int SetHeadlightSpecular(lua_State* L);
 	int SetHeadlightRange(lua_State* L);
 	int SetHeadlightVisible(lua_State* L);
+
+	int GetObj(lua_State* L);
+
+	int GetRadarPeriod(lua_State* L);
+	int SetRadarPeriod(lua_State* L);
+	int GetRadarRange(lua_State* L);
+	int SetRadarRange(lua_State* L);
+
+	int GetVelocJam(lua_State* L);
+	int SetVelocJam(lua_State* L);
 }

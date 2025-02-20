@@ -28,10 +28,12 @@ namespace ExtraUtilities::Lua::Environment
 {
 	inline Scanner gravity(BZR::Environment::gravityVector);
 
-	int GetGravity(lua_State* L);
-	int SetGravity(lua_State* L);
 	int GetFog(lua_State* L);
 	int SetFog(lua_State* L);
+
+	int GetGravity(lua_State* L);
+	int SetGravity(lua_State* L);
+
 	int GetSunAmbient(lua_State* L);
 	int SetSunAmbient(lua_State* L);
 }

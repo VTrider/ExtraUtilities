@@ -33,15 +33,15 @@ namespace ExtraUtilities::Lua::Camera
 	// restore needs to be disabled to prevent camera state being saved after leaving a game
 	inline Scanner currentView(BZR::Camera::currentView, BasicScanner::Restore::DISABLED);
 
-	int GetZoom(lua_State* L);
-	int SetZoom(lua_State* L);
+	int GetMaxZoom(lua_State* L);
+	int SetMaxZoom(lua_State* L);
 
 	int GetMinZoom(lua_State* L);
 	int SetMinZoom(lua_State* L);
 
-	int GetMaxZoom(lua_State* L);
-	int SetMaxZoom(lua_State* L);
-
 	int GetView(lua_State* L);
 	int SetView(lua_State* L);
+
+	int GetZoom(lua_State* L);
+	int SetZoom(lua_State* L);
 }
