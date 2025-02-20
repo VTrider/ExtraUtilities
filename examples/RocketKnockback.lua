@@ -16,6 +16,5 @@ local function DoKnockback(odf, hitObject, transform)
 end
 
 function exu.BulletHit(odf, shooter, hitObject, transform)
-    exu.MessageBox(odf)
     DoKnockback(odf, hitObject, transform)
 end
