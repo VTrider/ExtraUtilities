@@ -39,7 +39,12 @@ namespace ExtraUtilities::Patch
 			return;
 		}
 
-		lua_pushstring(L, odf); // First param
+		int len = strlen(odf);
+		char formattedODF[16]; // this should be enough room given the 8 char limit
+
+		strncpy(formattedODF, odf, len - 4); // strip the ".odf" from the name
+
+		lua_pushlstring(L, formattedODF, len - 4); // First param
 		
 		// Second param
 		if (shooter == nullptr)

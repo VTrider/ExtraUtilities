@@ -204,14 +204,14 @@ namespace ExtraUtilities::Lua
 	{
 		const luaL_Reg EXPORT[] = {
 			// Camera
-			{ "GetCameraMaxZoom", Camera::GetMaxZoom },
-			{ "SetCameraMaxZoom", Camera::SetMaxZoom },
-			{ "GetCameraMinZoom", Camera::GetMinZoom },
-			{ "SetCameraMinZoom", Camera::SetMinZoom },
-			{ "GetCameraView", Camera::GetView },
-			{ "SetCameraView", Camera::SetView },
-			{ "GetCameraZoom", Camera::GetZoom },
-			{ "SetCameraZoom", Camera::SetZoom },
+			{ "GetCameraMaxZoom", &Camera::GetMaxZoom },
+			{ "SetCameraMaxZoom", &Camera::SetMaxZoom },
+			{ "GetCameraMinZoom", &Camera::GetMinZoom },
+			{ "SetCameraMinZoom", &Camera::SetMinZoom },
+			{ "GetCameraView", &Camera::GetView },
+			{ "SetCameraView", &Camera::SetView },
+			{ "GetCameraZoom", &Camera::GetZoom },
+			{ "SetCameraZoom", &Camera::SetZoom },
 
 			// Control Panel
 			{ "SelectAdd",  &ControlPanel::SelectAdd },
