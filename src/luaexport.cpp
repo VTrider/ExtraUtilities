@@ -233,6 +233,8 @@ namespace ExtraUtilities::Lua
 			{ "SetHeadlightSpecular", &GameObject::SetHeadlightSpecular },
 			{ "SetHeadlightRange", &GameObject::SetHeadlightRange },
 			{ "SetHeadlightVisible", &GameObject::SetHeadlightVisible },
+			{ "GetMass", &GameObject::GetMass },
+			{ "SetMass", &GameObject::SetMass },
 			{ "GetObj",			&GameObject::GetObj },
 			{ "GetRadarRange",	&GameObject::GetRadarRange },
 			{ "SetRadarRange",	&GameObject::SetRadarRange },

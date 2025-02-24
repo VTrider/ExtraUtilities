@@ -175,7 +175,7 @@ namespace BZR
 		uintptr_t vftableAttachable;
 		uint8_t padding_1[0x14];
 		uintptr_t vftableDistributedObject;
-		uint8_t padding_2[0xD4];
+		uint8_t padding_2[0xD0];
 		GameObjectClass* curPilot;
 		tagENTITY* ent;
 		OBJ76* obj;

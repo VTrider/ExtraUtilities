@@ -34,6 +34,9 @@ namespace ExtraUtilities::Lua::GameObject
 	int SetHeadlightRange(lua_State* L);
 	int SetHeadlightVisible(lua_State* L);
 
+	int GetMass(lua_State* L);
+	int SetMass(lua_State* L);
+
 	int GetObj(lua_State* L);
 
 	int GetRadarPeriod(lua_State* L);
