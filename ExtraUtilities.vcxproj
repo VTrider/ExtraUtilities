@@ -151,6 +151,7 @@
     <ClCompile Include="src\Multiplayer.cpp" />
     <ClCompile Include="src\Ogre.cpp" />
     <ClCompile Include="src\Ordnance.cpp" />
+    <ClCompile Include="src\OrdnanceVelocity.cpp" />
     <ClCompile Include="src\OS.cpp" />
     <ClCompile Include="src\OS.h" />
     <ClCompile Include="src\PlayOption.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\Multiplayer.h" />
     <ClInclude Include="src\Ogre.h" />
     <ClInclude Include="src\Ordnance.h" />
+    <ClInclude Include="src\OrdnanceVelocity.h" />
     <ClInclude Include="src\Scanner.h" />
     <ClInclude Include="src\Patches.h" />
     <ClInclude Include="src\PlayOption.h" />

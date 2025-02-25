@@ -99,6 +99,9 @@
     <ClCompile Include="src\BulletInitCallback.cpp">
       <Filter>Source Files\Patches</Filter>
     </ClCompile>
+    <ClCompile Include="src\OrdnanceVelocity.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h">
@@ -189,6 +192,9 @@
       <Filter>Header Files\Exports</Filter>
     </ClInclude>
     <ClInclude Include="src\BulletInitCallback.h">
+      <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OrdnanceVelocity.h">
       <Filter>Header Files\Patches</Filter>
     </ClInclude>
   </ItemGroup>
