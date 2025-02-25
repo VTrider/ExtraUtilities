@@ -27,6 +27,26 @@
 
 namespace ExtraUtilities::Patch
 {
+	//static void __cdecl Length(float* returnptr, BZR::VECTOR_3D* v)
+	//{
+	//	*returnptr = std::sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+	//}
+
+	//static void __cdecl Normalize(BZR::VECTOR_3D* v)
+	//{
+	//	float length;
+	//	Length(&length, v);
+
+	//	v->x /= length;
+	//	v->y /= length;
+	//	v->z /= length;
+	//}
+
+	//static void __cdecl DotProduct(float* returnptr, BZR::VECTOR_3D* v, BZR::VECTOR_3D* w)
+	//{
+	//	*returnptr = v->x * w->x + v->y * w->y + v->z * w->z;
+	//}
+
 	static void __declspec(naked) OrdnanceVelocityPatch()
 	{
 		__asm
@@ -39,6 +59,9 @@ namespace ExtraUtilities::Patch
 
 			sub esp, 0x10
 			movdqu [esp], xmm1
+
+			sub esp, 0x10
+			movdqu [esp], xmm2
 			
 			/*
 			 * Notes:
@@ -54,7 +77,18 @@ namespace ExtraUtilities::Patch
 
 			movdqu xmm0, [eax+0x12C] // load shooter velocity
 
+			cmp [velocOnlyInheritFront], 0x1
+			jne inheritAll
+
+			movups xmm2, [velocIgnoreY]
+			mulps xmm0, xmm2
+
+			inheritAll:
+
 			movdqu xmm1, [ebp-0x10] // load ordnance velocity
+
+			movups xmm2, [velocInheritRatio]
+			mulps xmm1, xmm2
 
 			addps xmm0, xmm1 // inherit velocity
 
@@ -64,6 +98,9 @@ namespace ExtraUtilities::Patch
 			mov [ebp-0xC], eax
 			pextrd eax, xmm0, 2
 			mov [ebp-0x08], eax
+
+			movdqu xmm2, [esp]
+			add esp, 0x10
 
 			movdqu xmm1, [esp]
 			add esp, 0x10

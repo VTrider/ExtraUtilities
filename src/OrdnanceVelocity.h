@@ -23,4 +23,10 @@
 namespace ExtraUtilities::Patch
 {
 	constexpr uintptr_t ordnanceVelocity = 0x004803D4;
+
+	inline bool velocOnlyInheritFront = false;
+
+	// Packed singles masks
+	inline float velocInheritRatio[4] = { 1.0f, 1.0f, 1.0f, 0.0f };
+	inline float velocIgnoreY[4] = { 1.0f, 0.0f, 1.0f, 0.0f };
 }
