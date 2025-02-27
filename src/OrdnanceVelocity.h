@@ -18,12 +18,15 @@
 
 #pragma once
 
+#include <lua.hpp>
+
 #include <cstdint>
 
 namespace ExtraUtilities::Patch
 {
 	constexpr uintptr_t ordnanceVelocity = 0x004803D4;
 	constexpr uintptr_t cannonLeadPosition = 0x0048F658;
+	constexpr uintptr_t cannonVelocityTolerance = 0x0048F639;
 
 	inline bool velocOnlyInheritFront = true;
 
@@ -31,4 +34,13 @@ namespace ExtraUtilities::Patch
 
 	// Packed singles masks
 	inline float velocIgnoreY[4] = { 1.0f, 0.0f, 1.0f, 0.0f };
+
+	int GetOrdnanceVelocInheritance(lua_State* L);
+	int SetOrdnanceVelocInheritance(lua_State* L);
+
+	int GetOrdnanceVelocMode(lua_State* L);
+	int SetOrdnanceVelocMode(lua_State* L);
+
+	int GetOrdnanceVelocRatio(lua_State* L);
+	int SetOrdnanceVelocRatio(lua_State* L);
 }
