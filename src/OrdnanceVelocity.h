@@ -23,10 +23,12 @@
 namespace ExtraUtilities::Patch
 {
 	constexpr uintptr_t ordnanceVelocity = 0x004803D4;
+	constexpr uintptr_t cannonLeadPosition = 0x0048F658;
 
-	inline bool velocOnlyInheritFront = false;
+	inline bool velocOnlyInheritFront = true;
+
+	inline float velocInheritRatio = 1.0f;
 
 	// Packed singles masks
-	inline float velocInheritRatio[4] = { 1.0f, 1.0f, 1.0f, 0.0f };
 	inline float velocIgnoreY[4] = { 1.0f, 0.0f, 1.0f, 0.0f };
 }

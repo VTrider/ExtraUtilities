@@ -25,4 +25,5 @@
 #include "BulletHitCallback.h"
 #include "GlobalTurbo.h"
 #include "Ogre.h"
+#include "OrdnanceVelocity.h"
 #include "ShotConvergence.h"

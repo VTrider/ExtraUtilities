@@ -27,30 +27,25 @@
 
 namespace ExtraUtilities::Patch
 {
-	//static void __cdecl Length(float* returnptr, BZR::VECTOR_3D* v)
-	//{
-	//	*returnptr = std::sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
-	//}
-
-	//static void __cdecl Normalize(BZR::VECTOR_3D* v)
-	//{
-	//	float length;
-	//	Length(&length, v);
-
-	//	v->x /= length;
-	//	v->y /= length;
-	//	v->z /= length;
-	//}
-
-	//static void __cdecl DotProduct(float* returnptr, BZR::VECTOR_3D* v, BZR::VECTOR_3D* w)
-	//{
-	//	*returnptr = v->x * w->x + v->y * w->y + v->z * w->z;
-	//}
+	static void __cdecl DotProduct(float* returnptr, BZR::VECTOR_3D* v, BZR::VECTOR_3D* w)
+	{
+		*returnptr = v->x * w->x + v->y * w->y + v->z * w->z;
+	}
 
 	static void __declspec(naked) OrdnanceVelocityPatch()
 	{
+		static float dotResult{};
 		__asm
 		{
+			/*
+			 * Notes:
+			 * Ordnance* this is at [ebp-0x20]
+			 * Ordnance vector3d at x: [ebp-0x10] y: [ebp-0xC] z: [ebp-0x08]
+			 * Offset to GameObject velocity: 0x12C
+			 * Offset to obj76 front vector 0x38
+			 */
+
+			// Save registers
 			pushad
 			pushfd
 
@@ -63,23 +58,38 @@ namespace ExtraUtilities::Patch
 			sub esp, 0x10
 			movdqu [esp], xmm2
 			
-			/*
-			 * Notes:
-			 * Ordnance* this is at [ebp-0x20]
-			 * Ordnance vector3d at x: [ebp-0x10] y: [ebp-0xC] z: [ebp-0x08]
-			 * Offset to GameObject velocity: 0x12C
-			 */ 
+			// Begin patch
 
 			// Get owner of the ordnance
 			mov ecx, [ebp-0x20]
 			mov eax, [ecx+0xD8] // obj76
-			mov eax, [eax+0x8C] // GameObject* owner
+			mov ebx, [eax+0x8C] // GameObject* owner
 
-			movdqu xmm0, [eax+0x12C] // load shooter velocity
+			movups xmm0, [ebx+0x12C]
 
 			cmp [velocOnlyInheritFront], 0x1
 			jne inheritAll
 
+			push eax // save this from the call
+
+			// Dot the front vector and velocity vector
+			lea edx, [eax+0x38] // shooter front
+			push edx
+			lea edx, [ebx+0x12C] // shooter velocity
+			push edx
+			lea edx, [dotResult]
+			push edx
+			call DotProduct
+			add esp, 0xC
+
+			pop eax
+
+			movups xmm0, [eax+0x38] // shooter front
+			movss xmm1, [dotResult]
+			shufps xmm1, xmm1, 0 // pack with singles
+			mulps xmm0, xmm1 // scale by front velocity
+
+			// Ignore the Y value
 			movups xmm2, [velocIgnoreY]
 			mulps xmm0, xmm2
 
@@ -87,8 +97,9 @@ namespace ExtraUtilities::Patch
 
 			movdqu xmm1, [ebp-0x10] // load ordnance velocity
 
-			movups xmm2, [velocInheritRatio]
-			mulps xmm1, xmm2
+			movss xmm2, [velocInheritRatio]
+			shufps xmm2, xmm2, 0 // pack singles
+			mulps xmm1, xmm2 // apply user defined scaling factor
 
 			addps xmm0, xmm1 // inherit velocity
 
@@ -99,6 +110,9 @@ namespace ExtraUtilities::Patch
 			pextrd eax, xmm0, 2
 			mov [ebp-0x08], eax
 
+			// End patch
+
+			// Restore registers
 			movdqu xmm2, [esp]
 			add esp, 0x10
 
@@ -120,4 +134,125 @@ namespace ExtraUtilities::Patch
 		}
 	}
 	Hook ordnanceVelocityPatch(ordnanceVelocity, &OrdnanceVelocityPatch, 8, BasicPatch::Status::ACTIVE);
+
+	static void __declspec(naked) CannonLeadPositionPatch()
+	{
+		static float dotResult{};
+		__asm
+		{
+			/*
+			* Notes:
+			* eax has target velocity
+			* [ebp-0x20] has the this pointer (cannon)
+			* 
+			* need to subtract shooter velocity from the 
+			* target velocity to fix the TLI position
+			*/
+
+			pushad
+			pushfd
+
+			sub esp, 0x10
+			movdqu [esp], xmm0
+
+			sub esp, 0x10
+			movdqu [esp], xmm1
+
+			sub esp, 0x10
+			movdqu [esp], xmm2
+
+			// Begin patch
+
+			mov ecx, [ebp-0x20] // this pointer (cannon)
+			mov ebx, [ecx+0x18] // cannon owner obj76
+			mov edx, [ebx+0x8C] // obj76 owner (GameObject*)
+
+			push eax // this has target velocity
+			movups xmm1, [edx + 0x12C] // shooter velocity
+
+			cmp [velocOnlyInheritFront], 0x1
+			jne inheritAll
+
+			push ebx // save this from the call
+
+			// Dot the front vector and velocity vector
+			lea esi, [ebx + 0x38] // shooter front
+			push esi
+			lea esi, [edx + 0x12C] // shooter velocity
+			push esi
+			lea esi, [dotResult]
+			push esi
+			call DotProduct
+			add esp, 0xC
+
+			pop ebx
+
+			movups xmm1, [ebx + 0x38] // shooter front
+			movss xmm2, [dotResult]
+			shufps xmm2, xmm2, 0 // pack with singles
+			mulps xmm1, xmm2 // scale by front velocity
+
+			inheritAll:
+
+			// Ignore the Y value
+			movups xmm2, [velocIgnoreY]
+			mulps xmm1, xmm2
+
+			pop eax
+			movups xmm0, [eax]
+
+			subps xmm0, xmm1 // target velocity - shooter velocity = the value we want for the TLI calculation
+
+			// unpack values and replace
+			movss [ebp-0x1C], xmm0
+			pextrd ebx, xmm0, 1
+			mov [ebp-0x18], ebx
+			pextrd ebx, xmm0, 2
+			mov [ebp-0x14], ebx
+
+			// End patch
+
+			movdqu xmm2, [esp]
+			add esp, 0x10
+
+			movdqu xmm1, [esp]
+			add esp, 0x10
+
+			movdqu xmm0, [esp]
+			add esp, 0x10
+
+			popfd
+			popad
+
+			// Game code
+			mov eax, [ebp-0x20]
+			mov ecx, [eax+0x0C]
+
+			ret
+		}
+	}
+	Hook cannonLeadPositionPatch(cannonLeadPosition, &CannonLeadPositionPatch, 6, BasicPatch::Status::ACTIVE);
+}
+
+namespace ExtraUtilities::Lua::Patches
+{
+	int GetOrdnanceVelocInheritance(lua_State* L)
+	{
+		lua_pushboolean(L, Patch::ordnanceVelocityPatch.IsActive());
+		return 1;
+	}
+
+	int SetOrdnanceVelocInheritance(lua_State* L)
+	{
+		bool active = CheckBool(L, 1);
+		if (active == true)
+		{
+			Patch::ordnanceVelocityPatch.Reload();
+		}
+		else
+		{
+			Patch::ordnanceVelocityPatch.Unload();
+		}
+		return 0;
+	}
 }
