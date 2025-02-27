@@ -19,6 +19,7 @@
 #include "OrdnanceVelocity.h"
 
 #include "BZR.h"
+#include "InlinePatch.h"
 #include "Hook.h"
 #include "LuaHelpers.h"
 #include "LuaState.h"
@@ -133,7 +134,7 @@ namespace ExtraUtilities::Patch
 			ret
 		}
 	}
-	Hook ordnanceVelocityPatch(ordnanceVelocity, &OrdnanceVelocityPatch, 8, BasicPatch::Status::ACTIVE);
+	Hook ordnanceVelocityPatch(ordnanceVelocity, &OrdnanceVelocityPatch, 8, BasicPatch::Status::INACTIVE);
 
 	static void __declspec(naked) CannonLeadPositionPatch()
 	{
@@ -192,11 +193,11 @@ namespace ExtraUtilities::Patch
 			shufps xmm2, xmm2, 0 // pack with singles
 			mulps xmm1, xmm2 // scale by front velocity
 
-			inheritAll:
-
 			// Ignore the Y value
 			movups xmm2, [velocIgnoreY]
 			mulps xmm1, xmm2
+
+			inheritAll:
 
 			pop eax
 			movups xmm0, [eax]
@@ -231,13 +232,18 @@ namespace ExtraUtilities::Patch
 			ret
 		}
 	}
-	Hook cannonLeadPositionPatch(cannonLeadPosition, &CannonLeadPositionPatch, 6, BasicPatch::Status::ACTIVE);
+	Hook cannonLeadPositionPatch(cannonLeadPosition, &CannonLeadPositionPatch, 6, BasicPatch::Status::INACTIVE);
+
+	// This bypasses the is target speed > 0.1 m/s check, you still want to calculate
+	// lead position even on still targets because it will be affected by the shooter's speed
+	InlinePatch cannonVelocityTolerancePatch(cannonVelocityTolerance, std::vector<uint8_t>(6, 0x90), BasicPatch::Status::INACTIVE);
 }
 
 namespace ExtraUtilities::Lua::Patches
 {
 	int GetOrdnanceVelocInheritance(lua_State* L)
 	{
+		// This is only one component but they are all activated in sync
 		lua_pushboolean(L, Patch::ordnanceVelocityPatch.IsActive());
 		return 1;
 	}
@@ -248,11 +254,17 @@ namespace ExtraUtilities::Lua::Patches
 		if (active == true)
 		{
 			Patch::ordnanceVelocityPatch.Reload();
+			Patch::cannonLeadPositionPatch.Reload();
+			Patch::cannonVelocityTolerancePatch.Reload();
 		}
 		else
 		{
 			Patch::ordnanceVelocityPatch.Unload();
+			Patch::cannonLeadPositionPatch.Unload();
+			Patch::cannonVelocityTolerancePatch.Unload();
 		}
 		return 0;
 	}
+
+	int 
 }
