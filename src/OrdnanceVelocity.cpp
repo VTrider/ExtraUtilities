@@ -265,4 +265,6 @@ namespace ExtraUtilities::Lua::Patches
 		}
 		return 0;
 	}
+
+	int 
 }
