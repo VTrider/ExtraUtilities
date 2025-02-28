@@ -28,14 +28,13 @@
 
 namespace ExtraUtilities::Patch
 {
-	static void __cdecl DotProduct(float* returnptr, BZR::VECTOR_3D* v, BZR::VECTOR_3D* w)
+	static float __cdecl DotProduct(BZR::VECTOR_3D* v, BZR::VECTOR_3D* w)
 	{
-		*returnptr = v->x * w->x + v->y * w->y + v->z * w->z;
+		return v->x * w->x + v->y * w->y + v->z * w->z;
 	}
 
 	static void __declspec(naked) OrdnanceVelocityPatch()
 	{
-		static float dotResult{};
 		__asm
 		{
 			/*
@@ -45,6 +44,11 @@ namespace ExtraUtilities::Patch
 			 * Offset to GameObject velocity: 0x12C
 			 * Offset to obj76 front vector 0x38
 			 */
+
+			push ebp
+			mov ebp, esp
+
+			sub esp, 0x04 // allocate a local for the dot product result
 
 			// Save registers
 			pushad
@@ -61,8 +65,10 @@ namespace ExtraUtilities::Patch
 			
 			// Begin patch
 
+			mov edi, [ebp]
+
 			// Get owner of the ordnance
-			mov ecx, [ebp-0x20]
+			mov ecx, [edi-0x20]
 			mov eax, [ecx+0xD8] // obj76
 			mov ebx, [eax+0x8C] // GameObject* owner
 
@@ -78,15 +84,15 @@ namespace ExtraUtilities::Patch
 			push edx
 			lea edx, [ebx+0x12C] // shooter velocity
 			push edx
-			lea edx, [dotResult]
-			push edx
 			call DotProduct
-			add esp, 0xC
+			add esp, 0x8
 
 			pop eax
 
+			fstp [ebp-0x04] // dot result
+
 			movups xmm0, [eax+0x38] // shooter front
-			movss xmm1, [dotResult]
+			movss xmm1, [ebp-0x04]
 			shufps xmm1, xmm1, 0 // pack with singles
 			mulps xmm0, xmm1 // scale by front velocity
 
@@ -96,7 +102,7 @@ namespace ExtraUtilities::Patch
 
 			inheritAll:
 
-			movdqu xmm1, [ebp-0x10] // load ordnance velocity
+			movdqu xmm1, [edi-0x10] // load ordnance velocity
 
 			movss xmm2, [velocInheritRatio]
 			shufps xmm2, xmm2, 0 // pack singles
@@ -105,11 +111,11 @@ namespace ExtraUtilities::Patch
 			addps xmm0, xmm1 // inherit velocity
 
 			// unpack register and replace values
-			movss [ebp-0x10], xmm0
+			movss [edi-0x10], xmm0
 			pextrd eax, xmm0, 1
-			mov [ebp-0xC], eax
+			mov [edi-0xC], eax
 			pextrd eax, xmm0, 2
-			mov [ebp-0x08], eax
+			mov [edi-0x08], eax
 
 			// End patch
 
@@ -126,6 +132,9 @@ namespace ExtraUtilities::Patch
 			popfd
 			popad
 
+			mov esp, ebp
+			pop ebp
+
 			// Game code
 			mov ecx, [ebp-0x10]
 			mov [eax], ecx
@@ -138,7 +147,6 @@ namespace ExtraUtilities::Patch
 
 	static void __declspec(naked) CannonLeadPositionPatch()
 	{
-		static float dotResult{};
 		__asm
 		{
 			/*
@@ -149,6 +157,11 @@ namespace ExtraUtilities::Patch
 			* need to subtract shooter velocity from the 
 			* target velocity to fix the TLI position
 			*/
+
+			push ebp
+			mov ebp, esp
+
+			sub esp, 0x04 // dot result
 
 			pushad
 			pushfd
@@ -164,7 +177,9 @@ namespace ExtraUtilities::Patch
 
 			// Begin patch
 
-			mov ecx, [ebp-0x20] // this pointer (cannon)
+			mov edi, [ebp] // old stack frame
+
+			mov ecx, [edi-0x20] // this pointer (cannon)
 			mov ebx, [ecx+0x18] // cannon owner obj76
 			mov edx, [ebx+0x8C] // obj76 owner (GameObject*)
 
@@ -181,15 +196,15 @@ namespace ExtraUtilities::Patch
 			push esi
 			lea esi, [edx + 0x12C] // shooter velocity
 			push esi
-			lea esi, [dotResult]
-			push esi
 			call DotProduct
-			add esp, 0xC
+			add esp, 0x8
 
 			pop ebx
 
+			fstp [ebp-0x04]
+
 			movups xmm1, [ebx + 0x38] // shooter front
-			movss xmm2, [dotResult]
+			movss xmm2, [ebp-0x04]
 			shufps xmm2, xmm2, 0 // pack with singles
 			mulps xmm1, xmm2 // scale by front velocity
 
@@ -205,11 +220,11 @@ namespace ExtraUtilities::Patch
 			subps xmm0, xmm1 // target velocity - shooter velocity = the value we want for the TLI calculation
 
 			// unpack values and replace
-			movss [ebp-0x1C], xmm0
+			movss [edi-0x1C], xmm0
 			pextrd ebx, xmm0, 1
-			mov [ebp-0x18], ebx
+			mov [edi-0x18], ebx
 			pextrd ebx, xmm0, 2
-			mov [ebp-0x14], ebx
+			mov [edi-0x14], ebx
 
 			// End patch
 
@@ -225,6 +240,9 @@ namespace ExtraUtilities::Patch
 			popfd
 			popad
 
+			mov esp, ebp
+			pop ebp
+
 			// Game code
 			mov eax, [ebp-0x20]
 			mov ecx, [eax+0x0C]
@@ -234,9 +252,17 @@ namespace ExtraUtilities::Patch
 	}
 	Hook cannonLeadPositionPatch(cannonLeadPosition, &CannonLeadPositionPatch, 6, BasicPatch::Status::INACTIVE);
 
+	  void __declspec(naked)MortarLeadPositionPatch()
+	{
+		__asm
+		{
+
+		}
+	}
+
 	// This bypasses the is target speed > 0.1 m/s check, you still want to calculate
 	// lead position even on still targets because it will be affected by the shooter's speed
-	InlinePatch cannonVelocityTolerancePatch(cannonVelocityTolerance, std::vector<uint8_t>(6, 0x90), BasicPatch::Status::INACTIVE);
+	InlinePatch cannonVelocityTolerancePatch(cannonVelocityTolerance, BasicPatch::NOP, 6, BasicPatch::Status::INACTIVE);
 }
 
 namespace ExtraUtilities::Lua::Patches

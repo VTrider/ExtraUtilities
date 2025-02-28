@@ -34,7 +34,10 @@ namespace ExtraUtilities::Patch
 
 	// Packed singles masks
 	inline float velocIgnoreY[4] = { 1.0f, 0.0f, 1.0f, 0.0f };
+}
 
+namespace ExtraUtilities::Lua::Patches
+{
 	int GetOrdnanceVelocInheritance(lua_State* L);
 	int SetOrdnanceVelocInheritance(lua_State* L);
 

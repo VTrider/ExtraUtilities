@@ -31,7 +31,6 @@ namespace ExtraUtilities
 		const void** p_function = &m_function; // pointer to the function for memcpy
 
 		// x86 shellcode
-		static constexpr uint8_t NOP = 0x90; // no operation
 		static constexpr uint8_t CALL[] = { 0xFF, 0x15 }; // call near absolute indirect
 
 		bool ValidateHook() const
