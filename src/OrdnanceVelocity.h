@@ -28,13 +28,16 @@ namespace ExtraUtilities::Patch
 	constexpr uintptr_t cannonLeadPosition = 0x0048F658;
 	constexpr uintptr_t cannonVelocityTolerance = 0x0048F639;
 
-	inline bool velocOnlyInheritFront = true;
+	inline bool velocOnlyInheritFront = false;
 
 	inline float velocInheritRatio = 1.0f;
 
 	// Packed singles masks
 	inline float velocIgnoreY[4] = { 1.0f, 0.0f, 1.0f, 0.0f };
+}
 
+namespace ExtraUtilities::Lua::Patches
+{
 	int GetOrdnanceVelocInheritance(lua_State* L);
 	int SetOrdnanceVelocInheritance(lua_State* L);
 

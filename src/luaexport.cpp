@@ -247,6 +247,8 @@ namespace ExtraUtilities::Lua
 			{ "GetGameKey", &IO::GetGameKey },
 
 			// Multiplayer
+			{ "BuildAsyncObject", &Multiplayer::BuildAsyncObject },
+			{ "BuildSyncObject", &Multiplayer::BuildSyncObject },
 			{ "GetLives", &Multiplayer::GetLives },
 			{ "SetLives", &Multiplayer::SetLives },
 
@@ -261,6 +263,8 @@ namespace ExtraUtilities::Lua
 			// Patches
 			{ "GetGlobalTurbo",     &Patches::GetGlobalTurbo },
 			{ "SetGlobalTurbo",     &Patches::SetGlobalTurbo },
+			{ "GetOrdnanceVelocInheritance", &Patches::GetOrdnanceVelocInheritance },
+			{ "SetOrdnanceVelocInheritance", &Patches::SetOrdnanceVelocInheritance },
 			{ "GetShotConvergence", &Patches::GetShotConvergence },
 			{ "SetShotConvergence", &Patches::SetShotConvergence },
 

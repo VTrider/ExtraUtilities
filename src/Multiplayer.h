@@ -19,6 +19,7 @@
 #pragma once
 
 #include "BZR.h"
+#include "InlinePatch.h"
 #include "Scanner.h"
 
 #include <lua.hpp>
@@ -27,6 +28,11 @@ namespace ExtraUtilities::Lua::Multiplayer
 {
 	inline Scanner isNetGame(BZR::Multiplayer::isNetGame, BasicScanner::Restore::DISABLED);
 	inline Scanner lives(BZR::Multiplayer::lives);
+	inline InlinePatch buildObjectAlwaysAsync(0x005C833D, BasicPatch::NOP, 11, BasicPatch::Status::INACTIVE);
+	inline InlinePatch buildObjectAlwaysSync(0x005C833B, BasicPatch::NOP, 2, BasicPatch::Status::INACTIVE);
+
+	int BuildAsyncObject(lua_State* L);
+	int BuildSyncObject(lua_State* L);
 
 	int GetLives(lua_State* L);
 	int SetLives(lua_State* L);

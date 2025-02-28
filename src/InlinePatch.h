@@ -43,7 +43,7 @@ namespace ExtraUtilities
 		}
 
 	public:
-		// Single typed value inline patch
+		// Buffer inline patch
 		InlinePatch(uintptr_t address, const void* payload, size_t length, Status status)
 			: BasicPatch(address, length, status), m_payload((uint8_t*)payload, (uint8_t*)payload + length)
 		{
@@ -56,6 +56,16 @@ namespace ExtraUtilities
 		// Shellcode inline patch
 		InlinePatch(uintptr_t address, std::vector<uint8_t> payload, Status status)
 			: BasicPatch(address, payload.size(), status), m_payload(payload)
+		{
+			if (m_status == Status::ACTIVE)
+			{
+				DoPatch();
+			}
+		}
+
+		// Single value inline patch
+		InlinePatch(uintptr_t address, uint8_t value, size_t length, Status status)
+			: BasicPatch(address, length, status), m_payload(length, value)
 		{
 			if (m_status == Status::ACTIVE)
 			{

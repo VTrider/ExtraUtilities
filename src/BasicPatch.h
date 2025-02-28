@@ -36,6 +36,9 @@ namespace ExtraUtilities
 			INACTIVE // game code is running
 		};
 
+		// x86 shellcode
+		static constexpr uint8_t NOP = 0x90; // no operation
+
 	protected:
 		Status m_status;
 
