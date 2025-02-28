@@ -30,7 +30,7 @@ namespace ExtraUtilities
 	class BasicPatch
 	{
 	public:
-		enum class Status
+		enum class Status : uint8_t
 		{
 			ACTIVE, // patched code is running
 			INACTIVE // game code is running
