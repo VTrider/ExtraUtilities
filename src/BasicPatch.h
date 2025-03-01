@@ -21,8 +21,6 @@
 #include <Windows.h>
 
 #include <cstdint>
-#include <format>
-#include <string>
 #include <vector>
 
 namespace ExtraUtilities

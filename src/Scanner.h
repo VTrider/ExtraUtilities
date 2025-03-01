@@ -28,7 +28,6 @@
 
 #include <Windows.h>
 
-#include <iostream>
 #include <vector>
 
 #undef ABSOLUTE // win32 name collision

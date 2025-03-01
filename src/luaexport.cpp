@@ -29,9 +29,6 @@
 #include "lua.hpp"
 #include <Windows.h>
 
-#include <sstream>
-#include <thread> 
-
 // Avoid name collision with winapi macro
 #pragma push_macro("MessageBox")
 #undef MessageBox
