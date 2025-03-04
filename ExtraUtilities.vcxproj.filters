@@ -78,9 +78,6 @@
     <ClCompile Include="src\SoundOptions.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ogre.cpp">
-      <Filter>Source Files\Patches</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShotConvergence.cpp">
       <Filter>Source Files\Patches</Filter>
     </ClCompile>
@@ -173,9 +170,6 @@
     <ClInclude Include="src\BasicScanner.h">
       <Filter>Header Files\Memory Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ogre.h">
-      <Filter>Header Files\Patches</Filter>
-    </ClInclude>
     <ClInclude Include="src\ShotConvergence.h">
       <Filter>Header Files\Patches</Filter>
     </ClInclude>
@@ -196,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="src\OrdnanceVelocity.h">
       <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ogre.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

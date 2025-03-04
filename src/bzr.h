@@ -249,10 +249,20 @@ namespace BZR
 	namespace Ogre
 	{
 		// Function offsets from OgreMain.dll
+		constexpr uintptr_t getAmbientLightOffset = 0x3C8D90;
+		constexpr uintptr_t setAmbientLightOffset = 0x3D35E0;
+		constexpr uintptr_t getDiffuseColorOffset = 0x18219;
 		constexpr uintptr_t setDiffuseColorOffset = 0x220280;
+		constexpr uintptr_t getSpecularColorOffset = 0x21F490;
 		constexpr uintptr_t setSpecularColorOffset = 0x2204B0;
 		constexpr uintptr_t setSpotlightRangeOffset = 0x220550;
 		constexpr uintptr_t setVisibleOffset = 0x220EF0;
+
+		// Absolute address
+		inline auto terrain_masterlight = (void**)0x00920CA0; // pointer to the sun light object
+
+		inline auto sceneManagerStructure = (void**)0x00920EA0; // base of some ogre structure that leads to scene manager
+		constexpr uintptr_t sceneManagerOffset = 0x08;
 	}
 
 	class Ordnance

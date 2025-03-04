@@ -149,7 +149,6 @@
     <ClCompile Include="src\IO.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
     <ClCompile Include="src\Multiplayer.cpp" />
-    <ClCompile Include="src\Ogre.cpp" />
     <ClCompile Include="src\Ordnance.cpp" />
     <ClCompile Include="src\OrdnanceVelocity.cpp" />
     <ClCompile Include="src\OS.cpp" />
