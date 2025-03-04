@@ -224,6 +224,8 @@ namespace ExtraUtilities::Lua
 			{ "SetSunAmbient", &Environment::SetSunAmbient },
 			{ "GetSunDiffuse", &Environment::GetSunDiffuse },
 			{ "SetSunDiffuse", &Environment::SetSunDiffuse },
+			{ "GetSunSpecular", &Environment::GetSunSpecular },
+			{ "SetSunSpecular", &Environment::SetSunSpecular },
 
 			// GameObject
 			{ "SetAsUser",		&GameObject::SetAsUser },

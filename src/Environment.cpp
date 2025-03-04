@@ -19,6 +19,7 @@
 #include "Environment.h"
 
 #include "Hook.h"
+#include "InlinePatch.h"
 #include "LuaHelpers.h"
 
 namespace ExtraUtilities::Lua::Environment
@@ -32,7 +33,6 @@ namespace ExtraUtilities::Lua::Environment
 		return 1;
 	}
 
-	// You can use individual floats or a vector 3d
 	int SetGravity(lua_State* L)
 	{
 		auto newGravity = CheckVectorOrSingles(L, 1);
@@ -45,35 +45,16 @@ namespace ExtraUtilities::Lua::Environment
 	{
 		Ogre::Fog f = fog.Read();
 
-		lua_createtable(L, 0, 5);
-
-		lua_pushnumber(L, f.r);
-		lua_setfield(L, -2, "r");
-
-		lua_pushnumber(L, f.g);
-		lua_setfield(L, -2, "g");
-
-		lua_pushnumber(L, f.b);
-		lua_setfield(L, -2, "b");
-
-		lua_pushnumber(L, f.start);
-		lua_setfield(L, -2, "start");
-
-		lua_pushnumber(L, f.ending);
-		lua_setfield(L, -2, "ending");
+		PushFog(L, f);
 
 		return 1;
 	}
 
 	int SetFog(lua_State* L)
 	{
-		float r = static_cast<float>(luaL_checknumber(L, 1));
-		float g = static_cast<float>(luaL_checknumber(L, 2));
-		float b = static_cast<float>(luaL_checknumber(L, 3));
-		float start = static_cast<float>(luaL_checknumber(L, 4));
-		float ending = static_cast<float>(luaL_checknumber(L, 5));
+		auto f = CheckFogOrSingles(L, 1);
 
-		fog.Write({ r, g, b, start, ending });
+		fog.Write(f);
 
 		return 0;
 	}
@@ -117,10 +98,33 @@ namespace ExtraUtilities::Lua::Environment
 
 		return 0;
 	}
+
+	int GetSunSpecular(lua_State* L)
+	{
+		auto* color = Ogre::GetSpecularColor(Ogre::terrain_masterlight.Read());
+
+		PushColor(L, *color);
+
+		return 1;
+	}
+
+	int SetSunSpecular(lua_State* L)
+	{
+		auto color = CheckColorOrSingles(L, 1);
+
+		Ogre::SetSpecularColor(Ogre::terrain_masterlight.Read(), color.r, color.g, color.b);
+		desiredSunSpecular = color;
+
+		return 0;
+	}
 }
 
 namespace ExtraUtilities::Patch
 {
+	// Prevents fog reset function from running, the same method doesn't work for the sun for some reason
+	InlinePatch fogResetPatch(fogReset, BasicPatch::RET, BasicPatch::Status::ACTIVE);
+
+	// Sunlight reset patches
 	static __declspec(naked) void SunAmbientResetPatch()
 	{
 		__asm

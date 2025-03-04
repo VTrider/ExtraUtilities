@@ -74,6 +74,27 @@ namespace ExtraUtilities::Lua
 		lua_setfield(L, -2, "b");
 	}
 
+	// Pushes an ogre fog table to the stack
+	inline void PushFog(lua_State* L, const Ogre::Fog& fog)
+	{
+		lua_createtable(L, 0, 5);
+
+		lua_pushnumber(L, fog.r);
+		lua_setfield(L, -2, "r");
+
+		lua_pushnumber(L, fog.g);
+		lua_setfield(L, -2, "g");
+
+		lua_pushnumber(L, fog.b);
+		lua_setfield(L, -2, "b");
+
+		lua_pushnumber(L, fog.start);
+		lua_setfield(L, -2, "start");
+
+		lua_pushnumber(L, fog.ending);
+		lua_setfield(L, -2, "ending");
+	}
+
 	// Type checked lua boolean
 	inline bool CheckBool(lua_State* L, int idx)
 	{
@@ -140,5 +161,37 @@ namespace ExtraUtilities::Lua
 			c.b = static_cast<float>(luaL_checknumber(L, idx + 2));
 		}
 		return c;
+	}
+
+	// Gets either a fog table or five numbers from lua
+	inline Ogre::Fog CheckFogOrSingles(lua_State* L, int idx)
+	{
+		Ogre::Fog f;
+		if (lua_istable(L, idx))
+		{
+			lua_getfield(L, idx, "r");
+			f.r = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "g");
+			f.g = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "b");
+			f.b = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "start");
+			f.start = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "ending");
+			f.ending = static_cast<float>(luaL_checknumber(L, -1));
+		}
+		else
+		{
+			f.r = static_cast<float>(luaL_checknumber(L, idx));
+			f.g = static_cast<float>(luaL_checknumber(L, idx + 1));
+			f.b = static_cast<float>(luaL_checknumber(L, idx + 2));
+			f.start = static_cast<float>(luaL_checknumber(L, idx + 3));
+			f.ending = static_cast<float>(luaL_checknumber(L, idx + 4));
+		}
+		return f;
 	}
 }
