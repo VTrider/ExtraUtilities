@@ -18,7 +18,7 @@ local function DoRecoil(odf, shooter, transform)
     -- Shake the shooter too!
     local currentOmega = GetOmega(shooter)
     -- x = pitch shake, y = yaw shake, z = roll shake
-    SetOmega(shooter, SetVector(math.random(5, 15) * 0.1, math.random(-25, 25) * 0.01, currentOmega.z))
+    SetOmega(shooter, SetVector(currentOmega.x + math.random(5, 15) * 0.1, currentOmega.y + math.random(-25, 25) * 0.01, currentOmega.z))
 end
 
 function exu.BulletInit(odf, shooter, transform)
