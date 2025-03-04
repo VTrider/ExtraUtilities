@@ -45,27 +45,58 @@ namespace ExtraUtilities::Ogre
 		float r, g, b;
 	};
 
-	inline uintptr_t setDiffuseColorAddr = BasicScanner::CalculateAddress(BZR::Ogre::setDiffuseColorOffset, BasicScanner::BaseAddress::OGRE);
+	inline Scanner terrain_masterlight(BZR::Ogre::terrain_masterlight, BasicScanner::Restore::DISABLED);
+	inline Scanner sceneManager(BZR::Ogre::sceneManagerStructure, { BZR::Ogre::sceneManagerOffset }, BasicScanner::Restore::DISABLED);
+
+	// Gets the fog structure from the scene manager
+	inline Fog* GetFog()
+	{
+		void* sm = sceneManager.Read();
+		Fog* fog;
+		__asm
+		{
+			mov eax, [sm]
+			add eax, 0x128
+			mov [fog], eax
+		}
+		return fog;
+	}
+
+	// Function Pointers
+
+	// This is bordering on voodoo
+
+	using enum BasicScanner::BaseAddress;
+
+	inline uintptr_t getAmbientLightAddr = BasicScanner::CalculateAddress(BZR::Ogre::getAmbientLightOffset, OGRE);
+	using _GetAmbientLight = Color*(__thiscall*)(void*);
+	inline _GetAmbientLight GetAmbientLight = (_GetAmbientLight)getAmbientLightAddr;
+
+	inline uintptr_t setAmbientLightAddr = BasicScanner::CalculateAddress(BZR::Ogre::setAmbientLightOffset, OGRE);
+	using _SetAmbientLight = void(__thiscall*)(void*, Color*);
+	inline _SetAmbientLight SetAmbientLight = (_SetAmbientLight)setAmbientLightAddr;
+
+	inline uintptr_t getDiffuseColorAddr = BasicScanner::CalculateAddress(BZR::Ogre::getDiffuseColorOffset, OGRE);
+	using _GetDiffuseColor = Color*(__thiscall*)(void*);
+	inline _GetDiffuseColor GetDiffuseColor = (_GetDiffuseColor)getDiffuseColorAddr;
+
+	inline uintptr_t setDiffuseColorAddr = BasicScanner::CalculateAddress(BZR::Ogre::setDiffuseColorOffset, OGRE);
 	using _SetDiffuseColor = void(__thiscall*)(void*, float, float, float);
 	inline _SetDiffuseColor SetDiffuseColor = (_SetDiffuseColor)setDiffuseColorAddr;
 
-	inline uintptr_t setSpecularColorAddr = BasicScanner::CalculateAddress(BZR::Ogre::setSpecularColorOffset, BasicScanner::BaseAddress::OGRE);
+	inline uintptr_t getSpecularColorAddr = BasicScanner::CalculateAddress(BZR::Ogre::getSpecularColorOffset, OGRE);
+	using _GetSpecularColor = Color*(__thiscall*)(void*);
+	inline _GetSpecularColor GetSpecularColor = (_GetDiffuseColor)getSpecularColorAddr;
+
+	inline uintptr_t setSpecularColorAddr = BasicScanner::CalculateAddress(BZR::Ogre::setSpecularColorOffset, OGRE);
 	using _SetSpecularColor = void(__thiscall*)(void*, float, float, float);
 	inline _SetSpecularColor SetSpecularColor = (_SetSpecularColor)setSpecularColorAddr;
 
-	inline uintptr_t setSpotlightRangeAddr = BasicScanner::CalculateAddress(BZR::Ogre::setSpotlightRangeOffset, BasicScanner::BaseAddress::OGRE);
+	inline uintptr_t setSpotlightRangeAddr = BasicScanner::CalculateAddress(BZR::Ogre::setSpotlightRangeOffset, OGRE);
 	using _SetSpotlightRange = void(__thiscall*)(void*, float*, float*, float);
 	inline _SetSpotlightRange SetSpotlightRange = (_SetSpotlightRange)setSpotlightRangeAddr;
 
-	inline uintptr_t setVisibleAddr = BasicScanner::CalculateAddress(BZR::Ogre::setVisibleOffset, BasicScanner::BaseAddress::OGRE);
+	inline uintptr_t setVisibleAddr = BasicScanner::CalculateAddress(BZR::Ogre::setVisibleOffset, OGRE);
 	using _SetVisible = void(__thiscall*)(void*, bool);
 	inline _SetVisible SetVisible = (_SetVisible)setVisibleAddr;
-}
-
-namespace ExtraUtilities::Patch
-{
-	inline const uintptr_t sceneManagerHookAddr = BasicScanner::CalculateAddress(0x3B521E, BasicScanner::BaseAddress::OGRE);
-
-	inline std::unique_ptr<Scanner<Ogre::Fog>> fog;
-	inline std::unique_ptr<Scanner<Ogre::Color>> sunAmbient;
 }

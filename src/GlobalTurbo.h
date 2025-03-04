@@ -30,9 +30,6 @@ namespace ExtraUtilities::Patch
 	// puts the address of our own variable into the comparison
 	constexpr std::uintptr_t comissPatch = 0x00601CA3;
 	inline float patchedTurboTolerance = 0.9f;
-	// this needs to be a double pointer because we need to put the address into the machine code
-	// and memcpy will take a pointer to the pointer to the value
-	inline float* p_tolerance = &patchedTurboTolerance;
 
 	// this instruction bypasses the final check to prevent turbo from happening, so
 	// when combined with a reduced tolerance it forces ai to turbo everywhere

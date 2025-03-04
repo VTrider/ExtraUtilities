@@ -23,8 +23,8 @@
 
 namespace ExtraUtilities::Patch
 {
-	InlinePatch turboPatch1(comissPatch, &p_tolerance, 4, InlinePatch::Status::INACTIVE);
-	InlinePatch turboPatch2(turboConditionPatch, 0x90, 2, InlinePatch::Status::INACTIVE);
+	InlinePatch turboPatch1(comissPatch, &patchedTurboTolerance, InlinePatch::Status::INACTIVE);
+	InlinePatch turboPatch2(turboConditionPatch, BasicPatch::NOP, 2, InlinePatch::Status::INACTIVE);
 }
 
 namespace ExtraUtilities::Lua::Patches

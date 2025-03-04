@@ -19,6 +19,7 @@
 #pragma once
 
 #include "BZR.h"
+#include "Ogre.h"
 
 #include <lua.hpp>
 
@@ -58,6 +59,22 @@ namespace ExtraUtilities::Lua
 		lua_call(L, 12, 1);
 	}
 
+	// Pushes an ogre color table to the stack
+	inline void PushColor(lua_State* L, const Ogre::Color& color)
+	{
+		lua_createtable(L, 0, 3);
+
+		lua_pushnumber(L, color.r);
+		lua_setfield(L, -2, "r");
+
+		lua_pushnumber(L, color.g);
+		lua_setfield(L, -2, "g");
+
+		lua_pushnumber(L, color.b);
+		lua_setfield(L, -2, "b");
+	}
+
+	// Type checked lua boolean
 	inline bool CheckBool(lua_State* L, int idx)
 	{
 		if (!lua_isboolean(L, idx))
@@ -67,6 +84,7 @@ namespace ExtraUtilities::Lua
 		return lua_toboolean(L, idx);
 	}
 
+	// Type checked lua handle
 	inline BZR::handle CheckHandle(lua_State* L, int idx)
 	{
 		if (!lua_isuserdata(L, idx))
@@ -74,5 +92,53 @@ namespace ExtraUtilities::Lua
 			luaL_typerror(L, idx, "handle");
 		}
 		return reinterpret_cast<BZR::handle>(lua_touserdata(L, idx));
+	}
+
+	// Get either a vector or three numbers from lua
+	inline BZR::VECTOR_3D CheckVectorOrSingles(lua_State* L, int idx)
+	{
+		BZR::VECTOR_3D v;
+		if (lua_isuserdata(L, idx))
+		{
+			lua_getfield(L, idx, "x");
+			v.x = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "y");
+			v.y = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "z");
+			v.z = static_cast<float>(luaL_checknumber(L, -1));
+		}
+		else
+		{
+			v.x = static_cast<float>(luaL_checknumber(L, idx));
+			v.y = static_cast<float>(luaL_checknumber(L, idx + 1));
+			v.z = static_cast<float>(luaL_checknumber(L, idx + 2));
+		}
+		return v;
+	}
+
+	// Get either a color table or three numbers from lua
+	inline Ogre::Color CheckColorOrSingles(lua_State* L, int idx)
+	{
+		Ogre::Color c;
+		if (lua_istable(L, idx))
+		{
+			lua_getfield(L, idx, "r");
+			c.r = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "g");
+			c.g = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "b");
+			c.b = static_cast<float>(luaL_checknumber(L, -1));
+		}
+		else
+		{
+			c.r = static_cast<float>(luaL_checknumber(L, idx));
+			c.g = static_cast<float>(luaL_checknumber(L, idx + 1));
+			c.b = static_cast<float>(luaL_checknumber(L, idx + 2));
+		}
+		return c;
 	}
 }
