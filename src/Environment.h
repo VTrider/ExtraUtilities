@@ -47,10 +47,15 @@ namespace ExtraUtilities::Lua::Environment
 
 	int GetSunDiffuse(lua_State* L);
 	int SetSunDiffuse(lua_State* L);
+
+	int GetSunSpecular(lua_State* L);
+	int SetSunSpecular(lua_State* L);
 }
 
 namespace ExtraUtilities::Patch
 {
+	constexpr uintptr_t fogReset = 0x00683370;
+
 	// Addresses for the reset function to use our own values
 	constexpr uintptr_t sunAmbientReset = 0x0067DE3D;
 	constexpr uintptr_t sunDiffuseReset = 0x0067DED7;

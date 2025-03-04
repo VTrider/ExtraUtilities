@@ -319,4 +319,3 @@ namespace BZR
 		inline auto matrix = (MAT_3D*)0x025CE6F8;
 	}
 }
-

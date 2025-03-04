@@ -36,6 +36,7 @@ namespace ExtraUtilities
 
 		// x86 shellcode
 		static constexpr uint8_t NOP = 0x90; // no operation
+		static constexpr uint8_t RET = 0xC3; // return
 
 	protected:
 		Status m_status;
