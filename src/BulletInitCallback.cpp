@@ -75,7 +75,15 @@ namespace ExtraUtilities::Patch
 			 mov ebx, [ebp+0x08] // MAT_3D transform
 			 push ebx // third param
 
+			 mov ebx, 0x0 // load nullptr in case there's no object
+
+			 cmp eax, 0x0 // in rare cases modded objects or maybe explosions can cause this to be null
+			 je skip
+
 			 mov ebx, [eax+0x8C] // GameObject* shooter
+
+			 skip:
+
 			 push ebx // second param
 
 			 mov ebx, [ecx+0xC] // OrdnanceClass*
