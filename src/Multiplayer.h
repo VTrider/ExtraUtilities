@@ -30,10 +30,13 @@ namespace ExtraUtilities::Lua::Multiplayer
 	inline Scanner lives(BZR::Multiplayer::lives);
 	inline InlinePatch buildObjectAlwaysAsync(0x005C833D, BasicPatch::NOP, 11, BasicPatch::Status::INACTIVE);
 	inline InlinePatch buildObjectAlwaysSync(0x005C833B, BasicPatch::NOP, 2, BasicPatch::Status::INACTIVE);
+	inline Scanner myNetID(BZR::Multiplayer::myNetID, BasicScanner::Restore::DISABLED);
 
 	int BuildAsyncObject(lua_State* L);
 	int BuildSyncObject(lua_State* L);
 
 	int GetLives(lua_State* L);
 	int SetLives(lua_State* L);
+
+	int GetMyNetID(lua_State* L);
 }

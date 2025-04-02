@@ -241,6 +241,8 @@ namespace BZR
 		// Real life counter, does not update the scoreboard in real time however
 		inline auto lives = (int*)0x008E8D04;
 
+		inline auto myNetID = (uint8_t*)0x009180D4; // ID that's used with Send() and Receive()
+
 		// Call this function to update the scoreboard with the current life count
 		using _UpdateLives = void(*)(void);
 		inline _UpdateLives UpdateLives = (_UpdateLives)0x006260f0;

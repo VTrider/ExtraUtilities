@@ -252,6 +252,7 @@ namespace ExtraUtilities::Lua
 			{ "BuildSyncObject", &Multiplayer::BuildSyncObject },
 			{ "GetLives", &Multiplayer::GetLives },
 			{ "SetLives", &Multiplayer::SetLives },
+			{ "GetMyNetID", &Multiplayer::GetMyNetID },
 
 			// Ordnance
 			{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },

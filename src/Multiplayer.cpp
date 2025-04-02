@@ -68,7 +68,7 @@ namespace ExtraUtilities::Lua::Multiplayer
 
 	int GetLives(lua_State* L)
 	{
-		lua_pushnumber(L, lives.Read());
+		lua_pushinteger(L, lives.Read());
 		return 1;
 	}
 
@@ -85,5 +85,11 @@ namespace ExtraUtilities::Lua::Multiplayer
 		}
 		
 		return 0;
+	}
+
+	int GetMyNetID(lua_State* L)
+	{
+		lua_pushinteger(L, myNetID.Read());
+		return 1;
 	}
 }
