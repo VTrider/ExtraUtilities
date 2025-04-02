@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AddScrapCallback.cpp" />
     <ClCompile Include="src\BulletHitCallback.cpp" />
     <ClCompile Include="src\BulletInitCallback.cpp" />
     <ClCompile Include="src\Camera.cpp" />
@@ -164,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h" />
+    <ClInclude Include="src\AddScrapCallback.h" />
     <ClInclude Include="src\BulletHitCallback.h" />
     <ClInclude Include="src\BulletInitCallback.h" />
     <ClInclude Include="src\BZR.h" />

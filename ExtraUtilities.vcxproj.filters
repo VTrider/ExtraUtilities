@@ -99,6 +99,9 @@
     <ClCompile Include="src\OrdnanceVelocity.cpp">
       <Filter>Source Files\Patches</Filter>
     </ClCompile>
+    <ClCompile Include="src\AddScrapCallback.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="src\Ogre.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AddScrapCallback.h">
+      <Filter>Header Files\Patches</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
