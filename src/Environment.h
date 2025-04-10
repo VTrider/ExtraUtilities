@@ -29,13 +29,6 @@ namespace ExtraUtilities::Lua::Environment
 	inline Scanner gravity(BZR::Environment::gravityVector);
 	inline Scanner fog(Ogre::GetFog(), BasicScanner::Restore::DISABLED);
 
-	// We need to store these in order to hook the function that constantly
-	// resets the sunlight color whenever an explosion or other various things happen.
-	// Initialize them to the map default.
-	inline Ogre::Color desiredSunAmbient = *Ogre::GetAmbientLight(Ogre::sceneManager.Read());
-	inline Ogre::Color desiredSunDiffuse = *Ogre::GetDiffuseColor(Ogre::terrain_masterlight.Read());
-	inline Ogre::Color desiredSunSpecular = *Ogre::GetSpecularColor(Ogre::terrain_masterlight.Read());
-
 	int GetFog(lua_State* L);
 	int SetFog(lua_State* L);
 
@@ -60,4 +53,13 @@ namespace ExtraUtilities::Patch
 	constexpr uintptr_t sunAmbientReset = 0x0067DE3D;
 	constexpr uintptr_t sunDiffuseReset = 0x0067DED7;
 	constexpr uintptr_t sunSpecularReset = 0x0067DF53;
+
+	void TryInitializeOgre();
+
+	// We need to store these in order to hook the function that constantly
+	// resets the sunlight color whenever an explosion or other various things happen.
+	// Initialize them to the map default.
+	inline Ogre::Color desiredSunAmbient;
+	inline Ogre::Color desiredSunDiffuse;
+	inline Ogre::Color desiredSunSpecular;
 }
