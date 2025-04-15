@@ -263,6 +263,7 @@ namespace ExtraUtilities::Lua
 			{ "MessageBox",			 &OS::MessageBox },
 
 			// Patches
+			{ "AddScrapSilent",     &Patches::AddScrapSilent },
 			{ "GetGlobalTurbo",     &Patches::GetGlobalTurbo },
 			{ "SetGlobalTurbo",     &Patches::SetGlobalTurbo },
 			{ "GetOrdnanceVelocInheritance", &Patches::GetOrdnanceVelocInheritance },

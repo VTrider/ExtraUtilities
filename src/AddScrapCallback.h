@@ -18,9 +18,17 @@
 
 #pragma once
 
+#include <lua.hpp>
+
 #include <cstdint>
 
 namespace ExtraUtilities::Patch
 {
 	constexpr uintptr_t addScrap = 0x005E1016;
+}
+
+
+namespace ExtraUtilities::Lua::Patches
+{
+	int AddScrapSilent(lua_State* L);
 }

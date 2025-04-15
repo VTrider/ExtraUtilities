@@ -78,3 +78,24 @@ namespace ExtraUtilities::Patch
 	}
 	Hook addScrapHook(addScrap, &AddScrapCallback, 6, BasicPatch::Status::ACTIVE);
 }
+
+namespace ExtraUtilities::Lua::Patches
+{
+	int AddScrapSilent(lua_State* L)
+	{
+		int teamNum = luaL_checkinteger(L, 1);
+		int amount = luaL_checkinteger(L, 2);
+
+		lua_getglobal(L, "AddScrap");
+		lua_pushinteger(L, teamNum);
+		lua_pushinteger(L, amount);
+
+		Patch::addScrapHook.Unload();
+
+		lua_call(L, 2, 1);
+		
+		Patch::addScrapHook.Reload();
+
+		return 1;
+	}
+}

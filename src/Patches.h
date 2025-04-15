@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "AddScrapCallback.h"
 #include "BulletHitCallback.h"
 #include "GlobalTurbo.h"
 #include "OrdnanceVelocity.h"
