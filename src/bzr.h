@@ -243,6 +243,8 @@ namespace BZR
 
 		inline auto myNetID = (uint8_t*)0x009180D4; // ID that's used with Send() and Receive()
 
+		inline auto showScoreboard = (bool*)0x02A17494;
+
 		// Call this function to update the scoreboard with the current life count
 		using _UpdateLives = void(*)(void);
 		inline _UpdateLives UpdateLives = (_UpdateLives)0x006260f0;

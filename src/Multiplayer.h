@@ -31,6 +31,7 @@ namespace ExtraUtilities::Lua::Multiplayer
 	inline InlinePatch buildObjectAlwaysAsync(0x005C833D, BasicPatch::NOP, 11, BasicPatch::Status::INACTIVE);
 	inline InlinePatch buildObjectAlwaysSync(0x005C833B, BasicPatch::NOP, 2, BasicPatch::Status::INACTIVE);
 	inline Scanner myNetID(BZR::Multiplayer::myNetID, BasicScanner::Restore::DISABLED);
+	inline Scanner showScoreboard(BZR::Multiplayer::showScoreboard);
 
 	int BuildAsyncObject(lua_State* L);
 	int BuildSyncObject(lua_State* L);
@@ -39,4 +40,7 @@ namespace ExtraUtilities::Lua::Multiplayer
 	int SetLives(lua_State* L);
 
 	int GetMyNetID(lua_State* L);
+
+	int GetShowScoreboard(lua_State* L);
+	int SetShowScoreboard(lua_State* L);
 }

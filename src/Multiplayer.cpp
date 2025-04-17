@@ -18,6 +18,8 @@
 
 #include "Multiplayer.h"
 
+#include "LuaHelpers.h"
+
 #include <lua.hpp>
 
 namespace ExtraUtilities::Lua::Multiplayer
@@ -91,5 +93,18 @@ namespace ExtraUtilities::Lua::Multiplayer
 	{
 		lua_pushinteger(L, myNetID.Read());
 		return 1;
+	}
+
+	int GetShowScoreboard(lua_State* L)
+	{
+		lua_pushboolean(L, showScoreboard.Read());
+		return 1;
+	}
+
+	int SetShowScoreboard(lua_State* L)
+	{
+		bool state = CheckBool(L, 1);
+		showScoreboard.Write(state);
+		return 0;
 	}
 }

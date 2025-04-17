@@ -253,6 +253,8 @@ namespace ExtraUtilities::Lua
 			{ "GetLives", &Multiplayer::GetLives },
 			{ "SetLives", &Multiplayer::SetLives },
 			{ "GetMyNetID", &Multiplayer::GetMyNetID },
+			{ "GetShowScoreboard", &Multiplayer::GetShowScoreboard },
+			{ "SetShowScoreboard", &Multiplayer::SetShowScoreboard },
 
 			// Ordnance
 			{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },
