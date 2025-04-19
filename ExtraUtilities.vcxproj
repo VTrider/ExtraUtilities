@@ -162,6 +162,7 @@
     <ClCompile Include="src\SoundOptions.cpp" />
     <ClCompile Include="src\Steam.cpp" />
     <ClCompile Include="src\StockExtensions.cpp" />
+    <ClCompile Include="src\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h" />

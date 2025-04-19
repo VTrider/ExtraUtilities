@@ -201,7 +201,8 @@ namespace ExtraUtilities::Lua
 	{
 		const luaL_Reg EXPORT[] = {
 			// Camera
-			{ "GetCameraMatrix", &Camera::GetMatrix },
+			{ "GetCameraTransformMatrix", &Camera::GetTransformMatrix },
+			{ "GetCameraViewMatrix", &Camera::GetViewMatrix },
 			{ "GetCameraMaxZoom", &Camera::GetMaxZoom },
 			{ "SetCameraMaxZoom", &Camera::SetMaxZoom },
 			{ "GetCameraMinZoom", &Camera::GetMinZoom },

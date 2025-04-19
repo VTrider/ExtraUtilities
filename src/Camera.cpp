@@ -22,24 +22,23 @@
 
 namespace ExtraUtilities::Lua::Camera
 {
-	int GetMatrix(lua_State* L)
+	int GetTransformMatrix(lua_State* L)
 	{
-		BZR::BZR_Camera* cam = mainCam.Get();
-		BZR::MAT_3D mat = cam->Matrix;
-
-		// these fields need to be negated idk why probably
-		// some 3d graphics stuff I don't understand lol
-		mat.right_z = -mat.right_z;
-		mat.up_z = -mat.up_z;
-		mat.front_x = -mat.front_x;
+		BZR::MAT_3D viewMatrix = mainCam.Get()->Matrix;
 		
-		// the matrix field has junk data in the position fields,
-		// but the real position is in the first field of the view pyramid
-		mat.posit_x = cam->View_Pyramid[0].x;
-		mat.posit_y = cam->View_Pyramid[0].y;
-		mat.posit_z = cam->View_Pyramid[0].z;
+		BZR::MAT_3D transformMatrix;
+		BZR::Matrix_Inverse(&transformMatrix, &viewMatrix);
+		
+		PushMatrix(L, transformMatrix);
 
-		PushMatrix(L, mat);
+		return 1;
+	}
+
+	int GetViewMatrix(lua_State* L)
+	{
+		BZR::MAT_3D viewMatrix = mainCam.Get()->Matrix;
+
+		PushMatrix(L, viewMatrix);
 
 		return 1;
 	}

@@ -24,6 +24,8 @@
 
 #include <cstdint>
 
+#include "Vec3.h"
+
 namespace BZR
 {
 	// Typedefs
@@ -35,6 +37,7 @@ namespace BZR
 	class tagENTITY;
 	using OBJ76 = void;
 	using AiProcess = void;
+	using VECTOR_3D = ExtraUtilities::Vec3;
 
 	struct Jammer
 	{
@@ -68,19 +71,35 @@ namespace BZR
 		double posit_z;
 	};
 
-	struct VECTOR_3D
-	{
-		VECTOR_3D() : x(0), y(0), z(0) {}
-		VECTOR_3D(float x, float y, float z) : x(x), y(y), z(z) {}
-		VECTOR_3D(double x, double y, double z) : x(static_cast<float>(x)), y(static_cast<float>(y)), z(static_cast<float>(z)) {}
-		float x, y, z;
-	};
+	//struct VECTOR_3D
+	//{
+	//	VECTOR_3D() : x(0), y(0), z(0) {}
+	//	VECTOR_3D(float x, float y, float z) : x(x), y(y), z(z) {}
+	//	VECTOR_3D(double x, double y, double z) : x(static_cast<float>(x)), y(static_cast<float>(y)), z(static_cast<float>(z)) {}
+	//	float x, y, z;
+	//};
 
 	struct VECTOR_3D_LONG
 	{
+		double x, y, z;
 		VECTOR_3D_LONG() : x(0), y(0), z(0) {}
 		VECTOR_3D_LONG(double x, double y, double z) : x(x), y(y), z(z) {}
-		double x, y, z;
+		ExtraUtilities::Vec3 ToVec()
+		{
+			return ExtraUtilities::Vec3(x, y, z);
+		}
+	};
+
+	struct Frustum
+	{
+		VECTOR_3D near_top_left;
+		VECTOR_3D near_top_right;
+		VECTOR_3D near_bottom_right;
+		VECTOR_3D near_bottom_left;
+		VECTOR_3D far_top_left;
+		VECTOR_3D far_top_right;
+		VECTOR_3D far_bottom_right;
+		VECTOR_3D far_bottom_left;
 	};
 
 	class BZR_Camera // todo merge camera namespaces
@@ -105,7 +124,7 @@ namespace BZR
 		VECTOR_3D_LONG bSphere_Center;
 		double bSphere_Radius;
 		uint8_t View_Volume[0x60]; // plane class
-		VECTOR_3D View_Frustum[8];
+		Frustum View_Frustum;
 		VECTOR_3D_LONG View_Pyramid[5];
 	};
 
@@ -146,6 +165,9 @@ namespace BZR
 		using _Set_View = void(__cdecl*)(tagENTITY*, int); // 2nd param is an enum
 		inline _Set_View Set_View = (_Set_View)0x0061D120;
 	}
+
+	using _Matrix_Inverse = void(__cdecl*)(MAT_3D*, MAT_3D*);
+	inline _Matrix_Inverse Matrix_Inverse = (_Matrix_Inverse)0x008203F0;
 
 	namespace Cheats
 	{
