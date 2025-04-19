@@ -76,8 +76,43 @@ namespace BZR
 		float x, y, z;
 	};
 
+	struct VECTOR_3D_LONG
+	{
+		VECTOR_3D_LONG() : x(0), y(0), z(0) {}
+		VECTOR_3D_LONG(double x, double y, double z) : x(x), y(y), z(z) {}
+		double x, y, z;
+	};
+
+	class BZR_Camera // todo merge camera namespaces
+	{
+	public:
+		float Orig_x;
+		float Orig_y;
+		float Const_x;
+		float Const_y;
+		float Max_Depth;
+		float Left;
+		float Bottom;
+		float Right;
+		float Top;
+		float View_Angle;
+		float Tang;
+		float Aspect;
+		float Zoom_Factor;
+		void (*Draw_Poly)(void);
+		void* Buffer; // _GRAPHIC_BUFFER*
+		MAT_3D Matrix;
+		VECTOR_3D_LONG bSphere_Center;
+		double bSphere_Radius;
+		uint8_t View_Volume[0x60]; // plane class
+		VECTOR_3D View_Frustum[8];
+		VECTOR_3D_LONG View_Pyramid[5];
+	};
+
 	namespace Camera
 	{
+		inline auto View_Record_MainCam = (BZR_Camera*)0x008EAAE0;
+
 		inline auto zoomFactorFPP = (float*)0x008EAD10;
 		inline auto zoomFactorTPP = (float*)0x008EAB10;
 		inline auto maxZoomFactor = (float*)0x008A2688;

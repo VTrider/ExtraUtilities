@@ -18,8 +18,93 @@
 
 #include "Camera.h"
 
+#include "LuaHelpers.h"
+
 namespace ExtraUtilities::Lua::Camera
 {
+	int GetMatrix(lua_State* L)
+	{
+		BZR::BZR_Camera* cam = mainCam.Get();
+		BZR::MAT_3D mat = cam->Matrix;
+
+		// these fields need to be negated idk why probably
+		// some 3d graphics stuff I don't understand lol
+		mat.right_z = -mat.right_z;
+		mat.up_z = -mat.up_z;
+		mat.front_x = -mat.front_x;
+		
+		// the matrix field has junk data in the position fields,
+		// but the real position is in the first field of the view pyramid
+		mat.posit_x = cam->View_Pyramid[0].x;
+		mat.posit_y = cam->View_Pyramid[0].y;
+		mat.posit_z = cam->View_Pyramid[0].z;
+
+		PushMatrix(L, mat);
+
+		return 1;
+	}
+
+	int GetMaxZoom(lua_State* L)
+	{
+		lua_pushnumber(L, maxZoom.Read());
+		return 1;
+	}
+
+	int SetMaxZoom(lua_State* L)
+	{
+		float zoom = static_cast<float>(luaL_checknumber(L, 1));
+		maxZoom.Write(zoom);
+		return 0;
+	}
+
+	int GetMinZoom(lua_State* L)
+	{
+		lua_pushnumber(L, minZoom.Read());
+		return 1;
+	}
+
+	int SetMinZoom(lua_State* L)
+	{
+		float zoom = static_cast<float>(luaL_checknumber(L, 1));
+		minZoom.Write(zoom);
+		return 0;
+	}
+
+	int GetView(lua_State* L)
+	{
+		lua_pushinteger(L, currentView.Read());
+		return 1;
+	}
+
+	int SetView(lua_State* L)
+	{
+		int view = luaL_checkinteger(L, 1);
+
+		using enum BZR::Camera::View;
+		switch (view)
+		{
+		case COCKPIT:
+			break;
+		case NO_COCKPIT:
+			break;
+		case CHASE:
+			break;
+		case ORBIT:
+			break;
+		case NO_HUD:
+			break;
+		case FREECAM:
+			break;
+		default:
+			luaL_argerror(L, 1, "Extra Utilities Error: Invalid view mode");
+			return 0;
+		}
+
+		BZR::Camera::Set_View(userEntity.Read(), view);
+
+		return 0;
+	}
+
 	int GetZoom(lua_State* L)
 	{
 		int camera = luaL_checkinteger(L, 1);
@@ -58,67 +143,6 @@ namespace ExtraUtilities::Lua::Camera
 			luaL_argerror(L, 1, "Extra Utilities Error: Invalid camera");
 			return 0;
 		}
-		return 0;
-	}
-
-	int GetMinZoom(lua_State* L)
-	{
-		lua_pushnumber(L, minZoom.Read());
-		return 1;
-	}
-
-	int SetMinZoom(lua_State* L)
-	{
-		float zoom = static_cast<float>(luaL_checknumber(L, 1));
-		minZoom.Write(zoom);
-		return 0;
-	}
-
-	int GetMaxZoom(lua_State* L)
-	{
-		lua_pushnumber(L, maxZoom.Read());
-		return 1;
-	}
-
-	int SetMaxZoom(lua_State* L)
-	{
-		float zoom = static_cast<float>(luaL_checknumber(L, 1));
-		maxZoom.Write(zoom);
-		return 0;
-	}
-
-	int GetView(lua_State* L)
-	{
-		lua_pushinteger(L, currentView.Read());
-		return 1;
-	}
-
-	int SetView(lua_State* L)
-	{
-		int view = luaL_checkinteger(L, 1);
-
-		using enum BZR::Camera::View;
-		switch (view)
-		{
-		case COCKPIT:
-			break;
-		case NO_COCKPIT:
-			break;
-		case CHASE:
-			break;
-		case ORBIT:
-			break;
-		case NO_HUD:
-			break;
-		case FREECAM:
-			break;
-		default:
-			luaL_argerror(L, 1, "Extra Utilities Error: Invalid view mode");
-			return 0;
-		}
-
-		BZR::Camera::Set_View(userEntity.Read(), view);
-
 		return 0;
 	}
 }
