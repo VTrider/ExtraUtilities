@@ -23,6 +23,8 @@
 
 #include <lua.hpp>
 
+#include <string>
+
 namespace ExtraUtilities::Lua::GameObject
 {
 	int SetAsUser(lua_State* L)
@@ -31,6 +33,38 @@ namespace ExtraUtilities::Lua::GameObject
 		BZR::GameObject* obj = BZR::GameObject::GetObj(h);
 		BZR::GameObject::SetAsUser(obj);
 		return 0;
+	}
+
+	int IsCommTowerPowered(lua_State* L)
+	{
+		BZR::handle h = CheckHandle(L, 1);
+
+		lua_getglobal(L, "GetClassLabel");
+		lua_pushlightuserdata(L, reinterpret_cast<void*>(h));
+		lua_call(L, 1, 1);
+
+		std::string classLabel = luaL_checkstring(L, -1);
+
+		if (classLabel != "commtower")
+		{
+			luaL_error(L, "Extra Utilities: object is not a comm tower");
+			return 0;
+		}
+
+		BZR::GameObject* obj = BZR::GameObject::GetObj(h);
+
+		BZR::handle powerHandle;
+
+		__asm
+		{
+			mov eax, [obj]
+			mov eax, [eax+0x238]
+			mov [powerHandle], eax;
+		}
+		
+		lua_pushboolean(L, powerHandle == 0 ? 0 : 1);
+
+		return 1;
 	}
 
 	int GetHandle(lua_State* L)

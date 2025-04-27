@@ -231,6 +231,7 @@ namespace ExtraUtilities::Lua
 
 			// GameObject
 			{ "SetAsUser",		&GameObject::SetAsUser },
+			{ "IsCommTowerPowered", &GameObject::IsCommTowerPowered },
 			{ "GetHandle",		&GameObject::GetHandle },
 			{ "SetHeadlightDiffuse", &GameObject::SetHeadlightDiffuse },
 			{ "SetHeadlightSpecular", &GameObject::SetHeadlightSpecular },

@@ -27,6 +27,8 @@ namespace ExtraUtilities::Lua::GameObject
 {
 	int SetAsUser(lua_State* L);
 
+	int IsCommTowerPowered(lua_State* L);
+
 	int GetHandle(lua_State* L);
 
 	int SetHeadlightDiffuse(lua_State* L);
