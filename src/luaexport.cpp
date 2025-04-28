@@ -258,6 +258,7 @@ namespace ExtraUtilities::Lua
 			{ "GetMyNetID", &Multiplayer::GetMyNetID },
 			{ "GetShowScoreboard", &Multiplayer::GetShowScoreboard },
 			{ "SetShowScoreboard", &Multiplayer::SetShowScoreboard },
+			{ "DisableStartingRecycler", &Multiplayer::DisableStartingRecycler },
 
 			// Ordnance
 			{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },

@@ -32,6 +32,8 @@ namespace ExtraUtilities::Lua::Multiplayer
 	inline InlinePatch buildObjectAlwaysSync(0x005C833B, BasicPatch::NOP, 2, BasicPatch::Status::INACTIVE);
 	inline Scanner myNetID(BZR::Multiplayer::myNetID, BasicScanner::Restore::DISABLED);
 	inline Scanner showScoreboard(BZR::Multiplayer::showScoreboard);
+	// This voodoo shellcode jumps to the end of the function just before the stack cookie is checked and skips building the rec
+	inline InlinePatch skipStartingRecycler(0x0056EFA4, { 0xE9, 0x2C, 0x01, 0x00, 0x00, 0x90 }, BasicPatch::Status::INACTIVE);
 
 	int BuildAsyncObject(lua_State* L);
 	int BuildSyncObject(lua_State* L);
@@ -43,4 +45,6 @@ namespace ExtraUtilities::Lua::Multiplayer
 
 	int GetShowScoreboard(lua_State* L);
 	int SetShowScoreboard(lua_State* L);
+
+	int DisableStartingRecycler(lua_State*);
 }

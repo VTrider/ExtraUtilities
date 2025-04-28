@@ -30,12 +30,12 @@ namespace ExtraUtilities::Lua::Multiplayer
 
 		// Set up stack for wrappuh call
 		lua_getglobal(L, "BuildObject");
-		
+
 		// Handle the variadic args to BuildObject,
 		// the function needs to be first so we shuffle
 		// it's args to be on top
 		int argC = lua_gettop(L);
-		for (int i = 1; i < argC ; i++) // remember 1 based index!
+		for (int i = 1; i < argC; i++) // remember 1 based index!
 		{
 			lua_pushvalue(L, i);
 		}
@@ -85,7 +85,7 @@ namespace ExtraUtilities::Lua::Multiplayer
 		{
 			BZR::Multiplayer::UpdateLives();
 		}
-		
+
 		return 0;
 	}
 
@@ -105,6 +105,12 @@ namespace ExtraUtilities::Lua::Multiplayer
 	{
 		bool state = CheckBool(L, 1);
 		showScoreboard.Write(state);
+		return 0;
+	}
+
+	int DisableStartingRecycler(lua_State*)
+	{
+		skipStartingRecycler.Reload();
 		return 0;
 	}
 }
