@@ -41,6 +41,9 @@ namespace ExtraUtilities
 			lua_settop(L, top);
 		}
 	};
+
+	using _LuaCheckStatus = bool(__cdecl*)(int pcallCode, lua_State* L, const char* message);
+	inline _LuaCheckStatus LuaCheckStatus = (_LuaCheckStatus)0x004FF600;
 }
 
 namespace ExtraUtilities::Lua

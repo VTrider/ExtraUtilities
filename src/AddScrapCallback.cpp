@@ -45,7 +45,8 @@ namespace ExtraUtilities::Patch
 		lua_pushinteger(L, teamNumber);
 		lua_pushinteger(L, scrapAmount);
 
-		lua_call(L, 2, 0);
+		int status = lua_pcall(L, 2, 0, 0);
+		LuaCheckStatus(status, L, "Extra Utilities AddScrap error:\n%s");
 	}
 
 	static void __declspec(naked) AddScrapCallback()

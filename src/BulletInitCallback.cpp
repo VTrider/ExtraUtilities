@@ -68,9 +68,8 @@ namespace ExtraUtilities::Patch
 
 		}
 		
-		lua_call(L, 3, 0);
-
-		lua_pop(L, -1);
+		int status = lua_pcall(L, 3, 0, 0);
+		LuaCheckStatus(status, L, "Extra Utilities BulletInit error:\n%s");
 	}
 
 	static void __declspec(naked) BulletInitCallback()

@@ -80,7 +80,8 @@ namespace ExtraUtilities::Patch
 			Lua::PushMatrix(L, *transform);
 		}
 		
-		lua_call(L, 4, 0);
+		int status = lua_pcall(L, 4, 0, 0);
+		LuaCheckStatus(status, L, "Extra Utilities BulletHit error:\n%s");
 	}
 
 	static void __declspec(naked) BulletHitCallback()
