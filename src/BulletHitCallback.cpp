@@ -30,6 +30,7 @@ namespace ExtraUtilities::Patch
 	static void __cdecl LuaCallback(const char* odf, BZR::GameObject* shooter, BZR::GameObject* hitObject, BZR::MAT_3D* transform)
 	{
 		lua_State* L = Lua::state;
+		StackGuard guard(L);
 
 		lua_getglobal(L, "exu");
 		lua_getfield(L, -1, "BulletHit");
@@ -49,6 +50,7 @@ namespace ExtraUtilities::Patch
 		// Second param
 		if (shooter == nullptr)
 		{
+			MessageBox(0, "shooter in BulletHit was null - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 			lua_pushnil(L);
 		}
 		else
@@ -59,6 +61,7 @@ namespace ExtraUtilities::Patch
 		// Third param
 		if (hitObject == nullptr)
 		{
+			// MessageBox(0, "hitObject in BulletHit was null - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 			lua_pushnil(L);
 		}
 		else
@@ -67,11 +70,17 @@ namespace ExtraUtilities::Patch
 		}
 
 		// Fourth param
-		Lua::PushMatrix(L, *transform);
-
+		if (transform == nullptr)
+		{
+			MessageBox(0, "transform in BulletHit was null - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
+			lua_pushnil(L);
+		}
+		else
+		{
+			Lua::PushMatrix(L, *transform);
+		}
+		
 		lua_call(L, 4, 0);
-
-		lua_pop(L, -1);
 	}
 
 	static void __declspec(naked) BulletHitCallback()

@@ -23,6 +23,26 @@
 
 #include <lua.hpp>
 
+namespace ExtraUtilities
+{
+	// RAII stack cleanup tool, define at the beginning of a lua callback
+	// so your local variables get cleaned up to prevent crashing.
+	class StackGuard
+	{
+	private:
+		lua_State* L;
+		int top;
+
+	public:
+		StackGuard(lua_State* L) : L(L), top(lua_gettop(L)) {}
+
+		~StackGuard()
+		{
+			lua_settop(L, top);
+		}
+	};
+}
+
 namespace ExtraUtilities::Lua
 {
 	// Pushes one bz vector to the stack

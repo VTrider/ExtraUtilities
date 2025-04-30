@@ -19,6 +19,7 @@
 #include "AddScrapCallback.h"
 
 #include "Hook.h"
+#include "LuaHelpers.h"
 #include "LuaState.h"
 
 namespace ExtraUtilities::Patch
@@ -26,6 +27,7 @@ namespace ExtraUtilities::Patch
 	static void __cdecl LuaCallback(uint32_t teamNumber, uint32_t scrapAmount)
 	{
 		lua_State* L = Lua::state;
+		StackGuard guard(L);
 
 		lua_getglobal(L, "exu");
 		lua_getfield(L, -1, "AddScrap");
@@ -35,12 +37,15 @@ namespace ExtraUtilities::Patch
 			return;
 		}
 
+		if (teamNumber > 15)
+		{
+			MessageBox(0, "bad team number in AddScrap - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
+		}
+
 		lua_pushinteger(L, teamNumber);
 		lua_pushinteger(L, scrapAmount);
 
 		lua_call(L, 2, 0);
-
-		lua_pop(L, -1);
 	}
 
 	static void __declspec(naked) AddScrapCallback()
