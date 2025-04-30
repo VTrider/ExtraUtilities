@@ -37,11 +37,6 @@ namespace ExtraUtilities::Patch
 			return;
 		}
 
-		if (teamNumber > 15)
-		{
-			MessageBox(0, "bad team number in AddScrap - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
-		}
-
 		lua_pushinteger(L, teamNumber);
 		lua_pushinteger(L, scrapAmount);
 

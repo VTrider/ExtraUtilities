@@ -50,7 +50,6 @@ namespace ExtraUtilities::Patch
 		// Second param
 		if (shooter == nullptr)
 		{
-			MessageBox(0, "shooter in BulletHit was null - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 			lua_pushnil(L);
 		}
 		else
@@ -61,7 +60,6 @@ namespace ExtraUtilities::Patch
 		// Third param
 		if (hitObject == nullptr)
 		{
-			// MessageBox(0, "hitObject in BulletHit was null - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 			lua_pushnil(L);
 		}
 		else
@@ -72,7 +70,6 @@ namespace ExtraUtilities::Patch
 		// Fourth param
 		if (transform == nullptr)
 		{
-			MessageBox(0, "transform in BulletHit was null - please report to VTrider", "Extra Utilities", MB_OK | MB_ICONERROR | MB_APPLMODAL);
 			lua_pushnil(L);
 		}
 		else
