@@ -15,7 +15,7 @@ Compatibility:
 
 Contact me on discord: vtrider
 
-Join the battlezone community discord: https://discord.gg/battlezonestrategy
+Join the battlezone community discord: https://discord.gg/battlezonecommunity
 
 ### For Developers:
 
