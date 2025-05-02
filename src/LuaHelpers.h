@@ -19,9 +19,14 @@
 #pragma once
 
 #include "BZR.h"
+#include "LuaState.h"
 #include "Ogre.h"
 
 #include <lua.hpp>
+
+#include <functional>
+#include <string>
+#include <vector>
 
 namespace ExtraUtilities
 {

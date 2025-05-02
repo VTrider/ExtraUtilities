@@ -35,7 +35,7 @@ namespace ExtraUtilities::Lua::Multiplayer
 		// the function needs to be first so we shuffle
 		// it's args to be on top
 		int argC = lua_gettop(L);
-		for (int i = 1; i < argC; i++) // remember 1 based index!
+		for (int i = 1; i <= argC; i++) // remember 1 based index!
 		{
 			lua_pushvalue(L, i);
 		}
@@ -57,7 +57,7 @@ namespace ExtraUtilities::Lua::Multiplayer
 		// the function needs to be first so we shuffle
 		// it's args to be on top
 		int argC = lua_gettop(L);
-		for (int i = 1; i < argC; i++) // remember 1 based index!
+		for (int i = 1; i <= argC; i++) // remember 1 based index!
 		{
 			lua_pushvalue(L, i);
 		}
@@ -103,8 +103,8 @@ namespace ExtraUtilities::Lua::Multiplayer
 
 	int SetShowScoreboard(lua_State* L)
 	{
-		bool state = CheckBool(L, 1);
-		showScoreboard.Write(state);
+		bool status = CheckBool(L, 1);
+		showScoreboard.Write(status);
 		return 0;
 	}
 

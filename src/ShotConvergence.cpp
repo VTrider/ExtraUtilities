@@ -36,8 +36,8 @@ namespace ExtraUtilities::Lua::Patches
 
 	int SetShotConvergence(lua_State* L)
 	{
-		bool state = CheckBool(L, 1);
-		if (state == true)
+		bool status = CheckBool(L, 1);
+		if (status == true)
 		{
 			Patch::shotConvergence.Reload();
 		}

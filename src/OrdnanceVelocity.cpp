@@ -252,7 +252,7 @@ namespace ExtraUtilities::Patch
 	}
 	Hook cannonLeadPositionPatch(cannonLeadPosition, &CannonLeadPositionPatch, 6, BasicPatch::Status::INACTIVE);
 
-	  void __declspec(naked)MortarLeadPositionPatch()
+	void __declspec(naked)MortarLeadPositionPatch()
 	{
 		__asm
 		{

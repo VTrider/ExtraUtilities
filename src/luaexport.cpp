@@ -35,19 +35,8 @@
 
 namespace ExtraUtilities::Lua
 {
-	int Init(lua_State* L)
+	void MakeEnums(lua_State* L, int exuIdx)
 	{
-		state = L; // save the state pointer to use in callbacks
-
-		// Register all this stuff inside the library table
-		lua_getglobal(L, "exu");
-
-		int exuIdx = lua_gettop(L);
-
-		// Version string
-		lua_pushstring(L, version.c_str());
-		lua_setfield(L, exuIdx, "VERSION");
-
 		// Camera enum
 		lua_newtable(L);
 
@@ -190,10 +179,30 @@ namespace ExtraUtilities::Lua
 		lua_setfield(L, -2, "ENABLED");
 
 		lua_setfield(L, exuIdx, "SATELLITE");
+	}
 
-		// VTnoia lua pop in case I missed something before
-		lua_pop(L, -1);
+	void DoEventHooks(lua_State*)
+	{
 
+	}
+
+	int Init(lua_State* L)
+	{
+		StackGuard guard(L);
+		state = L; // save the state pointer to use in callbacks
+
+		// Register all this stuff inside the library table
+		lua_getglobal(L, "exu");
+
+		int exuIdx = lua_gettop(L);
+
+		// Version string
+		lua_pushstring(L, version.c_str());
+		lua_setfield(L, exuIdx, "VERSION");
+
+		MakeEnums(L, exuIdx);
+		DoEventHooks(L);
+		
 		return 0;
 	}
 
@@ -272,6 +281,8 @@ namespace ExtraUtilities::Lua
 			{ "AddScrapSilent",     &Patches::AddScrapSilent },
 			{ "GetGlobalTurbo",     &Patches::GetGlobalTurbo },
 			{ "SetGlobalTurbo",     &Patches::SetGlobalTurbo },
+			{ "GetUnitTurbo", &Patches::GetUnitTurbo },
+			{ "SetUnitTurbo", &Patches::SetUnitTurbo },
 			{ "GetOrdnanceVelocInheritance", &Patches::GetOrdnanceVelocInheritance },
 			{ "SetOrdnanceVelocInheritance", &Patches::SetOrdnanceVelocInheritance },
 			{ "GetShotConvergence", &Patches::GetShotConvergence },

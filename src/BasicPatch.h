@@ -113,5 +113,24 @@ namespace ExtraUtilities
 				RestorePatch();
 			}
 		}
+
+		void SetStatus(Status s)
+		{
+			switch (s)
+			{
+			case Status::ACTIVE:
+				Reload();
+				break;
+
+			case Status::INACTIVE:
+				Unload();
+				break;
+			}
+		}
+
+		void SetStatus(bool status)
+		{
+			SetStatus(static_cast<Status>(!status));
+		}
 	};
 }
