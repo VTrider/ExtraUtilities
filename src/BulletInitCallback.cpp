@@ -111,5 +111,5 @@ namespace ExtraUtilities::Patch
 			ret
 		}
 	}
-	Hook bulletInitCallback(bulletInit, &BulletInitCallback, 6, BasicPatch::Status::ACTIVE);
+	Hook bulletInitCallback(0x00480363, &BulletInitCallback, 6, BasicPatch::Status::ACTIVE);
 }

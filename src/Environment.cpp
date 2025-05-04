@@ -183,6 +183,10 @@ namespace ExtraUtilities::Patch
 	}
 	Hook sunSpecularResetPatch(sunSpecularReset, &SunSpecularResetPatch, 6, BasicPatch::Status::INACTIVE);
 
+	/*
+	* This waits to initialize the ogre hooks until you call an ogre function
+	* in order to prevent the game crashing when alt tabbed in the loading screen
+	*/
 	void TryInitializeOgre()
 	{
 		static bool done = false;

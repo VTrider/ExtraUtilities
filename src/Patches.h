@@ -24,6 +24,7 @@
 
 #include "AddScrapCallback.h"
 #include "BulletHitCallback.h"
+#include "BulletInitCallback.h"
 #include "GlobalTurbo.h"
 #include "OrdnanceVelocity.h"
 #include "ShotConvergence.h"

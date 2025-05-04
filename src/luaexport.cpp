@@ -210,6 +210,7 @@ namespace ExtraUtilities::Lua
 	{
 		const luaL_Reg EXPORT[] = {
 			// Camera
+			{ "GetCameraOrigins", &Camera::GetOrigins },
 			{ "GetCameraTransformMatrix", &Camera::GetTransformMatrix },
 			{ "GetCameraViewMatrix", &Camera::GetViewMatrix },
 			{ "GetCameraMaxZoom", &Camera::GetMaxZoom },
@@ -336,6 +337,9 @@ namespace ExtraUtilities::Lua
 
 			// Stock Extensions
 			{ "DoString", &StockExtensions::DoString },
+			{ "MatrixInverse", &StockExtensions::MatrixInverse },
+			{ "ScreenToWorld", &StockExtensions::ScreenToWorld },
+			{ "VectorUnrotate", &StockExtensions::VectorUnrotate },
 
 			// Function register table must end with a zero entry
 			{ 0, 0 }

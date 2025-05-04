@@ -22,6 +22,27 @@
 
 namespace ExtraUtilities::Lua::Camera
 {
+	int GetOrigins(lua_State* L)
+	{
+		BZR::BZR_Camera* cam = mainCam.Get();
+		
+		lua_createtable(L, 0, 4); // table with 4 non array (map) elements
+
+		lua_pushnumber(L, cam->Orig_x);
+		lua_setfield(L, -2, "Orig_x");
+
+		lua_pushnumber(L, cam->Orig_y);
+		lua_setfield(L, -2, "Orig_y");
+
+		lua_pushnumber(L, cam->Const_x);
+		lua_setfield(L, -2, "Const_x");
+
+		lua_pushnumber(L, cam->Const_y);
+		lua_setfield(L, -2, "Const_y");
+
+		return 1;
+	}
+
 	int GetTransformMatrix(lua_State* L)
 	{
 		BZR::MAT_3D viewMatrix = mainCam.Get()->Matrix;

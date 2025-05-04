@@ -66,7 +66,7 @@ namespace ExtraUtilities::Patch
 			pushad
 			pushfd
 
-			push 0x0
+			push 0x0 // Code for begin
 			mov eax, [eax+0x10]
 			push eax
 			call DoSelectiveTurboPatch
@@ -91,7 +91,7 @@ namespace ExtraUtilities::Patch
 			pushad
 			pushfd
 
-			push 0x1
+			push 0x1 // Code for end
 			mov eax, [edx+0x10]
 			push eax
 			call DoSelectiveTurboPatch
