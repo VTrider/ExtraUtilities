@@ -24,9 +24,7 @@
 
 #include <lua.hpp>
 
-#include <functional>
 #include <string>
-#include <vector>
 
 namespace ExtraUtilities
 {
@@ -47,6 +45,8 @@ namespace ExtraUtilities
 		}
 	};
 
+	// Pass in the return from pcall to use the game's error handler in event
+	// callbacks
 	using _LuaCheckStatus = bool(__cdecl*)(int pcallCode, lua_State* L, const char* message);
 	inline _LuaCheckStatus LuaCheckStatus = (_LuaCheckStatus)0x004FF600;
 }
@@ -57,7 +57,7 @@ namespace ExtraUtilities::Lua
 	inline void PushVector(lua_State* L, const BZR::VECTOR_3D& v)
 	{
 		lua_getglobal(L, "SetVector");
-		
+
 		lua_pushnumber(L, v.x);
 		lua_pushnumber(L, v.y);
 		lua_pushnumber(L, v.z);
@@ -221,5 +221,53 @@ namespace ExtraUtilities::Lua
 			f.ending = static_cast<float>(luaL_checknumber(L, idx + 4));
 		}
 		return f;
+	}
+
+	inline BZR::MAT_3D CheckMatrix(lua_State* L, int idx)
+	{
+		BZR::MAT_3D mat;
+		if (!lua_isuserdata(L, idx))
+		{
+			luaL_typerror(L, idx, "matrix");
+		}
+		else
+		{
+			lua_getfield(L, idx, "right_x");
+			mat.right_x = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "right_y");
+			mat.right_y = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "right_z");
+			mat.right_z = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "up_x");
+			mat.up_x = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "up_y");
+			mat.up_y = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "up_z");
+			mat.up_z = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "front_x");
+			mat.front_x = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "front_y");
+			mat.front_y = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "front_z");
+			mat.front_z = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "posit_x");
+			mat.posit_x = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "posit_y");
+			mat.posit_y = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "posit_z");
+			mat.posit_z = static_cast<float>(luaL_checknumber(L, -1));
+		}
+		return mat;
 	}
 }

@@ -77,7 +77,7 @@ namespace ExtraUtilities::Patch
 			ret
 		}
 	}
-	Hook addScrapHook(addScrap, &AddScrapCallback, 6, BasicPatch::Status::ACTIVE);
+	Hook addScrapHook(0x005E1016, &AddScrapCallback, 6, BasicPatch::Status::ACTIVE);
 }
 
 namespace ExtraUtilities::Lua::Patches

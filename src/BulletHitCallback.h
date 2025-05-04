@@ -18,9 +18,7 @@
 
 #pragma once
 
-#include <cstdint>
-
-namespace ExtraUtilities::Patch
+namespace ExtraUtilities
 {
-	constexpr uintptr_t bulletHit = 0x00480771;
+
 }

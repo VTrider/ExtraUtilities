@@ -21,6 +21,7 @@
 #include "BasicPatch.h"
 
 #include <Windows.h>
+#include <array>
 
 namespace ExtraUtilities
 {

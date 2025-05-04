@@ -28,6 +28,13 @@
 
 namespace ExtraUtilities::Patch
 {
+	bool velocOnlyInheritFront = false;
+
+	float velocInheritRatio = 1.0f;
+
+	// Packed singles mask to negate the Y velocity
+	constexpr float velocIgnoreY[4] = { 1.0f, 0.0f, 1.0f, 0.0f };
+
 	static float __cdecl DotProduct(BZR::VECTOR_3D* v, BZR::VECTOR_3D* w)
 	{
 		return v->x * w->x + v->y * w->y + v->z * w->z;
@@ -143,7 +150,7 @@ namespace ExtraUtilities::Patch
 			ret
 		}
 	}
-	Hook ordnanceVelocityPatch(ordnanceVelocity, &OrdnanceVelocityPatch, 8, BasicPatch::Status::INACTIVE);
+	Hook ordnanceVelocityPatch(0x004803D4, &OrdnanceVelocityPatch, 8, BasicPatch::Status::INACTIVE);
 
 	static void __declspec(naked) CannonLeadPositionPatch()
 	{
@@ -201,10 +208,10 @@ namespace ExtraUtilities::Patch
 
 			pop ebx
 
-			fstp [ebp-0x04]
+			fstp [ebp-0x04] // dot result
 
 			movups xmm1, [ebx + 0x38] // shooter front
-			movss xmm2, [ebp-0x04]
+			movss xmm2, [ebp-0x04] // dot result
 			shufps xmm2, xmm2, 0 // pack with singles
 			mulps xmm1, xmm2 // scale by front velocity
 
@@ -214,12 +221,13 @@ namespace ExtraUtilities::Patch
 
 			inheritAll:
 
-			pop eax
+			pop eax // get back shooter velocity
 			movups xmm0, [eax]
 
 			subps xmm0, xmm1 // target velocity - shooter velocity = the value we want for the TLI calculation
 
 			// unpack values and replace
+			// edi is old ebp so [ebp-0x1C]
 			movss [edi-0x1C], xmm0
 			pextrd ebx, xmm0, 1
 			mov [edi-0x18], ebx
@@ -250,19 +258,28 @@ namespace ExtraUtilities::Patch
 			ret
 		}
 	}
-	Hook cannonLeadPositionPatch(cannonLeadPosition, &CannonLeadPositionPatch, 6, BasicPatch::Status::INACTIVE);
-
+	Hook cannonLeadPositionPatch(0x0048F658, &CannonLeadPositionPatch, 6, BasicPatch::Status::INACTIVE);
+	float x = 500.0f;
 	void __declspec(naked)MortarLeadPositionPatch()
 	{
 		__asm
 		{
+			// Game code
+			mov [ecx+0x08], eax
+			mov ecx, [ebp+0xC]
 
+			push eax
+			mov eax, [x]
+			mov [ebp-0x18], eax
+			pop eax
+
+			ret
 		}
 	}
-
+	Hook mortarLeadPositionPatch(0x0056B254, &MortarLeadPositionPatch, 6, BasicPatch::Status::INACTIVE);
 	// This bypasses the is target speed > 0.1 m/s check, you still want to calculate
 	// lead position even on still targets because it will be affected by the shooter's speed
-	InlinePatch cannonVelocityTolerancePatch(cannonVelocityTolerance, BasicPatch::NOP, 6, BasicPatch::Status::INACTIVE);
+	InlinePatch cannonVelocityTolerancePatch(0x0048F639, BasicPatch::NOP, 6, BasicPatch::Status::INACTIVE);
 }
 
 namespace ExtraUtilities::Lua::Patches

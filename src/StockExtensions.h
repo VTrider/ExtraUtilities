@@ -23,4 +23,8 @@
 namespace ExtraUtilities::Lua::StockExtensions
 {
 	int DoString(lua_State* L);
+
+	int MatrixInverse(lua_State* L);
+	int ScreenToWorld(lua_State* L);
+	int VectorUnrotate(lua_State* L);
 }

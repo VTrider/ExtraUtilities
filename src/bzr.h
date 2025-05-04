@@ -162,16 +162,18 @@ namespace BZR
 
 		inline auto currentView = (int*)0x02CECEA0;
 
-		using _Set_View = void(__cdecl*)(tagENTITY*, int); // 2nd param is an enum
+		using _Set_View = void (__cdecl*) (tagENTITY*, int); // 2nd param is an enum
 		inline _Set_View Set_View = (_Set_View)0x0061D120;
 	}
-
-	using _Matrix_Inverse = void(__cdecl*)(MAT_3D*, MAT_3D*);
+	using _Matrix_Inverse = void (__cdecl*) (MAT_3D* returnStoragePointer, MAT_3D* matToInverse);
 	inline _Matrix_Inverse Matrix_Inverse = (_Matrix_Inverse)0x008203F0;
+
+	using _Vector_Unrotate = void (__cdecl*)(VECTOR_3D* returnStoragePointer, VECTOR_3D* inputVector, MAT_3D* perspectiveMatrix);
+	inline _Vector_Unrotate Vector_Unrotate = (_Vector_Unrotate)0x00440300;
 
 	namespace Cheats
 	{
-		inline auto editMode = (bool*)0x009454b8;
+		inline auto editMode = (bool*)0x009454B8;
 	}
 
 	class ControlPanel
@@ -271,7 +273,7 @@ namespace BZR
 			__asm
 			{
 				mov ecx, [ecx + 0x19C]
-				mov[jammer], ecx
+				mov [jammer], ecx
 			}
 
 			return jammer;

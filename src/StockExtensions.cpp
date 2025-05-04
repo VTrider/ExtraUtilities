@@ -17,10 +17,15 @@
 */
 
 /*
- * Restored stock lua functions
+ * Restored stock lua functions and C++ functions that exist in game
+ * but are not exposed to scripting
  */
 
 #include "StockExtensions.h"
+
+#include "BZR.h"
+#include "Camera.h"
+#include "LuaHelpers.h"
 
 namespace ExtraUtilities::Lua::StockExtensions
 {
@@ -29,5 +34,51 @@ namespace ExtraUtilities::Lua::StockExtensions
 		const char* str = luaL_checkstring(L, 1);
 		luaL_dostring(L, str);
 		return 0;
+	}
+
+	int MatrixInverse(lua_State* L)
+	{
+		BZR::MAT_3D mat = CheckMatrix(L, 1);
+
+		BZR::MAT_3D result;
+		BZR::Matrix_Inverse(&result, &mat);
+
+		PushMatrix(L, result);
+
+		return 1;
+	}
+
+	int ScreenToWorld(lua_State* L)
+	{
+		BZR::BZR_Camera* cam = Camera::mainCam.Get();
+
+		int screenX = luaL_checkinteger(L, 1);
+		int screenY = luaL_checkinteger(L, 2);
+
+		float viewX = (screenX - cam->Orig_x) / cam->Const_x;
+		float viewY = (screenY - cam->Orig_y) / cam->Const_y;
+
+		BZR::VECTOR_3D cameraDirection{ viewX, viewY, 1.0f };
+		BZR::VECTOR_3D worldDirection;
+
+		BZR::Vector_Unrotate(&worldDirection, &cameraDirection, &cam->Matrix);
+		worldDirection.Normalize();
+
+		PushVector(L, worldDirection);
+
+		return 1;
+	}
+
+	int VectorUnrotate(lua_State* L)
+	{
+		BZR::VECTOR_3D vec = CheckVectorOrSingles(L, 1);
+		BZR::MAT_3D perspectiveMat = CheckMatrix(L, 2);
+
+		BZR::VECTOR_3D result;
+		BZR::Vector_Unrotate(&result, &vec, &perspectiveMat);
+
+		PushVector(L, result);
+
+		return 1;
 	}
 }
