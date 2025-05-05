@@ -147,6 +147,7 @@
     <ClCompile Include="src\Environment.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\GlobalTurbo.cpp" />
+    <ClCompile Include="src\GraphicsOptions.cpp" />
     <ClCompile Include="src\IO.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
     <ClCompile Include="src\Multiplayer.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="src\Exports.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\GlobalTurbo.h" />
+    <ClInclude Include="src\GraphicsOptions.h" />
     <ClInclude Include="src\Hook.h" />
     <ClInclude Include="src\BasicPatch.h" />
     <ClInclude Include="src\InlinePatch.h" />

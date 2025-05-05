@@ -25,7 +25,7 @@
 
 namespace ExtraUtilities::Lua::Steam
 {
-	inline Scanner steam64(BZR::Steam::steam64);
+	inline const Scanner steam64(BZR::Steam::steam64);
 
 	int GetSteam64(lua_State* L);
 }

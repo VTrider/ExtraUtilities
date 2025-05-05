@@ -293,6 +293,11 @@ namespace BZR
 		}
 	};
 
+	namespace GraphicsOptions
+	{
+		inline auto isFullscreen = (bool*)0x009183B8;
+	}
+
 	namespace Multiplayer
 	{
 		inline auto isNetGame = (bool*)0x00917f7b;

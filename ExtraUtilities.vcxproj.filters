@@ -105,6 +105,9 @@
     <ClCompile Include="src\Vec3.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GraphicsOptions.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="src\AddScrapCallback.h">
       <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsOptions.h">
+      <Filter>Header Files\Exports</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

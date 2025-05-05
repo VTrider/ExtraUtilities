@@ -23,18 +23,10 @@
 
 #include <lua.hpp>
 
-#undef GetObject // windows.h name conflict
-
-namespace ExtraUtilities::Lua::Reticle
+namespace ExtraUtilities::Lua::GraphicsOptions
 {
-	inline const Scanner position(BZR::Reticle::position);
-	inline Scanner range(BZR::Reticle::range);
-	inline const Scanner object(BZR::Reticle::object);
-	inline const Scanner matrix(BZR::Reticle::matrix);
+	inline const Scanner isFullscreen(BZR::GraphicsOptions::isFullscreen, BasicScanner::Restore::DISABLED);
 
-	int GetMatrix(lua_State* L);
-	int GetObject(lua_State* L);
-	int GetPosition(lua_State* L);
-	int GetRange(lua_State* L);
-	int SetRange(lua_State* L);
+	int GetFullscreen(lua_State* L);
+	int GetGameResolution(lua_State* L);
 }

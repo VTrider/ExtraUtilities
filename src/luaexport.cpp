@@ -257,6 +257,10 @@ namespace ExtraUtilities::Lua
 			{ "GetVelocJam",	&GameObject::GetVelocJam },
 			{ "SetVelocJam",	&GameObject::SetVelocJam },
 
+			// Graphics Options
+			{ "GetFullscreen", &GraphicsOptions::GetFullscreen },
+			{ "GetGameResolution", &GraphicsOptions::GetGameResolution },
+
 			// IO
 			{ "GetGameKey", &IO::GetGameKey },
 

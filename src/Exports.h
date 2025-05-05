@@ -26,6 +26,7 @@
 #include "ControlPanel.h"
 #include "Environment.h"
 #include "GameObject.h"
+#include "GraphicsOptions.h"
 #include "IO.h"
 #include "Multiplayer.h"
 #include "Ordnance.h"

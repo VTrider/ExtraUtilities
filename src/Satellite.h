@@ -25,10 +25,10 @@
 
 namespace ExtraUtilities::Lua::Satellite
 {
-	inline Scanner state(BZR::Satellite::state);
-	inline Scanner cursorPos(BZR::Satellite::cursorPos);
-	inline Scanner camPos(BZR::Satellite::camPos);
-	inline Scanner clickPos(BZR::Satellite::clickPos);
+	inline const Scanner state(BZR::Satellite::state);
+	inline const Scanner cursorPos(BZR::Satellite::cursorPos);
+	inline const Scanner camPos(BZR::Satellite::camPos);
+	inline const Scanner clickPos(BZR::Satellite::clickPos);
 	inline Scanner panSpeed(BZR::Satellite::panSpeed);
 	inline Scanner minZoom(BZR::Satellite::minZoom);
 	inline Scanner maxZoom(BZR::Satellite::maxZoom);
