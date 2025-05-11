@@ -28,21 +28,14 @@ namespace ExtraUtilities::Lua::Multiplayer
 	{
 		buildObjectAlwaysAsync.Reload();
 
-		// Set up stack for wrappuh call
-		lua_getglobal(L, "BuildObject");
-
-		// Handle the variadic args to BuildObject,
-		// the function needs to be first so we shuffle
-		// it's args to be on top
 		int argC = lua_gettop(L);
-		for (int i = 1; i <= argC; i++) // remember 1 based index!
-		{
-			lua_pushvalue(L, i);
-		}
 
-		lua_call(L, argC - 1, 1); // minus one because one of the args is the function to be called
+		lua_getglobal(L, "BuildObject");
+		lua_insert(L, 1);
+		lua_call(L, argC, 1);
 
 		buildObjectAlwaysAsync.Unload();
+
 		return 1;
 	}
 
@@ -50,21 +43,14 @@ namespace ExtraUtilities::Lua::Multiplayer
 	{
 		buildObjectAlwaysSync.Reload();
 
-		// Set up stack for wrappuh call
-		lua_getglobal(L, "BuildObject");
-
-		// Handle the variadic args to BuildObject,
-		// the function needs to be first so we shuffle
-		// it's args to be on top
 		int argC = lua_gettop(L);
-		for (int i = 1; i <= argC; i++) // remember 1 based index!
-		{
-			lua_pushvalue(L, i);
-		}
 
-		lua_call(L, argC - 1, 1); // minus one because one of the args is the function to be called
+		lua_getglobal(L, "BuildObject");
+		lua_insert(L, 1);
+		lua_call(L, argC, 1);
 
 		buildObjectAlwaysSync.Unload();
+
 		return 1;
 	}
 
