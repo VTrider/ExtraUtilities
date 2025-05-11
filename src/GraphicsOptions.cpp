@@ -46,4 +46,15 @@ namespace ExtraUtilities::Lua::GraphicsOptions
 
 		return 2;
 	}
+
+	int GetUIScaling(lua_State* L)
+	{
+		int value = uiScaling.Read();
+		
+		// I have no idea why it works this way, it appears the actual value is
+		// multiplied by 5, so 1x scaling is 5 in memory, 2x is 10, 3x is 15 and so on.
+		lua_pushinteger(L, value / 5);
+
+		return 1;
+	}
 }

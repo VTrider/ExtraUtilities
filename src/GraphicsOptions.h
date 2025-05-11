@@ -26,7 +26,9 @@
 namespace ExtraUtilities::Lua::GraphicsOptions
 {
 	inline const Scanner isFullscreen(BZR::GraphicsOptions::isFullscreen, BasicScanner::Restore::DISABLED);
+	inline const Scanner uiScaling(BZR::GraphicsOptions::uiScaling, BasicScanner::Restore::DISABLED);
 
 	int GetFullscreen(lua_State* L);
 	int GetGameResolution(lua_State* L);
+	int GetUIScaling(lua_State* L);
 }

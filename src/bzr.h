@@ -296,6 +296,7 @@ namespace BZR
 	namespace GraphicsOptions
 	{
 		inline auto isFullscreen = (bool*)0x009183B8;
+		inline auto uiScaling = (int*)0x008E77A8;
 	}
 
 	namespace Multiplayer

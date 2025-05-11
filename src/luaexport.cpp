@@ -260,6 +260,7 @@ namespace ExtraUtilities::Lua
 			// Graphics Options
 			{ "GetFullscreen", &GraphicsOptions::GetFullscreen },
 			{ "GetGameResolution", &GraphicsOptions::GetGameResolution },
+			{ "GetUIScaling", &GraphicsOptions::GetUIScaling },
 
 			// IO
 			{ "GetGameKey", &IO::GetGameKey },
