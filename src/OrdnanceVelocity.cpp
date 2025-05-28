@@ -308,4 +308,24 @@ namespace ExtraUtilities::Lua::Patches
 		}
 		return 0;
 	}
+
+	int GetOrdnanceVelocMode(lua_State* L)
+	{
+		lua_pushinteger(L, Patch::velocOnlyInheritFront);
+		return 1;
+	}
+
+	int SetOrdnanceVelocMode(lua_State* L)
+	{
+		int mode = luaL_checkinteger(L, 1);
+
+		if (mode < 0 || mode > 1)
+		{
+			luaL_argerror(L, 1, "Extra Utilities: Invalid Ordnance Mode");
+		}
+
+		Patch::velocOnlyInheritFront = mode;
+
+		return 0;
+	}
 }

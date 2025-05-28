@@ -291,6 +291,8 @@ namespace ExtraUtilities::Lua
 			{ "SetUnitTurbo", &Patches::SetUnitTurbo },
 			{ "GetOrdnanceVelocInheritance", &Patches::GetOrdnanceVelocInheritance },
 			{ "SetOrdnanceVelocInheritance", &Patches::SetOrdnanceVelocInheritance },
+			{ "GetOrdnanceVelocMode", Patches::GetOrdnanceVelocMode },
+			{ "SetOrdnanceVelocMode", Patches::SetOrdnanceVelocMode },
 			{ "GetShotConvergence", &Patches::GetShotConvergence },
 			{ "SetShotConvergence", &Patches::SetShotConvergence },
 
