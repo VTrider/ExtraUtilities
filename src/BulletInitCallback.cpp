@@ -25,7 +25,10 @@
 
 namespace ExtraUtilities::Patch
 {
-	static void __cdecl LuaCallback(const char* odf, BZR::GameObject* shooter, BZR::MAT_3D* transform)
+	static void __cdecl LuaCallback(const char* odf,
+									BZR::GameObject* shooter,
+									BZR::MAT_3D* transform,
+									BZR::Ordnance* ordnanceHandle)
 	{
 		lua_State* L = Lua::state;
 		StackGuard guard(L);
@@ -65,8 +68,18 @@ namespace ExtraUtilities::Patch
 			Lua::PushMatrix(L, *transform);
 
 		}
+
+		// Fourth param
+		if (ordnanceHandle == nullptr)
+		{
+			lua_pushnil(L);
+		}
+		else
+		{
+			lua_pushlightuserdata(L, reinterpret_cast<void*>(ordnanceHandle));
+		}
 		
-		int status = lua_pcall(L, 3, 0, 0);
+		int status = lua_pcall(L, 4, 0, 0);
 		LuaCheckStatus(status, L, "Extra Utilities BulletInit error:\n%s");
 	}
 
@@ -78,6 +91,7 @@ namespace ExtraUtilities::Patch
 			 pushfd
 
 			 mov ecx, [ebp-0x20] // bullet* this
+			 push ecx // fourth param ordnanceHandle
 			 mov eax, [ecx+0xD8] // obj76
 
 			 mov ebx, [ebp+0x08] // MAT_3D transform
@@ -99,7 +113,7 @@ namespace ExtraUtilities::Patch
 			 push ebx // first param
 
 			 call LuaCallback
-			 add esp, 0xC
+			 add esp, 0x10 // four params
 
 			 popfd
 			 popad

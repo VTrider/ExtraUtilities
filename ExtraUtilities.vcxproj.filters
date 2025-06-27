@@ -209,5 +209,8 @@
     <ClInclude Include="src\GraphicsOptions.h">
       <Filter>Header Files\Exports</Filter>
     </ClInclude>
+    <ClInclude Include="src\VectorSpider.h">
+      <Filter>Header Files\Memory Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

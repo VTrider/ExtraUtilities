@@ -158,6 +158,26 @@ namespace ExtraUtilities::Lua
 
 		lua_setfield(L, -2, "OGRE"); // end ogre enum
 
+		// Ordnance enum
+		lua_newtable(L);
+
+		lua_pushinteger(L, Ordnance::AttributeCode::ODF);
+		lua_setfield(L, -2, "ODF");
+
+		lua_pushinteger(L, Ordnance::AttributeCode::TRANSFORM);
+		lua_setfield(L, -2, "TRANSFORM");
+
+		lua_pushinteger(L, Ordnance::AttributeCode::INIT_TRANSFORM);
+		lua_setfield(L, -2, "INIT_TRANSFORM");
+
+		lua_pushinteger(L, Ordnance::AttributeCode::OWNER);
+		lua_setfield(L, -2, "OWNER");
+
+		lua_pushinteger(L, Ordnance::AttributeCode::INIT_TIME);
+		lua_setfield(L, -2, "INIT_TIME");
+
+		lua_setfield(L, exuIdx, "ORDNANCE"); // end ordnance enum
+
 		// Radar state enum
 		lua_newtable(L);
 
@@ -167,7 +187,7 @@ namespace ExtraUtilities::Lua
 		lua_pushinteger(L, 1);
 		lua_setfield(L, -2, "RADAR");
 
-		lua_setfield(L, exuIdx, "RADAR");
+		lua_setfield(L, exuIdx, "RADAR"); // end radar state enum
 
 		// Satellite state enum
 		lua_newtable(L);
@@ -178,7 +198,7 @@ namespace ExtraUtilities::Lua
 		lua_pushinteger(L, 1);
 		lua_setfield(L, -2, "ENABLED");
 
-		lua_setfield(L, exuIdx, "SATELLITE");
+		lua_setfield(L, exuIdx, "SATELLITE"); // end satellite state enum
 	}
 
 	void DoEventHooks(lua_State*)
@@ -276,6 +296,8 @@ namespace ExtraUtilities::Lua
 			{ "DisableStartingRecycler", &Multiplayer::DisableStartingRecycler },
 
 			// Ordnance
+			{ "BuildOrdnance", &Ordnance::BuildOrdnance },
+			{ "GetOrdnanceAttribute", &Ordnance::GetOrdnanceAttribute },
 			{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },
 			{ "SetCoeffBallistic", &Ordnance::SetCoeffBallistic },
 

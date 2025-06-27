@@ -34,10 +34,12 @@ namespace BZR
 	// Forward declarations
 	class GameObject;
 	using GameObjectClass = void;
-	class tagENTITY;
-	using OBJ76 = void;
+	using tagENTITY = void;
+	class OBJ76;
 	using AiProcess = void;
 	using VECTOR_3D = ExtraUtilities::Vec3;
+
+	using pure_virtual_t = void(__thiscall*)(void);
 
 	struct Jammer
 	{
@@ -70,6 +72,8 @@ namespace BZR
 		double posit_y;
 		double posit_z;
 	};
+
+	using Mat3 = MAT_3D;
 
 	//struct VECTOR_3D
 	//{
@@ -209,6 +213,8 @@ namespace BZR
 		VECTOR_3D Alpha;
 	};
 
+	using Euler = EULER;
+
 	class GameObject
 	{
 	public:
@@ -315,6 +321,15 @@ namespace BZR
 		inline _UpdateLives UpdateLives = (_UpdateLives)0x006260f0;
 	}
 
+	class OBJ76
+	{
+	public:
+		uint8_t pad_1[0x20];
+		Mat3 transform;
+		uint8_t pad_2[44];
+		GameObject* owner;
+	};
+
 	namespace Ogre
 	{
 		// Function offsets from OgreMain.dll
@@ -334,11 +349,89 @@ namespace BZR
 		constexpr uintptr_t sceneManagerOffset = 0x08;
 	}
 
+	using DAMAGE = uint8_t[0x10];
+	using gas_object = void;
+	using ParticleRenderPointer = uint8_t[0x04];
+	using CSteamID = uint64_t;
+	using ExplosionClass = void;
+	using ParticleRenderClass = void;
+
+	class Ordnance; // Forward declaration
+
+	class OrdnanceClass
+	{
+	private:
+		using _Build = Ordnance*(__thiscall*)(OrdnanceClass* c, Mat3* mat, OBJ76* owner);
+
+	public:
+		uint8_t padding_1[0x08];
+		OrdnanceClass* proto;
+		uint32_t sig;
+		char* label;
+		uint8_t padding_2[0x04];
+		uint64_t cfg;
+		char odf[0x10];
+		OBJ76* ord;
+		tagENTITY* ent;
+		OBJ76* freeOrd;
+		ExplosionClass* xplGround;
+		ExplosionClass* xplVehicle;
+		ExplosionClass* xplBuilding;
+		int32_t ammoCost;
+		float lifeSpan;
+		float shotSpeed;
+		float damageValue;
+		uint16_t damageTypes;
+		bool notifyRemote;
+		char shotSound[0x10];
+		uint8_t padding_3;
+		ParticleRenderClass* renderClass;
+	
+		static constexpr uintptr_t OrdnanceClassList = 0x009C915C;
+		static inline _Build Build = (_Build)0x00586ff0;
+	};
+
+#pragma pack(push, 1)
 	class Ordnance
 	{
+	private:
+		struct vftable_t
+		{
+			void(__thiscall* scalar_deleting_destructor)(Ordnance* self, uint32_t param_1);
+			void(__thiscall* Init)(Ordnance* self, Mat3* mat, OBJ76* obj);
+			pure_virtual_t Cleanup;
+			pure_virtual_t Control;
+			pure_virtual_t Simulate;
+			pure_virtual_t Hit;
+			pure_virtual_t Submit;
+			pure_virtual_t Pack;
+			pure_virtual_t Unpack;
+		};
+
 	public:
+		vftable_t* vftable;
+		uint8_t padding_1[0x08];
+		OrdnanceClass* ordnanceClass;
+		float dt;
+		OBJ76* obj;
+		Euler euler;
+		DAMAGE damage;
+		gas_object* go;
+		ParticleRenderPointer renderObj;
+		float lifeTime;
+		CSteamID source;
+		int32_t bSend;
+		Mat3 initMat;
+		float initTime;
+		void* OgreEntity;
+		void* OgreNode;
+		void* OgreSkeleton;
+		OBJ76* owner;
+		int32_t ownerHandle;
+
 		static inline auto coeffBallistic = (float*)0x008A2858;
 	};
+#pragma pack(pop)
 
 	namespace PlayOption
 	{

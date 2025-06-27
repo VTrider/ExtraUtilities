@@ -225,7 +225,7 @@ namespace ExtraUtilities::Lua
 
 	inline BZR::MAT_3D CheckMatrix(lua_State* L, int idx)
 	{
-		BZR::MAT_3D mat;
+		BZR::MAT_3D mat{};
 		if (!lua_isuserdata(L, idx))
 		{
 			luaL_typerror(L, idx, "matrix");

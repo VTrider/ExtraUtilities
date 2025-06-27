@@ -27,7 +27,11 @@
 
 namespace ExtraUtilities::Patch
 {
-	static void __cdecl LuaCallback(const char* odf, BZR::GameObject* shooter, BZR::GameObject* hitObject, BZR::MAT_3D* transform)
+	static void __cdecl LuaCallback(const char* odf,
+								    BZR::GameObject* shooter, 
+									BZR::GameObject* hitObject,
+									BZR::MAT_3D* transform,
+									BZR::Ordnance* ordnanceHandle)
 	{
 		lua_State* L = Lua::state;
 		StackGuard guard(L);
@@ -76,8 +80,18 @@ namespace ExtraUtilities::Patch
 		{
 			Lua::PushMatrix(L, *transform);
 		}
+
+		// Fifth param
+		if (ordnanceHandle == nullptr)
+		{
+			lua_pushnil(L);
+		}
+		else
+		{
+			lua_pushlightuserdata(L, reinterpret_cast<void*>(ordnanceHandle));
+		}
 		
-		int status = lua_pcall(L, 4, 0, 0);
+		int status = lua_pcall(L, 5, 0, 0);
 		LuaCheckStatus(status, L, "Extra Utilities BulletHit error:\n%s");
 	}
 
@@ -105,13 +119,15 @@ namespace ExtraUtilities::Patch
 
 
 			// eax has the this pointer (bullet/ordnance inheritance bs)
+			push eax // fifth param ordnanceHandle
+
 			lea ebx, [eax] // I stored it here don't remember why
 
 			lea eax, [ecx-0x18] // matrix
-			push eax
+			push eax // fourth param transform
 
 			mov eax, [ebp+0x08] // gameobject* of hit object if it exists
-			push eax
+			push eax // third param hitObject
 
 			// now we're gonna do some voodoo to get the shooter handle
 			mov eax, [ebx+0xD8] // obj76 of the ordnance owner
@@ -125,14 +141,14 @@ namespace ExtraUtilities::Patch
 
 			skip:
 
-			push eax
+			push eax // second param shooter
 
 			mov eax, [ebx+0x0C] // OrdnanceClass* - Scanner by -0x04 from 1.5, is 0x10 in 1.5
 			lea ebx, [eax+0x20] // odf char*
-			push ebx
+			push ebx // first param odf
 
 			call LuaCallback
-			add esp, 0x10
+			add esp, 0x14 // five params
 
 			movdqu xmm3, [esp]
 			add esp, 0x10

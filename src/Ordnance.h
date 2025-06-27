@@ -20,12 +20,41 @@
 
 #include "BZR.h"
 #include "Scanner.h"
+#include "VectorSpider.h"
 
 #include <lua.hpp>
+
+#include <string>
+#include <unordered_map>
 
 namespace ExtraUtilities::Lua::Ordnance
 {
 	inline Scanner coeffBallistic(BZR::Ordnance::coeffBallistic);
+
+	inline const std::unordered_map<std::string, BZR::OrdnanceClass*> ordnanceMap = []()
+		{
+			std::unordered_map<std::string, BZR::OrdnanceClass*> map;
+			auto results = VectorSpider<BZR::OrdnanceClass*>(&BZR::OrdnanceClass::OrdnanceClassList);
+
+			for (const auto& ord : results)
+			{
+				std::string odfNoExtension(ord->odf, strlen(ord->odf) - 4);
+				map.emplace(odfNoExtension, ord);
+			}
+			return map;
+		}();
+
+	enum AttributeCode
+	{
+		ODF,
+		TRANSFORM,
+		INIT_TRANSFORM,
+		OWNER,
+		INIT_TIME
+	};
+
+	int BuildOrdnance(lua_State* L);
+	int GetOrdnanceAttribute(lua_State* L);
 
 	int GetCoeffBallistic(lua_State* L);
 	int SetCoeffBallistic(lua_State* L);

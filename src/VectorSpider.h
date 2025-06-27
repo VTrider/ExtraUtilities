@@ -16,13 +16,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Mod metadata file
-
 #pragma once
 
-#include <string>
+#include <vector>
 
 namespace ExtraUtilities
 {
-	inline std::string version = "1.0.0";
+	// Crawls an std::vector in memory from the given address
+	template <typename T>
+	std::vector<T> VectorSpider(const void* address)
+	{
+		std::vector<T> results;
+
+		T*** p = (T***)address;
+		T* begin = **p;
+		T* end = *(*p + 1);
+
+		while (begin != end)
+		{
+			results.push_back(reinterpret_cast<T>(*begin));
+			begin++;
+		}
+		
+		return results;
+	}
 }
