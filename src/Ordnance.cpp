@@ -27,6 +27,22 @@ namespace ExtraUtilities::Lua::Ordnance
 {
 	int BuildOrdnance(lua_State* L)
 	{
+		// This must be loaded after the map is completely finished loading otherwise it will not
+		// get all the ordnance
+		static const std::unordered_map<std::string, BZR::OrdnanceClass*> ordnanceMap = []()
+			{
+				std::unordered_map<std::string, BZR::OrdnanceClass*> map;
+				auto results = VectorSpider<BZR::OrdnanceClass*>(&BZR::OrdnanceClass::OrdnanceClassList);
+				std::ofstream s("feuker3.txt");
+				for (const auto& ord : results)
+				{
+					std::string odfNoExtension(ord->odf, strlen(ord->odf) - 4);
+					s << odfNoExtension << std::endl;
+					map.emplace(odfNoExtension, ord);
+				}
+				return map;
+			}();
+
 		std::string requestedOrd = luaL_checkstring(L, 1);
 		if (!ordnanceMap.contains(requestedOrd))
 		{

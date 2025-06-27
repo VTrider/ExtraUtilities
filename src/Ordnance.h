@@ -26,23 +26,10 @@
 
 #include <string>
 #include <unordered_map>
-
+#include <fstream>
 namespace ExtraUtilities::Lua::Ordnance
 {
 	inline Scanner coeffBallistic(BZR::Ordnance::coeffBallistic);
-
-	inline const std::unordered_map<std::string, BZR::OrdnanceClass*> ordnanceMap = []()
-		{
-			std::unordered_map<std::string, BZR::OrdnanceClass*> map;
-			auto results = VectorSpider<BZR::OrdnanceClass*>(&BZR::OrdnanceClass::OrdnanceClassList);
-
-			for (const auto& ord : results)
-			{
-				std::string odfNoExtension(ord->odf, strlen(ord->odf) - 4);
-				map.emplace(odfNoExtension, ord);
-			}
-			return map;
-		}();
 
 	enum AttributeCode
 	{
