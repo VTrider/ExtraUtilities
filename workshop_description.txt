@@ -1,0 +1,26 @@
+[h1]Extra Utilities[/h1]
+
+Release Version 1.0.0
+
+This mod is currently the first and only public script extender for Battlezone 98 Redux. It supports over 100 new lua functions and 3 new event handlers, and it's used in some of the biggest mods on the workshop such as ISDF Chronicles and BZP. The [url=https://github.com/VTrider/ExtraUtilities/wiki]wiki[/url] fully documents all of the features if you are interested in using it in your mod. If you have any questions feel free to ask me on discord @vtrider.
+
+Some highlights include:
+[list]
+    [*] Changing gravity
+    [*] Changing smart reticle range and detecting the object beneath it
+    [*] Enabling turbo speed and shot convergence on all units
+    [*]	Access to almost all information about the camera and reticle
+    [*]	Build ordnance at arbitrary positions and query their attributes at runtime
+[/list]
+
+Currently BZR does not automatically download dependency mods, so I would not recommend relying on users having this workshop item installed if it is a dependency for your mod. Instead ship it with the mod and require() it locally. However if the mythic BZR patch ever becomes real we will have day 1 support for asset packs!
+
+If you are a modder interested in contributing to this mod, or are curious about how it works, the GitHub repo can be found [url=https://github.com/VTrider/ExtraUtilities]here[/url].
+
+[h3]Special Thanks[/h3]
+[list]
+    [*] Janne, provided the original lua dll project, this wouldn't be possible without your help!
+    [*] DivisionByZero, created the dll loader script
+    [*] GrizzlyOne95, improved the dll loader
+    [*] Business Lawyer, helped squash many nasty bugs
+[/list]

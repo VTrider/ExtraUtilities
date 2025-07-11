@@ -461,3 +461,6 @@ FodyWeavers.xsd
 *.idb
 *.pdb
 /ExtraUtilities/Debug/vc143.idb
+/Build
+.env
+workshop.vdf

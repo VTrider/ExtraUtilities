@@ -1,0 +1,1 @@
+For some reason this workshop item doesn't want to change it's thumbnail image with steamcmd, so use the stock uploader for that.
