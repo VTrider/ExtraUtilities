@@ -95,5 +95,5 @@ def upload() -> None:
 
 
 if __name__ == "__main__":
-    # generate_manifest()
+    generate_manifest()
     upload()
