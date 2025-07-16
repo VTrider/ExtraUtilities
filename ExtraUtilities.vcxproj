@@ -149,6 +149,7 @@
     <ClCompile Include="src\GlobalTurbo.cpp" />
     <ClCompile Include="src\GraphicsOptions.cpp" />
     <ClCompile Include="src\IO.cpp" />
+    <ClCompile Include="src\KillMessages.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
     <ClCompile Include="src\Multiplayer.cpp" />
     <ClCompile Include="src\Ordnance.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\BasicPatch.h" />
     <ClInclude Include="src\InlinePatch.h" />
     <ClInclude Include="src\IO.h" />
+    <ClInclude Include="src\KillMessages.h" />
     <ClInclude Include="src\LuaHelpers.h" />
     <ClInclude Include="src\LuaState.h" />
     <ClInclude Include="src\Multiplayer.h" />

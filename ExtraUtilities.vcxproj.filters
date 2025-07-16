@@ -108,6 +108,9 @@
     <ClCompile Include="src\GraphicsOptions.cpp">
       <Filter>Source Files\Exports</Filter>
     </ClCompile>
+    <ClCompile Include="src\KillMessages.cpp">
+      <Filter>Source Files\Patches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="src\VectorSpider.h">
       <Filter>Header Files\Memory Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KillMessages.h">
+      <Filter>Header Files\Patches</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

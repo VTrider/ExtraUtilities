@@ -26,5 +26,6 @@
 #include "BulletHitCallback.h"
 #include "BulletInitCallback.h"
 #include "GlobalTurbo.h"
+#include "KillMessages.h"
 #include "OrdnanceVelocity.h"
 #include "ShotConvergence.h"

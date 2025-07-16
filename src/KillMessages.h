@@ -16,13 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Mod metadata file
-
 #pragma once
 
-#include <string>
+#include <lua.hpp>
 
-namespace ExtraUtilities
+namespace ExtraUtilities::Lua::Patches
 {
-	inline std::string version = "1.1.0";
+	int GetCustomKillMessage(lua_State* L);
+	int SetCustomKillMessage(lua_State* L);
 }
