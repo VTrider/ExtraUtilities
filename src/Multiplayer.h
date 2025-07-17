@@ -32,8 +32,8 @@ namespace ExtraUtilities::Lua::Multiplayer
 	inline InlinePatch buildObjectAlwaysSync(0x005C833B, BasicPatch::NOP, 2, BasicPatch::Status::INACTIVE);
 	inline const Scanner myNetID(BZR::Multiplayer::myNetID, BasicScanner::Restore::DISABLED);
 	inline Scanner showScoreboard(BZR::Multiplayer::showScoreboard);
-	// TODO: Fix this is not actually working
-	inline InlinePatch skipStartingRecycler(0x0056EFA4, { 0xE9, 0x2C, 0x01, 0x00, 0x00, 0x90 }, BasicPatch::Status::INACTIVE);
+	// Jumps over the section of code that spawns the starting recycler in MultSTMission
+	inline InlinePatch skipStartingRecycler(0x0056F014, { 0xE9, 0xBC, 0x00, 0x00, 0x00 }, BasicPatch::Status::INACTIVE);
 
 	int BuildAsyncObject(lua_State* L);
 	int BuildSyncObject(lua_State* L);
