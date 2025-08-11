@@ -219,7 +219,6 @@ function exu.GetGravity() end
 
 --- Sets the local player's current gravity velocity vector. This affects all units owned by the local player.
 --- Can take either three number parameters or a bz vector userdata.
---- Multiplayer remarks: must be manually synced between clients, not doing so may result in things like AI and ordnance becoming nondeterministic.
 --- @param x number
 --- @param y number
 --- @param z number
@@ -227,7 +226,9 @@ function exu.SetGravity(x, y, z) end
 
 --- Sets the local player's current gravity velocity vector. This affects all units owned by the local player.
 --- Can take either three number parameters or a bz vector userdata.
---- Multiplayer remarks: must be manually synced between clients, not doing so may result in things like AI and ordnance becoming nondeterministic.
+---
+--- Multiplayer remarks: this will affect ONLY local units, to keep the game looking consistent you should set this to the
+--- same value across all clients if it's been changed from stock.
 --- @param v Vector
 function exu.SetGravity(v) end
 
@@ -450,6 +451,7 @@ function exu.DisableStartingRecycler() end
 --- (from GetOrdnanceAttribute) is less than the lifespan defined in the odf.
 --- You can also use the exu.BulletHit callback to detect if the value is no longer valid,
 --- however this does not account for ordnance despawning or being destroyed through other means.
+---
 --- Multiplayer remarks: You should not Send() another player a local ordnance handle,
 --- they are likely client side and I haven't rigorously tested it in MP.
 --- @param odf string
@@ -470,7 +472,10 @@ function exu.GetOrdnanceAttribute(ordnanceHandle, attribute) end
 --- @return number
 function exu.GetCoeffBallistic() end
 
---- Sets the global ballistic coefficient. Multiplayer note: must be manually synced, otherwise ordnance may behave nondeterministically.
+--- Sets the global ballistic coefficient.
+---
+--- Multiplayer remarks: this is clientside, it should be set to the same value on ALL clients
+--- if you changed it at any point.
 --- @param coeff number
 function exu.SetCoeffBallistic(coeff) end
 
@@ -687,7 +692,7 @@ function exu.SetSatZoom(zoom) end
 
 --- Steam
 ---
---- This function can get information from steam.
+--- These functions can get information from steam.
 
 --- Gets the Steam 64 ID of the local player.
 --- @nodiscard
