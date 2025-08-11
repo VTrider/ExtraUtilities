@@ -34,6 +34,7 @@ def add_item_recurse(*path_from_root: str) -> None:
 # Add the target paths for the build, it will search their entire tree
 # so you only need to list the top level path
 
+add_item_recurse("Definitions")
 add_item_recurse("Release")
 add_item_recurse("Workshop")
 
@@ -65,6 +66,7 @@ def post_build() -> None:
     shutil.move(os.path.join(BUILD_FOLDER, "exu.dll"), os.path.join(BUILD_FOLDER, "Bin", "exu.dll"))
     shutil.move(os.path.join(BUILD_FOLDER, "exu.pdb"), os.path.join(BUILD_FOLDER, "Bin", "exu.pdb"))
     shutil.move(os.path.join(BUILD_FOLDER, "RequireFix.lua"), os.path.join(BUILD_FOLDER, "Scripts", "RequireFix.lua"))
+    shutil.move(os.path.join(BUILD_FOLDER, "ExtraUtils.lua"), os.path.join(BUILD_FOLDER, "Scripts", "ExtraUtils.lua"))
     shutil.move(os.path.join(BUILD_FOLDER, "monkey.jpg"), os.path.join(BUILD_FOLDER, "Assets", "monkey.jpg"))
 
 
