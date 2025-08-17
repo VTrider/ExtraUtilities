@@ -512,6 +512,17 @@ function exu.GetGlobalTurbo() end
 --- @param state boolean
 function exu.SetGlobalTurbo(state) end
 
+--- Gets whether a unit has turbo enabled (off by default).
+--- @nodiscard
+--- @param h Handle
+--- @return boolean
+function exu.GetUnitTurbo(h) end
+
+--- Sets turbo for an individual unit that overrides the global setting.
+--- @param h Handle
+--- @param state boolean
+function exu.SetUnitTurbo(h, state) end
+
 --- Gets the state of the ordnance velocity inheritance patch (see below).
 --- @nodiscard
 --- @return boolean
