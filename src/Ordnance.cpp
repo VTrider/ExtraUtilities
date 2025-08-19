@@ -33,11 +33,9 @@ namespace ExtraUtilities::Lua::Ordnance
 			{
 				std::unordered_map<std::string, BZR::OrdnanceClass*> map;
 				auto results = VectorSpider<BZR::OrdnanceClass*>(&BZR::OrdnanceClass::OrdnanceClassList);
-				std::ofstream s("feuker3.txt");
 				for (const auto& ord : results)
 				{
 					std::string odfNoExtension(ord->odf, strlen(ord->odf) - 4);
-					s << odfNoExtension << std::endl;
 					map.emplace(odfNoExtension, ord);
 				}
 				return map;
