@@ -33,6 +33,7 @@
 #include "OS.h"
 #include "PlayOption.h"
 #include "Radar.h"
+#include "Renderer.h"
 #include "Reticle.h"
 #include "Satellite.h"
 #include "SoundOptions.h"

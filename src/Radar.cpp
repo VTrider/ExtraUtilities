@@ -36,4 +36,17 @@ namespace ExtraUtilities::Lua::Radar
 		state.Write(newState);
 		return 0;
 	}
+
+	int GetRangeGlobal(lua_State* L)
+	{
+		lua_pushnumber(L, *BZR::Radar::globalRange);
+		return 1;
+	}
+
+	int SetRangeGlobal(lua_State* L)
+	{
+		float newRange = static_cast<float>(luaL_checknumber(L, 1));
+		*BZR::Radar::globalRange = newRange;
+		return 0;
+	}
 }

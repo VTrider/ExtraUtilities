@@ -16,8 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "Culling.h"
 #include "GlobalTurbo.h"
-
 #include "BZR.h"
 #include "Hook.h"
 #include "InlinePatch.h"
@@ -36,6 +36,11 @@ namespace ExtraUtilities::Patch
 
 	static void __cdecl DoSelectiveTurboPatch(BZR::GameObject* obj, TurboCode code)
 	{
+		if (code == TurboCode::BEGIN)
+		{
+			Culling::UpdateUnit(obj);
+		}
+
 		BZR::handle h = BZR::GameObject::GetHandle(obj);
 		switch (code)
 		{

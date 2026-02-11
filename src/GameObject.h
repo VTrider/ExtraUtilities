@@ -48,4 +48,10 @@ namespace ExtraUtilities::Lua::GameObject
 
 	int GetVelocJam(lua_State* L);
 	int SetVelocJam(lua_State* L);
+
+	int GetLabel(lua_State* L);
+	int GetPosition(lua_State* L);
+	int SetPosition(lua_State* L);
+	int GetVelocity(lua_State* L);
+	int SetVelocity(lua_State* L);
 }

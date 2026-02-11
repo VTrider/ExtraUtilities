@@ -37,11 +37,15 @@ namespace ExtraUtilities::Lua::Ordnance
 		TRANSFORM,
 		INIT_TRANSFORM,
 		OWNER,
-		INIT_TIME
+		INIT_TIME,
+		VELOCITY,
+		LIFE_TIME
 	};
 
 	int BuildOrdnance(lua_State* L);
 	int GetOrdnanceAttribute(lua_State* L);
+	int SetOrdnanceAttribute(lua_State* L);
+	int SetOrdnanceVelocity(lua_State* L);
 
 	int GetCoeffBallistic(lua_State* L);
 	int SetCoeffBallistic(lua_State* L);

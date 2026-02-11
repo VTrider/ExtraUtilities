@@ -91,11 +91,52 @@ namespace ExtraUtilities::Lua::Ordnance
 		case INIT_TIME:
 			lua_pushnumber(L, ord->initTime);
 			break;
+		case VELOCITY:
+			PushVector(L, ord->euler.v);
+			break;
+		case LIFE_TIME:
+			lua_pushnumber(L, ord->lifeTime);
+			break;
 		default:
 			return luaL_argerror(L, 2, "Invalid ordnance attribute code");
 		}
 
 		return 1;
+	}
+
+	int SetOrdnanceAttribute(lua_State* L)
+	{
+		if (!lua_isuserdata(L, 1))
+		{
+			luaL_typerror(L, 1, "Ordnance Handle");
+		}
+
+		BZR::Ordnance* ord = reinterpret_cast<BZR::Ordnance*>(lua_touserdata(L, 1));
+		AttributeCode code = static_cast<AttributeCode>(luaL_checkinteger(L, 2));
+
+		switch (code)
+		{
+		case LIFE_TIME:
+			ord->lifeTime = static_cast<float>(luaL_checknumber(L, 3));
+			break;
+		default:
+			return luaL_argerror(L, 2, "SetOrdnanceAttribute: Invalid code or property not writable");
+		}
+
+		return 0;
+	}
+
+	int SetOrdnanceVelocity(lua_State* L)
+	{
+		if (!lua_isuserdata(L, 1))
+		{
+			luaL_typerror(L, 1, "Ordnance Handle");
+		}
+
+		BZR::Ordnance* ord = reinterpret_cast<BZR::Ordnance*>(lua_touserdata(L, 1));
+		BZR::VECTOR_3D v = CheckVectorOrSingles(L, 2);
+		ord->euler.v = v;
+		return 0;
 	}
 
 	int GetCoeffBallistic(lua_State* L)

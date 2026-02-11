@@ -18,20 +18,14 @@
 
 #pragma once
 
-#include "BZR.h"
-#include "Scanner.h"
-
 #include <lua.hpp>
 
-namespace ExtraUtilities::Lua::Radar
+namespace ExtraUtilities::Lua::Renderer
 {
-	inline Scanner state(BZR::Radar::state);
+	int SetWireframe(lua_State* L);
+	int GetWireframe(lua_State* L);
 
-	// 1 = radar
-	// 0 = minimap
-	int GetState(lua_State* L);
-	int SetState(lua_State* L);
-
-	int GetRangeGlobal(lua_State* L);
-	int SetRangeGlobal(lua_State* L);
+	int DrawLine(lua_State* L);
+	int DrawBox(lua_State* L);
+	int ClearVisuals(lua_State* L);
 }

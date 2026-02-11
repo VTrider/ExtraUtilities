@@ -29,3 +29,8 @@
 #include "KillMessages.h"
 #include "OrdnanceVelocity.h"
 #include "ShotConvergence.h"
+#include "WeaponMask.h"
+#include "Cheats.h"
+#include "Radar.h"
+#include "Satellite.h"
+#include "GameObject.h"

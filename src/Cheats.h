@@ -18,20 +18,13 @@
 
 #pragma once
 
-#include "BZR.h"
-#include "Scanner.h"
-
 #include <lua.hpp>
 
-namespace ExtraUtilities::Lua::Radar
+namespace ExtraUtilities::Lua::Patches
 {
-	inline Scanner state(BZR::Radar::state);
+	int GetInfiniteAmmo(lua_State* L);
+	int SetInfiniteAmmo(lua_State* L);
 
-	// 1 = radar
-	// 0 = minimap
-	int GetState(lua_State* L);
-	int SetState(lua_State* L);
-
-	int GetRangeGlobal(lua_State* L);
-	int SetRangeGlobal(lua_State* L);
+	int GetInfiniteScrap(lua_State* L);
+	int SetInfiniteScrap(lua_State* L);
 }

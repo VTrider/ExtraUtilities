@@ -16,22 +16,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "WeaponMask.h"
 
-#include "BZR.h"
-#include "Scanner.h"
+#include "Hook.h"
+#include "bzr.h"
 
-#include <lua.hpp>
-
-namespace ExtraUtilities::Lua::Radar
+namespace ExtraUtilities::Patch
 {
-	inline Scanner state(BZR::Radar::state);
+	static uint32_t lastWeaponMask = 0;
 
-	// 1 = radar
-	// 0 = minimap
-	int GetState(lua_State* L);
-	int SetState(lua_State* L);
+	static void __declspec(naked) WeaponMaskCallback()
+	{
+		__asm
+		{
+			mov [lastWeaponMask], edx
+			
+			// Replicate original code
+			mov [ecx+0x1C], edx
+			mov eax, [ebp-0x110]
+			
+			ret
+		}
+	}
 
-	int GetRangeGlobal(lua_State* L);
-	int SetRangeGlobal(lua_State* L);
+	Hook weaponMaskHook(BZR::Cheats::WeaponMaskCaptureAddr, &WeaponMaskCallback, 9, BasicPatch::Status::ACTIVE);
+
+	uint32_t GetCapturedWeaponMask()
+	{
+		return lastWeaponMask;
+	}
+}
+
+namespace ExtraUtilities::Lua::Patches
+{
+	int GetWeaponMask(lua_State* L)
+	{
+		lua_pushinteger(L, Patch::GetCapturedWeaponMask());
+		return 1;
+	}
 }

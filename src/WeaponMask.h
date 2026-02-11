@@ -18,20 +18,10 @@
 
 #pragma once
 
-#include "BZR.h"
-#include "Scanner.h"
-
+#include <cstdint>
 #include <lua.hpp>
 
-namespace ExtraUtilities::Lua::Radar
+namespace ExtraUtilities::Lua::Patches
 {
-	inline Scanner state(BZR::Radar::state);
-
-	// 1 = radar
-	// 0 = minimap
-	int GetState(lua_State* L);
-	int SetState(lua_State* L);
-
-	int GetRangeGlobal(lua_State* L);
-	int SetRangeGlobal(lua_State* L);
+	int GetWeaponMask(lua_State* L);
 }
