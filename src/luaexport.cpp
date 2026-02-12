@@ -306,7 +306,7 @@ namespace ExtraUtilities::Lua
 			{ "GetGameResolution", &GraphicsOptions::GetGameResolution },
 			{ "GetUIScaling", &GraphicsOptions::GetUIScaling },
 
-			// Renderer
+			// Renderer TODO: not rendering anything for me? -VT
 			{ "SetWireframe", &Renderer::SetWireframe },
 			{ "GetWireframe", &Renderer::GetWireframe },
 			{ "DrawLine", &Renderer::DrawLine },
