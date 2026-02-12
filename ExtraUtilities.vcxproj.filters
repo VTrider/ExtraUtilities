@@ -111,6 +111,18 @@
     <ClCompile Include="src\KillMessages.cpp">
       <Filter>Source Files\Patches</Filter>
     </ClCompile>
+    <ClCompile Include="src\Culling.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Cheats.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WeaponMask.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h">
@@ -217,6 +229,15 @@
     </ClInclude>
     <ClInclude Include="src\KillMessages.h">
       <Filter>Header Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cheats.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Culling.h">
+      <Filter>Header Files\Exports</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WeaponMask.h">
+      <Filter>Header Files\Exports</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

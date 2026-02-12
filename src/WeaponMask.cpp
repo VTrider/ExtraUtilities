@@ -1,4 +1,4 @@
-/* Copyright (C) 2023-2026 VTrider
+/* Copyright (C) 2023-2025 VTrider
  *
  * This file is part of Extra Utilities.
  *
@@ -16,21 +16,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Combined header for patches
-*/
-
-#pragma once
-
-#include "AddScrapCallback.h"
-#include "BulletHitCallback.h"
-#include "BulletInitCallback.h"
-#include "GlobalTurbo.h"
-#include "KillMessages.h"
-#include "OrdnanceVelocity.h"
-#include "ShotConvergence.h"
 #include "WeaponMask.h"
-#include "Cheats.h"
-#include "Radar.h"
-#include "Satellite.h"
-#include "GameObject.h"
+
+#include "Hook.h"
+#include "bzr.h"
+
+namespace ExtraUtilities::Patch
+{
+	static uint32_t lastWeaponMask = 0;
+
+	static void __declspec(naked) WeaponMaskCallback()
+	{
+		__asm
+		{
+			mov [lastWeaponMask], edx
+			
+			// Replicate original code
+			mov [ecx+0x1C], edx
+			mov eax, [ebp-0x110]
+			
+			ret
+		}
+	}
+
+	Hook weaponMaskHook(BZR::Cheats::WeaponMaskCaptureAddr, &WeaponMaskCallback, 9, BasicPatch::Status::ACTIVE);
+
+	uint32_t GetCapturedWeaponMask()
+	{
+		return lastWeaponMask;
+	}
+}
+
+namespace ExtraUtilities::Lua::Patches
+{
+	int GetWeaponMask(lua_State* L)
+	{
+		lua_pushinteger(L, Patch::GetCapturedWeaponMask());
+		return 1;
+	}
+}

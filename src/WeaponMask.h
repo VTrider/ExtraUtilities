@@ -1,4 +1,4 @@
-/* Copyright (C) 2023-2026 VTrider
+/* Copyright (C) 2023-2025 VTrider
  *
  * This file is part of Extra Utilities.
  *
@@ -16,21 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Combined header for patches
-*/
-
 #pragma once
 
-#include "AddScrapCallback.h"
-#include "BulletHitCallback.h"
-#include "BulletInitCallback.h"
-#include "GlobalTurbo.h"
-#include "KillMessages.h"
-#include "OrdnanceVelocity.h"
-#include "ShotConvergence.h"
-#include "WeaponMask.h"
-#include "Cheats.h"
-#include "Radar.h"
-#include "Satellite.h"
-#include "GameObject.h"
+#include <cstdint>
+#include <lua.hpp>
+
+namespace ExtraUtilities::Lua::Patches
+{
+	int GetWeaponMask(lua_State* L);
+}

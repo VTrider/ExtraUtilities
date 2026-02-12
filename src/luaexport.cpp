@@ -21,6 +21,7 @@
 --------------------------------*/
 
 #include "About.h"
+#include "Culling.h"
 #include "Exports.h"
 #include "LuaHelpers.h"
 #include "LuaState.h"
@@ -176,6 +177,12 @@ namespace ExtraUtilities::Lua
 		lua_pushinteger(L, Ordnance::AttributeCode::INIT_TIME);
 		lua_setfield(L, -2, "INIT_TIME");
 
+		lua_pushinteger(L, Ordnance::AttributeCode::VELOCITY);
+		lua_setfield(L, -2, "VELOCITY");
+
+		lua_pushinteger(L, Ordnance::AttributeCode::LIFE_TIME);
+		lua_setfield(L, -2, "LIFE_TIME");
+
 		lua_setfield(L, exuIdx, "ORDNANCE"); // end ordnance enum
 
 		// Radar state enum
@@ -258,6 +265,16 @@ namespace ExtraUtilities::Lua
 			{ "SetSunDiffuse", &Environment::SetSunDiffuse },
 			{ "GetSunSpecular", &Environment::GetSunSpecular },
 			{ "SetSunSpecular", &Environment::SetSunSpecular },
+			{ "GetInfiniteAmmo", &Patches::GetInfiniteAmmo },
+			{ "SetInfiniteAmmo", &Patches::SetInfiniteAmmo },
+			{ "GetInfiniteScrap", &Patches::GetInfiniteScrap },
+			{ "SetInfiniteScrap", &Patches::SetInfiniteScrap },
+
+			// Culling
+			{ "GetCullDistance", &Lua::Culling::GetCullDistance },
+			{ "SetCullDistance", &Lua::Culling::SetCullDistance },
+			{ "GetCullingEnabled", &Lua::Culling::GetCullingEnabled },
+			{ "SetCullingEnabled", &Lua::Culling::SetCullingEnabled },
 
 			// GameObject
 			{ "SetAsUser",		&GameObject::SetAsUser },
@@ -274,13 +291,27 @@ namespace ExtraUtilities::Lua
 			{ "SetRadarRange",	&GameObject::SetRadarRange },
 			{ "GetRadarPeriod", &GameObject::GetRadarPeriod },
 			{ "SetRadarPeriod", &GameObject::SetRadarPeriod },
+			{ "GetRadarRangeGlobal", &Radar::GetRangeGlobal },
+			{ "SetRadarRangeGlobal", &Radar::SetRangeGlobal },
 			{ "GetVelocJam",	&GameObject::GetVelocJam },
 			{ "SetVelocJam",	&GameObject::SetVelocJam },
+			{ "GetLabel",		&GameObject::GetLabel },
+			{ "GetPosition",	&GameObject::GetPosition },
+			{ "SetPosition",	&GameObject::SetPosition },
+			{ "GetVelocity",	&GameObject::GetVelocity },
+			{ "SetVelocity",	&GameObject::SetVelocity },
 
 			// Graphics Options
 			{ "GetFullscreen", &GraphicsOptions::GetFullscreen },
 			{ "GetGameResolution", &GraphicsOptions::GetGameResolution },
 			{ "GetUIScaling", &GraphicsOptions::GetUIScaling },
+
+			// Renderer TODO: not rendering anything for me? -VT
+			{ "SetWireframe", &Renderer::SetWireframe },
+			{ "GetWireframe", &Renderer::GetWireframe },
+			{ "DrawLine", &Renderer::DrawLine },
+			{ "DrawBox", &Renderer::DrawBox },
+			{ "ClearVisuals", &Renderer::ClearVisuals },
 
 			// IO
 			{ "GetGameKey", &IO::GetGameKey },
@@ -300,6 +331,8 @@ namespace ExtraUtilities::Lua
 			// Ordnance
 			{ "BuildOrdnance", &Ordnance::BuildOrdnance },
 			{ "GetOrdnanceAttribute", &Ordnance::GetOrdnanceAttribute },
+			{ "SetOrdnanceAttribute", &Ordnance::SetOrdnanceAttribute },
+			{ "SetOrdnanceVelocity", &Ordnance::SetOrdnanceVelocity },
 			{ "GetCoeffBallistic", &Ordnance::GetCoeffBallistic },
 			{ "SetCoeffBallistic", &Ordnance::SetCoeffBallistic },
 
@@ -319,6 +352,7 @@ namespace ExtraUtilities::Lua
 			{ "SetOrdnanceVelocMode", Patches::SetOrdnanceVelocMode },
 			{ "GetShotConvergence", &Patches::GetShotConvergence },
 			{ "SetShotConvergence", &Patches::SetShotConvergence },
+			{ "GetWeaponMask", &Patches::GetWeaponMask },
 
 			// Play Options
 			{ "GetAutoLevel",	 &PlayOption::GetAutoLevel },

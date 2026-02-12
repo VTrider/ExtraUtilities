@@ -1,80 +1,74 @@
 --[[
-    This tutorial explains how to use the BulletHit
-    callback to make a custom weapon with object piercing
-    and terrain reflecting or piercing features
-
-    By VTrider
+    Custom Weapon Behaviors for BZ98R
+    Features:
+    - Blast cannons pierce through up to 1 target.
+    - Bullets bounce off the terrain slightly.
 --]]
 
--- Can be any ordnance odf, blast gives a cool effect
-local ORD = "blast"
+local BOUNCE_WEAPONS = {
+    ["bullet1"]  = true,
+    ["bullet1a"] = true,
+    ["bullet1b"] = true,
+    ["bullet1g"] = true,
+    ["bullet2"]  = true,
+    ["bullet5"]  = true,
+    ["bullet6"]  = true,
+    ["bullet6a"] = true,
+}
 
--- Not implemented but you should be aware that if you recursively
--- build ordnance you should take measures to prevent overflows
-local MAX_BOUNCES = 10
+local PIERCE_WEAPONS = {
+    ["blast"] = true,
+}
 
-local function ReflectTerrain(transform, shooter, hitObject)
-    -- This only applies on hitting terrain
-    if hitObject then return end
+-- Track ordnance specifically to avoid infinite recursion or over-piercing
+local piercedOrdnance = {}
+local piercedCount = 0
 
-    local _, normal = GetTerrainHeightAndNormal(transform)
+local function ReflectTerrain(odf, transform, shooter)
+    local hit, normal = GetTerrainHeightAndNormal(transform)
+    
     local shotDirection = SetVector(transform.front_x, transform.front_y, transform.front_z)
     local shotPosition = SetVector(transform.posit_x, transform.posit_y, transform.posit_z)
 
-    -- Formula for reflecting a vector across a normal
-    local reflectedDirection = shotDirection - (2 * DotProduct(shotDirection, normal) * normal)
-    local piercingShotMat = BuildDirectionalMatrix(shotPosition, reflectedDirection)
+    -- Formula for reflecting a vector across a normal: R = D - 2(D.N)N
+    local dot = DotProduct(shotDirection, normal)
+    local reflectedDirection = shotDirection - (2 * dot * normal)
+    
+    -- Shift position slightly above terrain to prevent immediate re-hit
+    local spawnPos = shotPosition + (normal * 0.2)
+    local bounceMat = BuildDirectionalMatrix(spawnPos, reflectedDirection)
 
-    -- The owner could be set to another object or a dummy object if you want the shooter
-    -- to be able to get hit by their reflected shots
-    exu.BuildOrdnance("blast", piercingShotMat, shooter)
+    -- Build the bounced ordnance
+    exu.BuildOrdnance(odf, bounceMat, shooter)
 end
 
--- Meters forward that the piercing ordnance will move by
--- when building the terrain piercing shot, this is a simple implementation,
--- but you could improve it by using a more sophisticated method like using
--- the terrain height and normals for example
-local TOLERANCE = 5.0
-
--- Note that in this function it spawns a NEW ordnance with a reset lifetime, so it could
--- inadvertently increase the range of the weapon, significantly if it already has long range (like blast),
--- so if this is a concern I would recommend making the piercing shot a special odf with reduced range, or
--- you can use exu.GetOrdnanceAttribute(ordnanceHandle, exu.ORDNANCE.INIT_TIME) to query it's starting time, and use
--- that to calculate how much of its lifetime has passed, and pick an odf accordingly, or you could just choose
--- not to use the piercing shot if the ordnance is past a certain proportion of its lifetime for example.
-local function PierceTerrain(transform, shooter, hitObject)
-    --- This only applies on hitting terrain
-    if hitObject then return end
-
-    local shotDirection = SetVector(transform.front_x, transform.front_y, transform.front_z)
-    local shotPosition = SetVector(transform.posit_x, transform.posit_y, transform.posit_z)
-
-    -- Building an ordnance inside the terrain will allow it to exit on the other side.
-    -- Note that BulletHit is NOT called when a bullet intersects terrain from the "bottom"
-    local insideTerrain = shotPosition + (shotDirection * TOLERANCE)
-
-    local piercingTerrainMat = BuildDirectionalMatrix(insideTerrain, shotDirection)
-    exu.BuildOrdnance(ORD, piercingTerrainMat, shooter)
-end
-
-local function PierceObject(transform, hitObject)
-    -- This only applies on an object hit, though you could also
-    -- design it to pierce terrain by building it inside the terrain
-    -- or on the other side
+local function PierceObject(odf, transform, hitObject, ordnanceHandle)
     if not hitObject then return end
 
-    -- Importantly we set the ordnance's owner to what
-    -- just got hit, so that the new ordnance passes through
-    -- them and continues onwards, otherwise it will simply hit
-    -- the target again if the owner is the original shooter
-    exu.BuildOrdnance(ORD, transform, hitObject)
+    -- Check if this specific projectile instance has already pierced once
+    if piercedOrdnance[ordnanceHandle] then 
+        return 
+    end
+
+    -- Mark this instance as having pierced
+    piercedOrdnance[ordnanceHandle] = true
+    piercedCount = piercedCount + 1
+
+    -- Importantly we set the ordnance's owner to what just got hit, 
+    -- so that the new ordnance passes through them and continues onwards.
+    exu.BuildOrdnance(odf, transform, hitObject)
 end
 
 function exu.BulletHit(odf, shooter, hitObject, transform, ordnanceHandle)
-    PierceObject(transform, hitObject)
+    -- CLEANUP: Reset the table if it grows too large (paranoia)
+    if piercedCount > 200 then 
+        piercedOrdnance = {} 
+        piercedCount = 0
+    end
 
-    -- The following two are mutually exclusive, only run one at a time
-    ReflectTerrain(transform, shooter, hitObject)
-    
-    -- PierceTerrain(transform, shooter, hitObject)
+    if PIERCE_WEAPONS[odf] then
+        PierceObject(odf, transform, hitObject, ordnanceHandle)
+    elseif BOUNCE_WEAPONS[odf] and hitObject == nil then
+        ReflectTerrain(odf, transform, shooter)
+    end
 end

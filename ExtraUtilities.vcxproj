@@ -139,9 +139,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AddScrapCallback.cpp" />
+    <ClCompile Include="src\Culling.cpp" />
     <ClCompile Include="src\BulletHitCallback.cpp" />
     <ClCompile Include="src\BulletInitCallback.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Cheats.cpp" />
     <ClCompile Include="src\ControlPanel.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\Environment.cpp" />
@@ -158,12 +160,14 @@
     <ClCompile Include="src\OS.h" />
     <ClCompile Include="src\PlayOption.cpp" />
     <ClCompile Include="src\Radar.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Reticle.cpp" />
     <ClCompile Include="src\Satellite.cpp" />
     <ClCompile Include="src\ShotConvergence.cpp" />
     <ClCompile Include="src\SoundOptions.cpp" />
     <ClCompile Include="src\Steam.cpp" />
     <ClCompile Include="src\StockExtensions.cpp" />
+    <ClCompile Include="src\WeaponMask.cpp" />
     <ClCompile Include="src\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +175,8 @@
     <ClInclude Include="src\AddScrapCallback.h" />
     <ClInclude Include="src\BulletHitCallback.h" />
     <ClInclude Include="src\BulletInitCallback.h" />
+    <ClInclude Include="src\Cheats.h" />
+    <ClInclude Include="src\Culling.h" />
     <ClInclude Include="src\BZR.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\ControlPanel.h" />
@@ -201,6 +207,7 @@
     <ClInclude Include="src\SoundOptions.h" />
     <ClInclude Include="src\Steam.h" />
     <ClInclude Include="src\StockExtensions.h" />
+    <ClInclude Include="src\WeaponMask.h" />
     <ClInclude Include="src\VectorSpider.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

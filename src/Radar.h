@@ -31,4 +31,7 @@ namespace ExtraUtilities::Lua::Radar
 	// 0 = minimap
 	int GetState(lua_State* L);
 	int SetState(lua_State* L);
+
+	int GetRangeGlobal(lua_State* L);
+	int SetRangeGlobal(lua_State* L);
 }

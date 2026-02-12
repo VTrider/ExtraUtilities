@@ -297,6 +297,19 @@ namespace BZR
 			}
 			return light;
 		}
+
+		// Gets the primary Ogre Entity for the object
+		void* GetOgreEntity()
+		{
+			void* entity;
+			__asm
+			{
+				mov ecx, [ecx+0xf0]
+				mov ecx, [ecx+0x8c] // Common offset for main entity in tagENTITY
+				mov [entity], ecx
+			}
+			return entity;
+		}
 	};
 
 	namespace GraphicsOptions
@@ -319,6 +332,9 @@ namespace BZR
 		// Call this function to update the scoreboard with the current life count
 		using _UpdateLives = void(*)(void);
 		inline _UpdateLives UpdateLives = (_UpdateLives)0x006260f0;
+
+		inline auto pilotCount = (int*)0x00517A70; // 0x00517A70 + 0x174 according to CT, checking static address
+		inline auto playerLimitBase = (uintptr_t*)0x00518320; // Needs manual verification of stable pointer
 	}
 
 	class OBJ76
@@ -470,6 +486,7 @@ namespace BZR
 	namespace Radar
 	{
 		inline auto state = (uint8_t*)0x008EAAAC;
+		inline auto globalRange = (float*)0x00558200;
 	}
 
 	namespace Reticle
@@ -479,5 +496,13 @@ namespace BZR
 		inline auto range = (float*)0x00886B20;
 		inline auto object = (int*)0x00979F40;
 		inline auto matrix = (MAT_3D*)0x025CE6F8;
+	}
+
+	namespace Cheats
+	{
+		// These are just labels for where we want to hook/patch
+		constexpr uintptr_t InfiniteAmmoAddr = 0x004A7709;
+		constexpr uintptr_t InfiniteScrapAddr = 0x005E10D7;
+		constexpr uintptr_t WeaponMaskCaptureAddr = 0x0060A8C6;
 	}
 }

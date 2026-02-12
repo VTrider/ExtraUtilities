@@ -246,4 +246,41 @@ namespace ExtraUtilities::Lua::GameObject
 		}
 		return 0;
 	}
+
+	int GetLabel(lua_State* L)
+	{
+		BZR::handle h = CheckHandle(L, 1);
+		lua_pushstring(L, BZR::GameObject::GetObj(h)->label);
+		return 1;
+	}
+
+	int GetPosition(lua_State* L)
+	{
+		BZR::handle h = CheckHandle(L, 1);
+		PushVector(L, BZR::GameObject::GetObj(h)->pos);
+		return 1;
+	}
+
+	int SetPosition(lua_State* L)
+	{
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::VECTOR_3D pos = CheckVectorOrSingles(L, 2);
+		BZR::GameObject::GetObj(h)->pos = pos;
+		return 0;
+	}
+
+	int GetVelocity(lua_State* L)
+	{
+		BZR::handle h = CheckHandle(L, 1);
+		PushVector(L, BZR::GameObject::GetObj(h)->euler.v);
+		return 1;
+	}
+
+	int SetVelocity(lua_State* L)
+	{
+		BZR::handle h = CheckHandle(L, 1);
+		BZR::VECTOR_3D v = CheckVectorOrSingles(L, 2);
+		BZR::GameObject::GetObj(h)->euler.v = v;
+		return 0;
+	}
 }
