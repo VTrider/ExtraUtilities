@@ -218,5 +218,13 @@
     <ClInclude Include="src\KillMessages.h">
       <Filter>Header Files\Patches</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource\Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

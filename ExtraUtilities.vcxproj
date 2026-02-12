@@ -167,6 +167,7 @@
     <ClCompile Include="src\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Resource\resource.h" />
     <ClInclude Include="src\About.h" />
     <ClInclude Include="src\AddScrapCallback.h" />
     <ClInclude Include="src\BulletHitCallback.h" />
@@ -202,6 +203,9 @@
     <ClInclude Include="src\Steam.h" />
     <ClInclude Include="src\StockExtensions.h" />
     <ClInclude Include="src\VectorSpider.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource\Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
