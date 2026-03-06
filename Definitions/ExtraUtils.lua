@@ -413,6 +413,7 @@ function exu.BuildAsyncObject(...) end
 function exu.BuildSyncObject(...) end
 
 --- Returns the custom kill message set for the given team if it exists
+--- @nodiscard
 --- @param team integer
 --- @return string | nil
 function exu.GetCustomKillMessage(team) end
