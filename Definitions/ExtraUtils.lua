@@ -412,6 +412,18 @@ function exu.BuildAsyncObject(...) end
 --- @return Handle
 function exu.BuildSyncObject(...) end
 
+--- Returns the custom kill message set for the given team if it exists
+--- @param team integer
+--- @return string | nil
+function exu.GetCustomKillMessage(team) end
+
+--- Sets a custom kill message for the given team.
+--- Can be used to rename generic AI teams (Team 5 etc.)
+--- [Custom name] killed by [Custom name 2]
+--- @param team integer
+--- @param message string MUST BE <32 CHARACTERS
+function exu.SetCustomKillMessage(team, message) end
+
 --- Gets the local player's life count.
 --- @nodiscard
 --- @return number
