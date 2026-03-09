@@ -30,6 +30,17 @@ namespace ExtraUtilities::Lua::GameObject
 	int IsCommTowerPowered(lua_State* L);
 
 	int GetHandle(lua_State* L);
+	int GetEntityVisible(lua_State* L);
+	int GetEntityCastShadows(lua_State* L);
+	int SetEntityVisible(lua_State* L);
+	int SetEntityCastShadows(lua_State* L);
+	int GetSubEntityCount(lua_State* L);
+	int GetSubEntityMaterial(lua_State* L);
+	int SetSubEntityMaterial(lua_State* L);
+	int SetEntityMaterial(lua_State* L);
+	int GetNumSubEntities(lua_State* L);
+	int GetMaterialName(lua_State* L);
+	int SetMaterialName(lua_State* L);
 
 	int SetHeadlightDiffuse(lua_State* L);
 	int SetHeadlightSpecular(lua_State* L);

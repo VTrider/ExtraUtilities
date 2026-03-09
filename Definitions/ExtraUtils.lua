@@ -277,6 +277,39 @@ function exu.SetSunSpecular(r, g, b) end
 --- @param newColor Color
 function exu.SetSunSpecular(newColor) end
 
+--- Returns the current sun direction vector.
+--- @nodiscard
+--- @return Vector
+function exu.GetSunDirection() end
+
+--- Sets the current sun direction vector. Can take either a vector or three number parameters.
+--- @param x number
+--- @param y number
+--- @param z number
+function exu.SetSunDirection(x, y, z) end
+
+--- Sets the current sun direction vector. Can take either a vector or three number parameters.
+--- @param direction Vector
+function exu.SetSunDirection(direction) end
+
+--- Returns the current sun power scale multiplier.
+--- @nodiscard
+--- @return number
+function exu.GetSunPowerScale() end
+
+--- Sets the current sun power scale multiplier.
+--- @param powerScale number
+function exu.SetSunPowerScale(powerScale) end
+
+--- Returns the current sun shadow far distance.
+--- @nodiscard
+--- @return number
+function exu.GetSunShadowFarDistance() end
+
+--- Sets the current sun shadow far distance.
+--- @param distance number
+function exu.SetSunShadowFarDistance(distance) end
+
 --- GameObject
 ---
 --- These functions act on game objects (handles) to query and modify various attributes.
@@ -296,6 +329,79 @@ function exu.IsCommTowerPowered(h) end
 --- @param obj GameObject*
 --- @return integer
 function exu.GetHandle(obj) end
+
+--- Gets whether the object's Ogre entity is currently visible.
+--- @nodiscard
+--- @param h Handle
+--- @return boolean | nil
+function exu.GetEntityVisible(h) end
+
+--- Gets whether the object's Ogre entity currently casts shadows.
+--- @nodiscard
+--- @param h Handle
+--- @return boolean | nil
+function exu.GetEntityCastShadows(h) end
+
+--- Sets whether the object's Ogre entity is visible.
+--- @param h Handle
+--- @param visible boolean
+function exu.SetEntityVisible(h, visible) end
+
+--- Sets whether the object's Ogre entity casts shadows.
+--- @param h Handle
+--- @param castShadows boolean
+function exu.SetEntityCastShadows(h, castShadows) end
+
+--- Gets the number of Ogre sub-entities attached to the object's render entity.
+--- @nodiscard
+--- @param h Handle
+--- @return integer | nil
+function exu.GetSubEntityCount(h) end
+
+--- Gets the number of Ogre sub-entities attached to the object's render entity.
+--- @nodiscard
+--- @param h Handle
+--- @return integer | nil
+function exu.GetNumSubEntities(h) end
+
+--- Gets the material name used by the given sub-entity.
+--- @nodiscard
+--- @param h Handle
+--- @param subEntityIndex integer
+--- @return string | nil
+function exu.GetSubEntityMaterial(h, subEntityIndex) end
+
+--- Gets the material name used by the object's render entity.
+--- If no sub-entity index is provided, returns the material on sub-entity 0.
+--- @nodiscard
+--- @param h Handle
+--- @param subEntityIndex integer? optional
+--- @return string | nil
+function exu.GetMaterialName(h, subEntityIndex) end
+
+--- Sets the material name used by the object's whole render entity.
+--- The resource group defaults to "General".
+--- @param h Handle
+--- @param materialName string
+--- @param resourceGroup string? optional
+function exu.SetEntityMaterial(h, materialName, resourceGroup) end
+
+--- Sets the material name used by a specific sub-entity.
+--- The resource group defaults to "General".
+--- @param h Handle
+--- @param subEntityIndex integer
+--- @param materialName string
+--- @param resourceGroup string? optional
+function exu.SetSubEntityMaterial(h, subEntityIndex, materialName, resourceGroup) end
+
+--- Sets the material name used by the object's render entity.
+--- If a sub-entity index is provided, changes only that sub-entity. Otherwise changes the whole entity.
+--- The resource group defaults to "General".
+--- @param h Handle
+--- @param materialName string
+--- @param subEntityIndex integer? optional
+--- @param resourceGroup string? optional
+function exu.SetMaterialName(h, materialName, subEntityIndex, resourceGroup) end
 
 --- Sets the diffuse color of the headlight of the given object (if it exists).
 --- @param h Handle

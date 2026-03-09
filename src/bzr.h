@@ -285,7 +285,19 @@ namespace BZR
 			return jammer;
 		}
 
-		// Offsets to get to the ogre light object from GameObject* -> f0 -> a8
+		// Offsets to get to Ogre-side objects from GameObject* -> f0 -> ...
+		void* GetOgreEntity()
+		{
+			void* entity;
+			__asm
+			{
+				mov ecx, [ecx+0xf0]
+				mov ecx, [ecx+0x94]
+				mov [entity], ecx
+			}
+			return entity;
+		}
+
 		void* GetLight()
 		{
 			void* light;
