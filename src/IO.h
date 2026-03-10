@@ -22,6 +22,7 @@
 #include <Windows.h>
 
 #include <algorithm>
+#include <cctype>
 #include <string>
 #include <unordered_map>
 
@@ -57,7 +58,11 @@ namespace ExtraUtilities::Lua::IO
 	inline std::string ToUpper(const std::string& str)
 	{
 		std::string newStr = str;
-		std::transform(newStr.begin(), newStr.end(), newStr.begin(), ::toupper);
+		std::transform(newStr.begin(), newStr.end(), newStr.begin(),
+			[](unsigned char c) -> char
+			{
+				return static_cast<char>(std::toupper(c));
+			});
 		return newStr;
 	}
 

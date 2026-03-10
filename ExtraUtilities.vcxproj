@@ -21,14 +21,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -92,7 +92,7 @@
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Lua5.1-BZR-debug.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>Lua5.1-BZR-debug.lib;OgreMain.lib;OgreOverlay.lib;User32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -127,7 +127,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Lua5.1-BZR.lib;User32.lib</AdditionalDependencies>
+      <AdditionalDependencies>Lua5.1-BZR.lib;OgreMain.lib;OgreOverlay.lib;User32.lib</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
       <LargeAddressAware>true</LargeAddressAware>
@@ -152,6 +152,7 @@
     <ClCompile Include="src\KillMessages.cpp" />
     <ClCompile Include="src\LuaExport.cpp" />
     <ClCompile Include="src\Multiplayer.cpp" />
+    <ClCompile Include="src\Overlay.cpp" />
     <ClCompile Include="src\Ordnance.cpp" />
     <ClCompile Include="src\OrdnanceVelocity.cpp" />
     <ClCompile Include="src\OS.cpp" />
@@ -188,7 +189,9 @@
     <ClInclude Include="src\LuaHelpers.h" />
     <ClInclude Include="src\LuaState.h" />
     <ClInclude Include="src\Multiplayer.h" />
+    <ClInclude Include="src\OgreOverlayShim.h" />
     <ClInclude Include="src\Ogre.h" />
+    <ClInclude Include="src\Overlay.h" />
     <ClInclude Include="src\Ordnance.h" />
     <ClInclude Include="src\OrdnanceVelocity.h" />
     <ClInclude Include="src\Scanner.h" />

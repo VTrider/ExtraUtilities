@@ -19,9 +19,39 @@
 #include "Camera.h"
 
 #include "LuaHelpers.h"
+#include "Ogre.h"
+
+#include <cmath>
 
 namespace ExtraUtilities::Lua::Camera
 {
+	namespace
+	{
+		void* GetCurrentOgreCamera()
+		{
+			void* sceneManager = Ogre::sceneManager.Read();
+			if (sceneManager == nullptr)
+			{
+				return nullptr;
+			}
+
+			__try
+			{
+				void* viewport = Ogre::GetCurrentViewport(sceneManager);
+				if (viewport == nullptr)
+				{
+					return nullptr;
+				}
+
+				return Ogre::GetViewportCamera(viewport);
+			}
+			__except (EXCEPTION_EXECUTE_HANDLER)
+			{
+				return nullptr;
+			}
+		}
+	}
+
 	int GetOrigins(lua_State* L)
 	{
 		BZR::BZR_Camera* cam = mainCam.Get();
@@ -94,6 +124,206 @@ namespace ExtraUtilities::Lua::Camera
 	{
 		lua_pushinteger(L, currentView.Read());
 		return 1;
+	}
+
+	int GetFOV(lua_State* L)
+	{
+		auto* cam = mainCam.Get();
+		lua_pushnumber(L, cam ? cam->View_Angle : 0.0f);
+		return 1;
+	}
+
+	int GetClipDistances(lua_State* L)
+	{
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			lua_pushnil(L);
+			lua_pushnil(L);
+			return 2;
+		}
+
+		__try
+		{
+			lua_pushnumber(L, Ogre::GetCameraNearClipDistance(camera));
+			lua_pushnumber(L, Ogre::GetCameraFarClipDistance(camera));
+			return 2;
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			lua_pushnil(L);
+			lua_pushnil(L);
+			return 2;
+		}
+	}
+
+	int SetClipDistances(lua_State* L)
+	{
+		float nearClip = static_cast<float>(luaL_checknumber(L, 1));
+		float farClip = static_cast<float>(luaL_checknumber(L, 2));
+		if (!std::isfinite(nearClip) || nearClip < 0.0f)
+		{
+			return luaL_argerror(L, 1, "near clip distance must be a finite non-negative number");
+		}
+		if (!std::isfinite(farClip) || farClip < 0.0f)
+		{
+			return luaL_argerror(L, 2, "far clip distance must be a finite non-negative number");
+		}
+
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			return 0;
+		}
+
+		__try
+		{
+			Ogre::SetFrustumNearClipDistance(camera, nearClip);
+			Ogre::SetFrustumFarClipDistance(camera, farClip);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+		}
+
+		return 0;
+	}
+
+	int GetAspectRatio(lua_State* L)
+	{
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		__try
+		{
+			lua_pushnumber(L, Ogre::GetFrustumAspectRatio(camera));
+			return 1;
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+	}
+
+	int SetAspectRatio(lua_State* L)
+	{
+		float ratio = static_cast<float>(luaL_checknumber(L, 1));
+		if (!std::isfinite(ratio) || ratio <= 0.0f)
+		{
+			return luaL_argerror(L, 1, "aspect ratio must be a finite number greater than zero");
+		}
+
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			return 0;
+		}
+
+		__try
+		{
+			Ogre::SetFrustumAspectRatio(camera, ratio);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+		}
+
+		return 0;
+	}
+
+	int GetProjectionType(lua_State* L)
+	{
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		__try
+		{
+			lua_pushinteger(L, Ogre::GetFrustumProjectionType(camera));
+			return 1;
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+	}
+
+	int SetProjectionType(lua_State* L)
+	{
+		int projectionType = luaL_checkinteger(L, 1);
+		if (projectionType < 0 || projectionType > 1)
+		{
+			return luaL_argerror(L, 1, "projection type must be 0 (orthographic) or 1 (perspective)");
+		}
+
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			return 0;
+		}
+
+		__try
+		{
+			Ogre::SetFrustumProjectionType(camera, projectionType);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+		}
+
+		return 0;
+	}
+
+	int GetPolygonMode(lua_State* L)
+	{
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		__try
+		{
+			lua_pushinteger(L, Ogre::GetCameraPolygonMode(camera));
+			return 1;
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+	}
+
+	int SetPolygonMode(lua_State* L)
+	{
+		int polygonMode = luaL_checkinteger(L, 1);
+		if (polygonMode < 1 || polygonMode > 3)
+		{
+			return luaL_argerror(L, 1, "polygon mode must be 1 (points), 2 (wireframe), or 3 (solid)");
+		}
+
+		void* camera = GetCurrentOgreCamera();
+		if (camera == nullptr)
+		{
+			return 0;
+		}
+
+		__try
+		{
+			Ogre::SetCameraPolygonMode(camera, polygonMode);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+		}
+
+		return 0;
 	}
 
 	int SetView(lua_State* L)

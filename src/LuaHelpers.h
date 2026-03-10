@@ -90,7 +90,7 @@ namespace ExtraUtilities::Lua
 	// Pushes an ogre color table to the stack
 	inline void PushColor(lua_State* L, const Ogre::Color& color)
 	{
-		lua_createtable(L, 0, 3);
+		lua_createtable(L, 0, 4);
 
 		lua_pushnumber(L, color.r);
 		lua_setfield(L, -2, "r");
@@ -100,6 +100,9 @@ namespace ExtraUtilities::Lua
 
 		lua_pushnumber(L, color.b);
 		lua_setfield(L, -2, "b");
+
+		lua_pushnumber(L, color.a);
+		lua_setfield(L, -2, "a");
 	}
 
 	// Pushes an ogre fog table to the stack
@@ -121,6 +124,57 @@ namespace ExtraUtilities::Lua
 
 		lua_pushnumber(L, fog.ending);
 		lua_setfield(L, -2, "ending");
+	}
+
+	inline void PushSkyBoxParams(lua_State* L, const Ogre::SkyBoxGenParameters& params)
+	{
+		lua_createtable(L, 0, 1);
+
+		lua_pushnumber(L, params.distance);
+		lua_setfield(L, -2, "distance");
+	}
+
+	inline void PushSkyDomeParams(lua_State* L, const Ogre::SkyDomeGenParameters& params)
+	{
+		lua_createtable(L, 0, 6);
+
+		lua_pushnumber(L, params.curvature);
+		lua_setfield(L, -2, "curvature");
+
+		lua_pushnumber(L, params.distance);
+		lua_setfield(L, -2, "distance");
+
+		lua_pushnumber(L, params.tiling);
+		lua_setfield(L, -2, "tiling");
+
+		lua_pushinteger(L, params.xsegments);
+		lua_setfield(L, -2, "xsegments");
+
+		lua_pushinteger(L, params.ysegments);
+		lua_setfield(L, -2, "ysegments");
+
+		lua_pushinteger(L, params.ysegments_keep);
+		lua_setfield(L, -2, "ysegments_keep");
+	}
+
+	inline void PushSkyPlaneParams(lua_State* L, const Ogre::SkyPlaneGenParameters& params)
+	{
+		lua_createtable(L, 0, 5);
+
+		lua_pushnumber(L, params.bow);
+		lua_setfield(L, -2, "bow");
+
+		lua_pushnumber(L, params.scale);
+		lua_setfield(L, -2, "scale");
+
+		lua_pushnumber(L, params.tiling);
+		lua_setfield(L, -2, "tiling");
+
+		lua_pushinteger(L, params.xsegments);
+		lua_setfield(L, -2, "xsegments");
+
+		lua_pushinteger(L, params.ysegments);
+		lua_setfield(L, -2, "ysegments");
 	}
 
 	// Type checked lua boolean
@@ -181,12 +235,22 @@ namespace ExtraUtilities::Lua
 
 			lua_getfield(L, idx, "b");
 			c.b = static_cast<float>(luaL_checknumber(L, -1));
+
+			lua_getfield(L, idx, "a");
+			if (!lua_isnil(L, -1))
+			{
+				c.a = static_cast<float>(luaL_checknumber(L, -1));
+			}
 		}
 		else
 		{
 			c.r = static_cast<float>(luaL_checknumber(L, idx));
 			c.g = static_cast<float>(luaL_checknumber(L, idx + 1));
 			c.b = static_cast<float>(luaL_checknumber(L, idx + 2));
+			if (!lua_isnoneornil(L, idx + 3))
+			{
+				c.a = static_cast<float>(luaL_checknumber(L, idx + 3));
+			}
 		}
 		return c;
 	}

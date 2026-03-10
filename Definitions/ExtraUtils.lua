@@ -26,6 +26,7 @@ error("This is a definition file, use require(\"exu\")")
 --- @field r number
 --- @field g number
 --- @field b number
+--- @field a number
 
 --- @class Fog
 --- @field r number
@@ -33,6 +34,24 @@ error("This is a definition file, use require(\"exu\")")
 --- @field b number
 --- @field start number meters
 --- @field ending number meters
+
+--- @class SkyBoxParams
+--- @field distance number
+
+--- @class SkyDomeParams
+--- @field curvature number
+--- @field distance number
+--- @field tiling number
+--- @field xsegments integer
+--- @field ysegments integer
+--- @field ysegments_keep integer
+
+--- @class SkyPlaneParams
+--- @field bow number
+--- @field scale number
+--- @field tiling number
+--- @field xsegments integer
+--- @field ysegments integer
 
 --- @class exu
 --- @field Origins CameraOrigins
@@ -94,6 +113,13 @@ exu.OGRE = {
         OUTER_ANGLE = 0.3490,
         FALLOFF = 1.0
     }
+}
+
+--- @class OverlayMetricsMode
+exu.OVERLAY_METRICS = {
+    RELATIVE = 0,
+    PIXELS = 1,
+    RELATIVE_ASPECT_ADJUSTED = 2
 }
 
 --- @class OrdnanceAttributes
@@ -158,6 +184,52 @@ function exu.SetCameraMinZoom(zoom) end
 --- @nodiscard
 --- @return CameraState
 function exu.GetCameraView() end
+
+--- Gets the current camera field of view in radians.
+--- @nodiscard
+--- @return number
+function exu.GetCameraFOV() end
+
+--- Gets the current active Ogre camera clip distances.
+--- @nodiscard
+--- @return number | nil, number | nil
+function exu.GetCameraClipDistances() end
+
+--- Sets the current active Ogre camera clip distances.
+--- @param nearClip number
+--- @param farClip number
+function exu.SetCameraClipDistances(nearClip, farClip) end
+
+--- Gets the current active Ogre camera aspect ratio.
+--- @nodiscard
+--- @return number | nil
+function exu.GetCameraAspectRatio() end
+
+--- Sets the current active Ogre camera aspect ratio.
+--- @param ratio number
+function exu.SetCameraAspectRatio(ratio) end
+
+--- Gets the current active Ogre camera projection type.
+--- 0 = orthographic, 1 = perspective.
+--- @nodiscard
+--- @return integer | nil
+function exu.GetCameraProjectionType() end
+
+--- Sets the current active Ogre camera projection type.
+--- 0 = orthographic, 1 = perspective.
+--- @param projectionType integer
+function exu.SetCameraProjectionType(projectionType) end
+
+--- Gets the current active Ogre camera polygon mode.
+--- 1 = points, 2 = wireframe, 3 = solid.
+--- @nodiscard
+--- @return integer | nil
+function exu.GetCameraPolygonMode() end
+
+--- Sets the current active Ogre camera polygon mode.
+--- 1 = points, 2 = wireframe, 3 = solid.
+--- @param polygonMode integer
+function exu.SetCameraPolygonMode(polygonMode) end
 
 --- Sets the current camera view mode.
 --- @param view CameraState | any
@@ -231,6 +303,22 @@ function exu.SetGravity(x, y, z) end
 --- same value across all clients if it's been changed from stock.
 --- @param v Vector
 function exu.SetGravity(v) end
+
+--- Returns a table with the current scene ambient light parameters.
+--- @nodiscard
+--- @return Color
+function exu.GetAmbientLight() end
+
+--- Sets the current scene ambient light parameters. Can take either three or four number parameters or a color table.
+--- @param r number
+--- @param g number
+--- @param b number
+--- @param a number? optional
+function exu.SetAmbientLight(r, g, b, a) end
+
+--- Sets the current scene ambient light parameters. Can take either three or four number parameters or a color table.
+--- @param newColor Color
+function exu.SetAmbientLight(newColor) end
 
 --- Returns a table with the current sun ambient parameters.
 --- @nodiscard
@@ -310,6 +398,206 @@ function exu.GetSunShadowFarDistance() end
 --- @param distance number
 function exu.SetSunShadowFarDistance(distance) end
 
+--- Returns the current skybox generation parameters if a skybox node exists.
+--- @nodiscard
+--- @return SkyBoxParams | nil
+function exu.GetSkyBoxParams() end
+
+--- Returns the current skydome generation parameters if a skydome node exists.
+--- @nodiscard
+--- @return SkyDomeParams | nil
+function exu.GetSkyDomeParams() end
+
+--- Returns the current skyplane generation parameters if a skyplane node exists.
+--- @nodiscard
+--- @return SkyPlaneParams | nil
+function exu.GetSkyPlaneParams() end
+
+--- Returns whether scene bounding boxes are currently shown.
+--- @nodiscard
+--- @return boolean
+function exu.GetShowBoundingBoxes() end
+
+--- Enables or disables scene bounding boxes.
+--- @param enabled boolean
+function exu.SetShowBoundingBoxes(enabled) end
+
+--- Returns whether debug shadows are currently shown.
+--- @nodiscard
+--- @return boolean
+function exu.GetShowDebugShadows() end
+
+--- Enables or disables debug shadows.
+--- @param enabled boolean
+function exu.SetShowDebugShadows(enabled) end
+
+--- Returns whether the current active viewport renders shadows.
+--- @nodiscard
+--- @return boolean
+function exu.GetViewportShadowsEnabled() end
+
+--- Enables or disables shadow rendering on the current active viewport.
+--- @param enabled boolean
+function exu.SetViewportShadowsEnabled(enabled) end
+
+--- Returns the current scene visibility mask.
+--- @nodiscard
+--- @return integer | nil
+function exu.GetSceneVisibilityMask() end
+
+--- Sets the current scene visibility mask.
+--- @param mask integer
+function exu.SetSceneVisibilityMask(mask) end
+
+--- Returns whether the scene manager currently has a skybox node.
+--- @nodiscard
+--- @return boolean
+function exu.HasSkyBoxNode() end
+
+--- Returns whether the scene manager currently has a skydome node.
+--- @nodiscard
+--- @return boolean
+function exu.HasSkyDomeNode() end
+
+--- Returns whether the scene manager currently has a skyplane node.
+--- @nodiscard
+--- @return boolean
+function exu.HasSkyPlaneNode() end
+
+--- Overlay
+---
+--- These functions expose Ogre overlays for custom HUD and UI work.
+
+--- Creates a new named overlay.
+--- @param name string
+--- @return boolean
+function exu.CreateOverlay(name) end
+
+--- Destroys an existing named overlay.
+--- @param name string
+function exu.DestroyOverlay(name) end
+
+--- Shows an existing named overlay.
+--- @param name string
+function exu.ShowOverlay(name) end
+
+--- Hides an existing named overlay.
+--- @param name string
+function exu.HideOverlay(name) end
+
+--- Sets the z-order of an overlay.
+--- Valid range is 0 to 650.
+--- @param name string
+--- @param zOrder integer
+function exu.SetOverlayZOrder(name, zOrder) end
+
+--- Sets the scroll offset on an overlay.
+--- @param name string
+--- @param x number
+--- @param y number
+function exu.SetOverlayScroll(name, x, y) end
+
+--- Creates a new overlay element.
+--- Useful built-in element types include `"Panel"`, `"BorderPanel"`, and `"TextArea"`.
+--- @param typeName string
+--- @param instanceName string
+--- @return boolean
+function exu.CreateOverlayElement(typeName, instanceName) end
+
+--- Destroys an existing overlay element by name.
+--- @param name string
+function exu.DestroyOverlayElement(name) end
+
+--- Returns whether an overlay element exists by name.
+--- @nodiscard
+--- @param name string
+--- @return boolean
+function exu.HasOverlayElement(name) end
+
+--- Attaches a container element to an overlay as a 2D root.
+--- The container must have been created through `CreateOverlayElement` as `"Panel"` or `"BorderPanel"`.
+--- @param overlayName string
+--- @param containerName string
+function exu.AddOverlay2D(overlayName, containerName) end
+
+--- Removes a container element from an overlay's 2D roots.
+--- @param overlayName string
+--- @param containerName string
+function exu.RemoveOverlay2D(overlayName, containerName) end
+
+--- Adds a child element to a parent container.
+--- The parent container must have been created through `CreateOverlayElement` as `"Panel"` or `"BorderPanel"`.
+--- @param parentName string
+--- @param childName string
+function exu.AddOverlayElementChild(parentName, childName) end
+
+--- Removes a child element from a parent container by child name.
+--- @param parentName string
+--- @param childName string
+function exu.RemoveOverlayElementChild(parentName, childName) end
+
+--- Shows an overlay element by name.
+--- @param name string
+function exu.ShowOverlayElement(name) end
+
+--- Hides an overlay element by name.
+--- @param name string
+function exu.HideOverlayElement(name) end
+
+--- Sets the metrics mode for an overlay element.
+--- See `exu.OVERLAY_METRICS`.
+--- @param name string
+--- @param mode OverlayMetricsMode | integer
+function exu.SetOverlayMetricsMode(name, mode) end
+
+--- Sets the position of an overlay element.
+--- @param name string
+--- @param left number
+--- @param top number
+function exu.SetOverlayPosition(name, left, top) end
+
+--- Sets the dimensions of an overlay element.
+--- @param name string
+--- @param width number
+--- @param height number
+function exu.SetOverlayDimensions(name, width, height) end
+
+--- Sets the material name of an overlay element.
+--- @param name string
+--- @param materialName string
+function exu.SetOverlayMaterial(name, materialName) end
+
+--- Sets the color of an overlay element.
+--- Can take either four number parameters or a color table.
+--- @param name string
+--- @param r number
+--- @param g number
+--- @param b number
+--- @param a number? optional
+function exu.SetOverlayColor(name, r, g, b, a) end
+
+--- Sets the color of an overlay element.
+--- Can take either four number parameters or a color table.
+--- @param name string
+--- @param color Color
+function exu.SetOverlayColor(name, color) end
+
+--- Sets the caption text of an overlay element.
+--- This is primarily useful for text areas.
+--- @param name string
+--- @param text string
+function exu.SetOverlayCaption(name, text) end
+
+--- Sets the font name of a text area created through `CreateOverlayElement("TextArea", ...)`.
+--- @param name string
+--- @param fontName string
+function exu.SetOverlayTextFont(name, fontName) end
+
+--- Sets the character height of a text area created through `CreateOverlayElement("TextArea", ...)`.
+--- @param name string
+--- @param charHeight number
+function exu.SetOverlayTextCharHeight(name, charHeight) end
+
 --- GameObject
 ---
 --- These functions act on game objects (handles) to query and modify various attributes.
@@ -342,6 +630,30 @@ function exu.GetEntityVisible(h) end
 --- @return boolean | nil
 function exu.GetEntityCastShadows(h) end
 
+--- Gets the object's Ogre rendering distance.
+--- @nodiscard
+--- @param h Handle
+--- @return number | nil
+function exu.GetEntityRenderingDistance(h) end
+
+--- Gets the object's Ogre visibility flags mask.
+--- @nodiscard
+--- @param h Handle
+--- @return integer | nil
+function exu.GetEntityVisibilityFlags(h) end
+
+--- Gets the object's Ogre query flags mask.
+--- @nodiscard
+--- @param h Handle
+--- @return integer | nil
+function exu.GetEntityQueryFlags(h) end
+
+--- Gets the object's Ogre render queue group.
+--- @nodiscard
+--- @param h Handle
+--- @return integer | nil
+function exu.GetEntityRenderQueueGroup(h) end
+
 --- Sets whether the object's Ogre entity is visible.
 --- @param h Handle
 --- @param visible boolean
@@ -351,6 +663,32 @@ function exu.SetEntityVisible(h, visible) end
 --- @param h Handle
 --- @param castShadows boolean
 function exu.SetEntityCastShadows(h, castShadows) end
+
+--- Sets the object's Ogre rendering distance.
+--- @param h Handle
+--- @param distance number
+function exu.SetEntityRenderingDistance(h, distance) end
+
+--- Sets the object's Ogre visibility flags mask.
+--- @param h Handle
+--- @param flags integer
+function exu.SetEntityVisibilityFlags(h, flags) end
+
+--- Sets the object's Ogre query flags mask.
+--- @param h Handle
+--- @param flags integer
+function exu.SetEntityQueryFlags(h, flags) end
+
+--- Sets the object's Ogre render queue group.
+--- @param h Handle
+--- @param group integer
+function exu.SetEntityRenderQueueGroup(h, group) end
+
+--- Sets whether a specific sub-entity is visible.
+--- @param h Handle
+--- @param subEntityIndex integer
+--- @param visible boolean
+function exu.SetSubEntityVisible(h, subEntityIndex, visible) end
 
 --- Gets the number of Ogre sub-entities attached to the object's render entity.
 --- @nodiscard
@@ -403,6 +741,44 @@ function exu.SetSubEntityMaterial(h, subEntityIndex, materialName, resourceGroup
 --- @param resourceGroup string? optional
 function exu.SetMaterialName(h, materialName, subEntityIndex, resourceGroup) end
 
+--- Returns whether the entity has a named animation state.
+--- @nodiscard
+--- @param h Handle
+--- @param animationName string
+--- @return boolean
+function exu.HasEntityAnimation(h, animationName) end
+
+--- Returns the current values for a named entity animation state.
+--- @nodiscard
+--- @param h Handle
+--- @param animationName string
+--- @return table | nil
+function exu.GetEntityAnimationInfo(h, animationName) end
+
+--- Enables or disables a named entity animation state.
+--- @param h Handle
+--- @param animationName string
+--- @param enabled boolean
+function exu.SetEntityAnimationEnabled(h, animationName, enabled) end
+
+--- Sets whether a named entity animation loops.
+--- @param h Handle
+--- @param animationName string
+--- @param loop boolean
+function exu.SetEntityAnimationLoop(h, animationName, loop) end
+
+--- Sets the blend weight of a named entity animation.
+--- @param h Handle
+--- @param animationName string
+--- @param weight number
+function exu.SetEntityAnimationWeight(h, animationName, weight) end
+
+--- Sets the current time position of a named entity animation.
+--- @param h Handle
+--- @param animationName string
+--- @param timePosition number
+function exu.SetEntityAnimationTime(h, animationName, timePosition) end
+
 --- Sets the diffuse color of the headlight of the given object (if it exists).
 --- @param h Handle
 --- @param r number
@@ -427,8 +803,64 @@ function exu.SetHeadlightSpecular(h, r, g, b) end
 function exu.SetHeadlightRange(h, innerAngle, outerAngle, falloff) end
 
 --- Sets whether or not a headlight is visible or hidden.
+--- @param h Handle
 --- @param visible boolean
-function exu.SetHeadlightVisible(visible) end
+function exu.SetHeadlightVisible(h, visible) end
+
+--- Gets the power scale of the object's Ogre light, if it has one.
+--- @nodiscard
+--- @param h Handle
+--- @return number | nil
+function exu.GetLightPowerScale(h) end
+
+--- Sets the power scale of the object's Ogre light.
+--- @param h Handle
+--- @param powerScale number
+function exu.SetLightPowerScale(h, powerScale) end
+
+--- Gets the position of the object's Ogre light.
+--- @nodiscard
+--- @param h Handle
+--- @return Vector | nil
+function exu.GetLightPosition(h) end
+
+--- Sets the position of the object's Ogre light.
+--- @param h Handle
+--- @param x number
+--- @param y number
+--- @param z number
+function exu.SetLightPosition(h, x, y, z) end
+
+--- Sets the position of the object's Ogre light.
+--- @param h Handle
+--- @param position Vector
+function exu.SetLightPosition(h, position) end
+
+--- Gets the direction of the object's Ogre light.
+--- @nodiscard
+--- @param h Handle
+--- @return Vector | nil
+function exu.GetLightDirection(h) end
+
+--- Sets the direction of the object's Ogre light.
+--- @param h Handle
+--- @param x number
+--- @param y number
+--- @param z number
+function exu.SetLightDirection(h, x, y, z) end
+
+--- Sets the direction of the object's Ogre light.
+--- @param h Handle
+--- @param direction Vector
+function exu.SetLightDirection(h, direction) end
+
+--- Sets the attenuation parameters of the object's Ogre light.
+--- @param h Handle
+--- @param range number
+--- @param constant number
+--- @param linear number
+--- @param quadratic number
+function exu.SetLightAttenuation(h, range, constant, linear, quadratic) end
 
 --- Gets the mass of the given object (most ships default to 1750 KG afaik).
 --- @nodiscard

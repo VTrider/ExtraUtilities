@@ -29,6 +29,7 @@
 #include "GraphicsOptions.h"
 #include "IO.h"
 #include "Multiplayer.h"
+#include "Overlay.h"
 #include "Ordnance.h"
 #include "OS.h"
 #include "PlayOption.h"

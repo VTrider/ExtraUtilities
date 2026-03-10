@@ -158,6 +158,20 @@ namespace ExtraUtilities::Lua
 
 		lua_setfield(L, -2, "OGRE"); // end ogre enum
 
+		// Overlay metrics enum
+		lua_newtable(L);
+
+		lua_pushinteger(L, 0);
+		lua_setfield(L, -2, "RELATIVE");
+
+		lua_pushinteger(L, 1);
+		lua_setfield(L, -2, "PIXELS");
+
+		lua_pushinteger(L, 2);
+		lua_setfield(L, -2, "RELATIVE_ASPECT_ADJUSTED");
+
+		lua_setfield(L, exuIdx, "OVERLAY_METRICS");
+
 		// Ordnance enum
 		lua_newtable(L);
 
@@ -239,6 +253,15 @@ namespace ExtraUtilities::Lua
 			{ "SetCameraMinZoom", &Camera::SetMinZoom },
 			{ "GetCameraView", &Camera::GetView },
 			{ "SetCameraView", &Camera::SetView },
+			{ "GetCameraFOV", &Camera::GetFOV },
+			{ "GetCameraClipDistances", &Camera::GetClipDistances },
+			{ "SetCameraClipDistances", &Camera::SetClipDistances },
+			{ "GetCameraAspectRatio", &Camera::GetAspectRatio },
+			{ "SetCameraAspectRatio", &Camera::SetAspectRatio },
+			{ "GetCameraProjectionType", &Camera::GetProjectionType },
+			{ "SetCameraProjectionType", &Camera::SetProjectionType },
+			{ "GetCameraPolygonMode", &Camera::GetPolygonMode },
+			{ "SetCameraPolygonMode", &Camera::SetPolygonMode },
 			{ "GetCameraZoom", &Camera::GetZoom },
 			{ "SetCameraZoom", &Camera::SetZoom },
 
@@ -252,6 +275,8 @@ namespace ExtraUtilities::Lua
 			{ "SetFog",		   &Environment::SetFog },
 			{ "GetGravity",    &Environment::GetGravity },
 			{ "SetGravity",    &Environment::SetGravity },
+			{ "GetAmbientLight", &Environment::GetAmbientLight },
+			{ "SetAmbientLight", &Environment::SetAmbientLight },
 			{ "GetSunAmbient", &Environment::GetSunAmbient },
 			{ "SetSunAmbient", &Environment::SetSunAmbient },
 			{ "GetSunDiffuse", &Environment::GetSunDiffuse },
@@ -264,6 +289,45 @@ namespace ExtraUtilities::Lua
 			{ "SetSunPowerScale", &Environment::SetSunPowerScale },
 			{ "GetSunShadowFarDistance", &Environment::GetSunShadowFarDistance },
 			{ "SetSunShadowFarDistance", &Environment::SetSunShadowFarDistance },
+			{ "GetSkyBoxParams", &Environment::GetSkyBoxParams },
+			{ "GetSkyDomeParams", &Environment::GetSkyDomeParams },
+			{ "GetSkyPlaneParams", &Environment::GetSkyPlaneParams },
+			{ "GetShowBoundingBoxes", &Environment::GetShowBoundingBoxes },
+			{ "SetShowBoundingBoxes", &Environment::SetShowBoundingBoxes },
+			{ "GetShowDebugShadows", &Environment::GetShowDebugShadows },
+			{ "SetShowDebugShadows", &Environment::SetShowDebugShadows },
+			{ "GetViewportShadowsEnabled", &Environment::GetViewportShadowsEnabled },
+			{ "SetViewportShadowsEnabled", &Environment::SetViewportShadowsEnabled },
+			{ "GetSceneVisibilityMask", &Environment::GetSceneVisibilityMask },
+			{ "SetSceneVisibilityMask", &Environment::SetSceneVisibilityMask },
+			{ "HasSkyBoxNode", &Environment::HasSkyBoxNode },
+			{ "HasSkyDomeNode", &Environment::HasSkyDomeNode },
+			{ "HasSkyPlaneNode", &Environment::HasSkyPlaneNode },
+
+			// Overlay
+			{ "CreateOverlay", &Overlay::CreateOverlay },
+			{ "DestroyOverlay", &Overlay::DestroyOverlay },
+			{ "ShowOverlay", &Overlay::ShowOverlay },
+			{ "HideOverlay", &Overlay::HideOverlay },
+			{ "SetOverlayZOrder", &Overlay::SetOverlayZOrder },
+			{ "SetOverlayScroll", &Overlay::SetOverlayScroll },
+			{ "CreateOverlayElement", &Overlay::CreateOverlayElement },
+			{ "DestroyOverlayElement", &Overlay::DestroyOverlayElement },
+			{ "HasOverlayElement", &Overlay::HasOverlayElement },
+			{ "AddOverlay2D", &Overlay::AddOverlay2D },
+			{ "RemoveOverlay2D", &Overlay::RemoveOverlay2D },
+			{ "AddOverlayElementChild", &Overlay::AddOverlayElementChild },
+			{ "RemoveOverlayElementChild", &Overlay::RemoveOverlayElementChild },
+			{ "ShowOverlayElement", &Overlay::ShowOverlayElement },
+			{ "HideOverlayElement", &Overlay::HideOverlayElement },
+			{ "SetOverlayMetricsMode", &Overlay::SetOverlayMetricsMode },
+			{ "SetOverlayPosition", &Overlay::SetOverlayPosition },
+			{ "SetOverlayDimensions", &Overlay::SetOverlayDimensions },
+			{ "SetOverlayMaterial", &Overlay::SetOverlayMaterial },
+			{ "SetOverlayColor", &Overlay::SetOverlayColor },
+			{ "SetOverlayCaption", &Overlay::SetOverlayCaption },
+			{ "SetOverlayTextFont", &Overlay::SetOverlayTextFont },
+			{ "SetOverlayTextCharHeight", &Overlay::SetOverlayTextCharHeight },
 
 			// GameObject
 			{ "SetAsUser",		&GameObject::SetAsUser },
@@ -271,8 +335,17 @@ namespace ExtraUtilities::Lua
 			{ "GetHandle",		&GameObject::GetHandle },
 			{ "GetEntityVisible", &GameObject::GetEntityVisible },
 			{ "GetEntityCastShadows", &GameObject::GetEntityCastShadows },
+			{ "GetEntityRenderingDistance", &GameObject::GetEntityRenderingDistance },
+			{ "GetEntityVisibilityFlags", &GameObject::GetEntityVisibilityFlags },
+			{ "GetEntityQueryFlags", &GameObject::GetEntityQueryFlags },
+			{ "GetEntityRenderQueueGroup", &GameObject::GetEntityRenderQueueGroup },
 			{ "SetEntityVisible", &GameObject::SetEntityVisible },
 			{ "SetEntityCastShadows", &GameObject::SetEntityCastShadows },
+			{ "SetEntityRenderingDistance", &GameObject::SetEntityRenderingDistance },
+			{ "SetEntityVisibilityFlags", &GameObject::SetEntityVisibilityFlags },
+			{ "SetEntityQueryFlags", &GameObject::SetEntityQueryFlags },
+			{ "SetEntityRenderQueueGroup", &GameObject::SetEntityRenderQueueGroup },
+			{ "SetSubEntityVisible", &GameObject::SetSubEntityVisible },
 			{ "GetSubEntityCount", &GameObject::GetSubEntityCount },
 			{ "GetSubEntityMaterial", &GameObject::GetSubEntityMaterial },
 			{ "SetSubEntityMaterial", &GameObject::SetSubEntityMaterial },
@@ -284,6 +357,19 @@ namespace ExtraUtilities::Lua
 			{ "SetHeadlightSpecular", &GameObject::SetHeadlightSpecular },
 			{ "SetHeadlightRange", &GameObject::SetHeadlightRange },
 			{ "SetHeadlightVisible", &GameObject::SetHeadlightVisible },
+			{ "GetLightPowerScale", &GameObject::GetLightPowerScale },
+			{ "SetLightPowerScale", &GameObject::SetLightPowerScale },
+			{ "GetLightPosition", &GameObject::GetLightPosition },
+			{ "SetLightPosition", &GameObject::SetLightPosition },
+			{ "GetLightDirection", &GameObject::GetLightDirection },
+			{ "SetLightDirection", &GameObject::SetLightDirection },
+			{ "SetLightAttenuation", &GameObject::SetLightAttenuation },
+			{ "HasEntityAnimation", &GameObject::HasEntityAnimation },
+			{ "GetEntityAnimationInfo", &GameObject::GetEntityAnimationInfo },
+			{ "SetEntityAnimationEnabled", &GameObject::SetEntityAnimationEnabled },
+			{ "SetEntityAnimationLoop", &GameObject::SetEntityAnimationLoop },
+			{ "SetEntityAnimationWeight", &GameObject::SetEntityAnimationWeight },
+			{ "SetEntityAnimationTime", &GameObject::SetEntityAnimationTime },
 			{ "GetMass", &GameObject::GetMass },
 			{ "SetMass", &GameObject::SetMass },
 			{ "GetObj",			&GameObject::GetObj },

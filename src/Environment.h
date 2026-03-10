@@ -37,6 +37,8 @@ namespace ExtraUtilities::Lua::Environment
 
 	int GetSunAmbient(lua_State* L);
 	int SetSunAmbient(lua_State* L);
+	int GetAmbientLight(lua_State* L);
+	int SetAmbientLight(lua_State* L);
 
 	int GetSunDiffuse(lua_State* L);
 	int SetSunDiffuse(lua_State* L);
@@ -52,6 +54,22 @@ namespace ExtraUtilities::Lua::Environment
 
 	int GetSunShadowFarDistance(lua_State* L);
 	int SetSunShadowFarDistance(lua_State* L);
+
+	int GetSkyBoxParams(lua_State* L);
+	int GetSkyDomeParams(lua_State* L);
+	int GetSkyPlaneParams(lua_State* L);
+	int GetShowBoundingBoxes(lua_State* L);
+	int SetShowBoundingBoxes(lua_State* L);
+	int GetShowDebugShadows(lua_State* L);
+	int SetShowDebugShadows(lua_State* L);
+	int GetViewportShadowsEnabled(lua_State* L);
+	int SetViewportShadowsEnabled(lua_State* L);
+	int GetSceneVisibilityMask(lua_State* L);
+	int SetSceneVisibilityMask(lua_State* L);
+
+	int HasSkyBoxNode(lua_State* L);
+	int HasSkyDomeNode(lua_State* L);
+	int HasSkyPlaneNode(lua_State* L);
 
 	Ogre::Color DefaultSunColor();
 }

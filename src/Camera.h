@@ -49,6 +49,15 @@ namespace ExtraUtilities::Lua::Camera
 	int GetView(lua_State* L);
 	int SetView(lua_State* L);
 
+	int GetFOV(lua_State* L);
+	int GetClipDistances(lua_State* L);
+	int SetClipDistances(lua_State* L);
+	int GetAspectRatio(lua_State* L);
+	int SetAspectRatio(lua_State* L);
+	int GetProjectionType(lua_State* L);
+	int SetProjectionType(lua_State* L);
+	int GetPolygonMode(lua_State* L);
+	int SetPolygonMode(lua_State* L);
 	int GetZoom(lua_State* L);
 	int SetZoom(lua_State* L);
 }

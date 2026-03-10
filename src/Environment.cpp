@@ -71,7 +71,8 @@ namespace ExtraUtilities::Lua::Environment
 	{
 		return std::isfinite(color.r)
 			&& std::isfinite(color.g)
-			&& std::isfinite(color.b);
+			&& std::isfinite(color.b)
+			&& std::isfinite(color.a);
 	}
 
 	bool IsExpectedColorRange(const Ogre::Color& color)
@@ -93,9 +94,84 @@ namespace ExtraUtilities::Lua::Environment
 		return std::isfinite(value);
 	}
 
+	using SkyNodeGetter = void*(*)(void*);
+
+	bool TryHasSkyNode(void* sceneManager, SkyNodeGetter getter, bool& outHasNode, const char* label)
+	{
+		__try
+		{
+			outHasNode = getter(sceneManager) != nullptr;
+			return true;
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Sky] %s node probe crashed sceneManager=%p code=0x%08X", label, sceneManager, GetExceptionCode());
+			outHasNode = false;
+			return false;
+		}
+	}
+
+	bool TryGetSkyBoxGenParameters(void* sceneManager, Ogre::SkyBoxGenParameters& outParams)
+	{
+		__try
+		{
+			return Ogre::GetSkyBoxGenParameters(sceneManager, outParams);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Sky] get skybox params crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+			return false;
+		}
+	}
+
+	bool TryGetSkyDomeGenParameters(void* sceneManager, Ogre::SkyDomeGenParameters& outParams)
+	{
+		__try
+		{
+			return Ogre::GetSkyDomeGenParameters(sceneManager, outParams);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Sky] get skydome params crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+			return false;
+		}
+	}
+
+	bool TryGetSkyPlaneGenParameters(void* sceneManager, Ogre::SkyPlaneGenParameters& outParams)
+	{
+		__try
+		{
+			return Ogre::GetSkyPlaneGenParameters(sceneManager, outParams);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Sky] get skyplane params crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+			return false;
+		}
+	}
+
 	void* GetSceneManager()
 	{
 		return Ogre::sceneManager.Read();
+	}
+
+	void* GetCurrentViewport()
+	{
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			return nullptr;
+		}
+
+		__try
+		{
+			return Ogre::GetCurrentViewport(sceneManager);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Viewport] get current viewport crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+			return nullptr;
+		}
 	}
 
 	void* GetTerrainMasterLight()
@@ -212,6 +288,16 @@ namespace ExtraUtilities::Lua::Environment
 		LogEnvironmentDebug("[EXU::SetSunAmbient] completed");
 
 		return 0;
+	}
+
+	int GetAmbientLight(lua_State* L)
+	{
+		return GetSunAmbient(L);
+	}
+
+	int SetAmbientLight(lua_State* L)
+	{
+		return SetSunAmbient(L);
 	}
 
 	int GetSunDiffuse(lua_State* L)
@@ -472,6 +558,317 @@ namespace ExtraUtilities::Lua::Environment
 		Ogre::SetShadowFarDistance(terrainMasterLight, shadowFarDistance);
 		LogEnvironmentDebug("[EXU::SetSunShadowFarDistance] completed");
 		return 0;
+	}
+
+	int GetSkyBoxParams(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		bool hasNode = false;
+		Ogre::SkyBoxGenParameters params{};
+		if (!TryHasSkyNode(sceneManager, Ogre::GetSkyBoxNode, hasNode, "skybox") || !hasNode ||
+			!TryGetSkyBoxGenParameters(sceneManager, params))
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		PushSkyBoxParams(L, params);
+		return 1;
+	}
+
+	int GetSkyDomeParams(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		bool hasNode = false;
+		Ogre::SkyDomeGenParameters params{};
+		if (!TryHasSkyNode(sceneManager, Ogre::GetSkyDomeNode, hasNode, "skydome") || !hasNode ||
+			!TryGetSkyDomeGenParameters(sceneManager, params))
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		PushSkyDomeParams(L, params);
+		return 1;
+	}
+
+	int GetSkyPlaneParams(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		bool hasNode = false;
+		Ogre::SkyPlaneGenParameters params{};
+		if (!TryHasSkyNode(sceneManager, Ogre::GetSkyPlaneNode, hasNode, "skyplane") || !hasNode ||
+			!TryGetSkyPlaneGenParameters(sceneManager, params))
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		PushSkyPlaneParams(L, params);
+		return 1;
+	}
+
+	int GetShowBoundingBoxes(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			lua_pushboolean(L, 0);
+			return 1;
+		}
+
+		bool enabled = false;
+		__try
+		{
+			enabled = Ogre::GetShowBoundingBoxes(sceneManager);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Scene] getShowBoundingBoxes crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+		}
+
+		lua_pushboolean(L, enabled ? 1 : 0);
+		return 1;
+	}
+
+	int SetShowBoundingBoxes(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			return 0;
+		}
+
+		bool enabled = CheckBool(L, 1);
+		__try
+		{
+			Ogre::ShowBoundingBoxes(sceneManager, enabled);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Scene] showBoundingBoxes crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+		}
+
+		return 0;
+	}
+
+	int GetShowDebugShadows(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			lua_pushboolean(L, 0);
+			return 1;
+		}
+
+		bool enabled = false;
+		__try
+		{
+			enabled = Ogre::GetShowDebugShadows(sceneManager);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Scene] getShowDebugShadows crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+		}
+
+		lua_pushboolean(L, enabled ? 1 : 0);
+		return 1;
+	}
+
+	int SetShowDebugShadows(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			return 0;
+		}
+
+		bool enabled = CheckBool(L, 1);
+		__try
+		{
+			Ogre::SetShowDebugShadows(sceneManager, enabled);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Scene] setShowDebugShadows crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+		}
+
+		return 0;
+	}
+
+	int GetViewportShadowsEnabled(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* viewport = GetCurrentViewport();
+		if (viewport == nullptr)
+		{
+			lua_pushboolean(L, 0);
+			return 1;
+		}
+
+		bool enabled = false;
+		__try
+		{
+			enabled = Ogre::GetViewportShadowsEnabled(viewport);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Viewport] getShadowsEnabled crashed viewport=%p code=0x%08X", viewport, GetExceptionCode());
+		}
+
+		lua_pushboolean(L, enabled ? 1 : 0);
+		return 1;
+	}
+
+	int SetViewportShadowsEnabled(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* viewport = GetCurrentViewport();
+		if (viewport == nullptr)
+		{
+			return 0;
+		}
+
+		bool enabled = CheckBool(L, 1);
+		__try
+		{
+			Ogre::SetViewportShadowsEnabled(viewport, enabled);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Viewport] setShadowsEnabled crashed viewport=%p code=0x%08X", viewport, GetExceptionCode());
+		}
+
+		return 0;
+	}
+
+	int GetSceneVisibilityMask(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			lua_pushnil(L);
+			return 1;
+		}
+
+		uint32_t mask = 0;
+		__try
+		{
+			mask = Ogre::GetSceneVisibilityMask(sceneManager);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Scene] getVisibilityMask crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+			lua_pushnil(L);
+			return 1;
+		}
+
+		lua_pushinteger(L, mask);
+		return 1;
+	}
+
+	int SetSceneVisibilityMask(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager == nullptr)
+		{
+			return 0;
+		}
+
+		uint32_t mask = static_cast<uint32_t>(luaL_checkinteger(L, 1));
+		__try
+		{
+			Ogre::SetSceneVisibilityMask(sceneManager, mask);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			LogEnvironmentDebug("[EXU::Scene] setVisibilityMask crashed sceneManager=%p code=0x%08X", sceneManager, GetExceptionCode());
+		}
+
+		return 0;
+	}
+
+	int HasSkyBoxNode(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		bool hasNode = false;
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager != nullptr)
+		{
+			TryHasSkyNode(sceneManager, Ogre::GetSkyBoxNode, hasNode, "skybox");
+		}
+
+		lua_pushboolean(L, hasNode);
+		return 1;
+	}
+
+	int HasSkyDomeNode(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		bool hasNode = false;
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager != nullptr)
+		{
+			TryHasSkyNode(sceneManager, Ogre::GetSkyDomeNode, hasNode, "skydome");
+		}
+
+		lua_pushboolean(L, hasNode);
+		return 1;
+	}
+
+	int HasSkyPlaneNode(lua_State* L)
+	{
+		Patch::TryInitializeOgre();
+
+		bool hasNode = false;
+		auto* sceneManager = GetSceneManager();
+		if (sceneManager != nullptr)
+		{
+			TryHasSkyNode(sceneManager, Ogre::GetSkyPlaneNode, hasNode, "skyplane");
+		}
+
+		lua_pushboolean(L, hasNode);
+		return 1;
 	}
 }
 
