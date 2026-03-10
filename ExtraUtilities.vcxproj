@@ -191,6 +191,7 @@
     <ClInclude Include="src\Multiplayer.h" />
     <ClInclude Include="src\OgreOverlayShim.h" />
     <ClInclude Include="src\Ogre.h" />
+    <ClInclude Include="src\OgreSceneManagerShim.h" />
     <ClInclude Include="src\Overlay.h" />
     <ClInclude Include="src\Ordnance.h" />
     <ClInclude Include="src\OrdnanceVelocity.h" />
