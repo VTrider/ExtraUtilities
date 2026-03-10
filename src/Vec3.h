@@ -43,6 +43,11 @@ namespace ExtraUtilities
 			return *this;
 		}
 
+		float Dot(const Vec3& v)
+		{
+			return x * v.x + y * v.y + z * v.z;
+		}
+
 		friend Vec3 operator+(const Vec3& v, const Vec3& w);
 		friend Vec3 operator-(const Vec3& v, const Vec3& w);
 		friend Vec3 operator*(const Vec3& v, const Vec3& w);

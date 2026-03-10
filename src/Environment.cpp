@@ -31,7 +31,7 @@
 namespace ExtraUtilities::Lua::Environment
 {
 	template <typename... Args>
-	void LogEnvironmentDebug(std::string_view fmt, Args&&... args)
+	void LogEnvironmentDebug([[maybe_unused]] std::string_view fmt, [[maybe_unused]] Args&&... args)
 	{
 #ifdef _DEBUG
 		std::ofstream file("exu_environment_debug.log", std::ios::app);
@@ -39,7 +39,7 @@ namespace ExtraUtilities::Lua::Environment
 #endif
 	}
 
-	std::string DescribeLuaCaller(lua_State* L)
+	std::string DescribeLuaCaller([[maybe_unused]] lua_State* L)
 	{
 #ifdef _DEBUG
 		lua_Debug ar{};

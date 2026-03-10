@@ -22,6 +22,7 @@
 #include "Ogre.h"
 
 #include <cmath>
+#include <numbers>
 
 namespace ExtraUtilities::Lua::Camera
 {
@@ -129,7 +130,14 @@ namespace ExtraUtilities::Lua::Camera
 	int GetFOV(lua_State* L)
 	{
 		auto* cam = mainCam.Get();
-		lua_pushnumber(L, cam ? cam->View_Angle : 0.0f);
+		auto& frustum = cam->View_Frustum;
+		auto v0 = frustum.near_bottom_left;
+		auto v1 = frustum.near_top_left;
+		v0.Normalize();
+		v1.Normalize();
+
+		float fov = 2.0f * std::acos(v0.Dot(v1));
+		lua_pushnumber(L, cam ? fov * (180.0f / std::numbers::pi_v<float>) : 0.0f);
 		return 1;
 	}
 

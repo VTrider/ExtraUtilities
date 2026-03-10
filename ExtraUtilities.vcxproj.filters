@@ -111,6 +111,9 @@
     <ClCompile Include="src\KillMessages.cpp">
       <Filter>Source Files\Patches</Filter>
     </ClCompile>
+    <ClCompile Include="src\Overlay.cpp">
+      <Filter>Source Files\Exports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\About.h">
@@ -220,6 +223,12 @@
     </ClInclude>
     <ClInclude Include="Resource\resource.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OgreOverlayShim.h">
+      <Filter>Source Files\Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Overlay.h">
+      <Filter>Header Files\Exports</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
