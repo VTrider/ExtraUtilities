@@ -24,5 +24,5 @@
 
 namespace ExtraUtilities
 {
-	inline std::string version = "1.1.0";
+	inline std::string version = "1.2.0";
 }
