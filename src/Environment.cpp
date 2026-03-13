@@ -24,28 +24,23 @@
 #include <Windows.h>
 
 #include <cmath>
-#include <cstdarg>
-#include <cstdio>
+#include "fstream"
+#include <format>
 #include <string>
 
 namespace ExtraUtilities::Lua::Environment
 {
-	void LogEnvironmentDebug(const char* fmt, ...)
+#ifdef _DEBUG
+	template <typename... Args>
+	void LogEnvironmentDebug(std::string_view fmt, Args&&... args)
 	{
-		char message[1024];
-		va_list args;
-		va_start(args, fmt);
-		vsnprintf_s(message, sizeof(message), _TRUNCATE, fmt, args);
-		va_end(args);
+		std::string message = std::vformat(fmt, std::make_format_args(args...));
 
-		OutputDebugStringA(message);
+		OutputDebugStringA(message.c_str());
 		OutputDebugStringA("\n");
 
-		if (FILE* file = fopen("exu_environment_debug.log", "a"))
-		{
-			fprintf(file, "%s\n", message);
-			fclose(file);
-		}
+		std::ofstream file("exu_environment_debug.log", std::ios::app);
+		file << message << '\n';
 	}
 
 	std::string DescribeLuaCaller(lua_State* L)
@@ -53,19 +48,16 @@ namespace ExtraUtilities::Lua::Environment
 		lua_Debug ar{};
 		if (lua_getstack(L, 1, &ar) && lua_getinfo(L, "Sln", &ar))
 		{
-			char caller[512];
-			sprintf_s(
-				caller,
-				sizeof(caller),
-				"%s:%d (%s)",
-				ar.short_src[0] ? ar.short_src : "?",
-				ar.currentline,
-				ar.name ? ar.name : "anonymous");
-			return caller;
+			return std::format("{}:{} ({})", ar.short_src[0] ? ar.short_src : "?", ar.currentline, ar.name ? ar.name : "anonymous");
 		}
 
 		return "unknown";
 	}
+
+#else
+#define LogEnvironmentDebug
+#define DescribeLuaCaller
+#endif
 
 	bool IsFiniteColor(const Ogre::Color& color)
 	{
