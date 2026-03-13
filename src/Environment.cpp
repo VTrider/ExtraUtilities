@@ -55,8 +55,10 @@ namespace ExtraUtilities::Lua::Environment
 	}
 
 #else
-#define LogEnvironmentDebug
-#define DescribeLuaCaller
+template<typename... Args>
+inline void IgnoreArgs(Args&&...) {}
+#define LogEnvironmentDebug(...) IgnoreArgs(__VA_ARGS__)
+#define DescribeLuaCaller(...) std::string("disabled in release build")
 #endif
 
 	bool IsFiniteColor(const Ogre::Color& color)
@@ -482,14 +484,15 @@ namespace ExtraUtilities::Patch
 	*/
 	void TryInitializeOgre()
 	{
+		using namespace Lua::Environment;
 		static bool done = false;
 		if (!done)
 		{
-			auto* sceneManager = Lua::Environment::GetSceneManager();
-			auto* terrainMasterLight = Lua::Environment::GetTerrainMasterLight();
+			auto* sceneManager = GetSceneManager();
+			auto* terrainMasterLight = GetTerrainMasterLight();
 			if (sceneManager == nullptr || terrainMasterLight == nullptr)
 			{
-				Lua::Environment::LogEnvironmentDebug(
+				LogEnvironmentDebug(
 					"[EXU::TryInitializeOgre] waiting sceneManager=%p terrainMasterLight=%p",
 					sceneManager,
 					terrainMasterLight);
@@ -497,7 +500,7 @@ namespace ExtraUtilities::Patch
 			}
 
 			fogResetPatch.Reload();
-			Lua::Environment::LogEnvironmentDebug(
+			LogEnvironmentDebug(
 				"[EXU::TryInitializeOgre] initialized sceneManager=%p terrainMasterLight=%p",
 				sceneManager,
 				terrainMasterLight);
